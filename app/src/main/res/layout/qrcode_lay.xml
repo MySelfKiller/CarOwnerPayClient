@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/dp_20"
+    android:paddingBottom="@dimen/dp_20"
+    android:paddingLeft="@dimen/dp_30"
+    android:paddingRight="@dimen/dp_30"
+    android:gravity="center"
+    android:background="@drawable/white_bg_shape_4"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/shared_qrcode_iv"
+            android:layout_width="@dimen/dp_150"
+            android:layout_height="@dimen/dp_150"/>
+        <TextView
+            android:layout_marginTop="@dimen/dp_10"
+            android:id="@+id/shared_compay_tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_13"
+            android:maxLines="1"
+            android:textColor="@color/grayText4"/>
+
+        <!--            <TextView-->
+        <!--                android:id="@+id/shared_compay_tv2"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginTop="@dimen/dp_10"-->
+        <!--                android:gravity="center"-->
+        <!--                android:maxLines="1"-->
+        <!--                android:textColor="@color/navigation_text_normal"-->
+        <!--                android:textSize="@dimen/sp_13" />-->
+        <!--            <TextView-->
+        <!--                android:gravity="center"-->
+        <!--                android:layout_marginTop="@dimen/dp_5"-->
+        <!--                android:id="@+id/shared_compay_tv3"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:textSize="@dimen/sp_13"-->
+        <!--                android:maxLines="1"-->
+        <!--                android:textColor="@color/navigation_text_normal"/>-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:gravity="center">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/shared_call_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minHeight="0dp"
+                android:paddingTop="@dimen/dp_7"
+                android:paddingBottom="@dimen/dp_7"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_5"
+                android:background="@drawable/blue_bg_shape"
+                android:text="保存二维码"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

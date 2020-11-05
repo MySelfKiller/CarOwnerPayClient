@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context=".ui.CustomerFragment">
+
+    <include layout="@layout/titlebar_white" />
+
+    <LinearLayout
+        android:id="@+id/customer_qrcode_lay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_30"
+        android:background="@drawable/qrcard_bg_shape"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dp_60"
+        android:paddingBottom="@dimen/dp_20">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_60"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/customer_qrcode_iv"
+                android:layout_width="@dimen/dp_150"
+                android:layout_height="@dimen/dp_150" />
+
+            <TextView
+                android:id="@+id/customer_compay_tv1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:maxLines="1"
+                android:padding="@dimen/dp_10"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14" />
+
+            <TextView
+                android:id="@+id/customer_compay_tv2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/dp_10"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14" />
+
+            <Button
+                android:id="@+id/customer_call_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_40"
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_40"
+                android:layout_marginBottom="@dimen/dp_20"
+                android:background="@drawable/white_bg_shape_2"
+                android:gravity="center"
+                android:minHeight="0dp"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10"
+                android:textStyle="normal"
+                android:text="拨打电话"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/sp_14"
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

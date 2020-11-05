@@ -1,0 +1,314 @@
+package com.kayu.car_owner_pay.ui;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
+import com.amap.api.location.AMapLocation;
+import com.kayu.car_owner_pay.KWApplication;
+import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.activity.MainViewModel;
+import com.kayu.car_owner_pay.activity.WebViewActivity;
+import com.kayu.car_owner_pay.model.SystemParam;
+import com.kayu.car_owner_pay.model.UserBean;
+import com.kayu.car_owner_pay.ui.income.BalanceFragment;
+import com.kayu.utils.NoMoreClickListener;
+import com.kayu.utils.StringUtil;
+import com.kayu.utils.location.LocationCallback;
+import com.kayu.utils.location.LocationManager;
+import com.kayu.utils.status_bar_set.StatusBarUtil;
+import com.kayu.utils.view.RoundImageView;
+import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
+import com.kongzue.dialog.util.BaseDialog;
+import com.kongzue.dialog.v3.MessageDialog;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class PersonalFragment extends Fragment {
+    private SmartRefreshLayout refreshLayout;
+    boolean isLoadmore = false;
+    boolean isRefresh = false;
+    private MainViewModel mainViewModel;
+    private RoundImageView user_head_img;
+    private TextView user_name;
+    private TextView user_balance;
+    private TextView explain_content;
+    private ConstraintLayout oil_order_lay,wash_order_lay;
+    private LinearLayout all_order_lay,more_lay;
+
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
+        StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
+        View root = inflater.inflate(R.layout.fragment_personal_new, container, false);
+        return root;
+    }
+
+//    @Override
+//    public void onAttach(@NonNull Context context) {
+//        super.onAttach(context);
+//        LogUtil.e("PersonalFragment----","----onAttach---");
+//    }
+//
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        refreshLayout = view.findViewById(R.id.refreshLayout);
+        //用户头像
+        user_head_img = view.findViewById(R.id.personal_user_head_img);
+        //用户名称
+        user_name = view.findViewById(R.id.personal_user_name);
+        //卡余额
+        user_balance = view.findViewById(R.id.personal_user_balance);
+        //账户提示语
+        explain_content = view.findViewById(R.id.personal_explain_content);
+
+        refreshLayout.setEnableAutoLoadMore(false);
+        refreshLayout.setEnableLoadMore(false);
+        refreshLayout.setEnableLoadMoreWhenContentNotFull(true);//是否在列表不满一页时候开启上拉加载功能
+        refreshLayout.setEnableOverScrollBounce(true);//是否启用越界回弹
+        refreshLayout.setEnableOverScrollDrag(true);
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
+                if (isRefresh || isLoadmore)
+                    return;
+                isRefresh = true;
+                initView();
+            }
+        });
+        TextView detailed_list = view.findViewById(R.id.personal_detailed_list);
+        detailed_list.setOnClickListener(new NoMoreClickListener() {
+            @Override
+            protected void OnMoreClick(View view) {
+                FragmentManager fg = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fg.beginTransaction();
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                fragmentTransaction.add(R.id.main_root_lay,new BalanceFragment());
+                fragmentTransaction.addToBackStack("ddd");
+                fragmentTransaction.commit();
+            }
+
+            @Override
+            protected void OnMoreErrorClick() {
+
+            }
+        });
+        ConstraintLayout customer_services_lay = view.findViewById(R.id.personal_customer_services_lay);
+        customer_services_lay.setOnClickListener(new NoMoreClickListener() {
+            @Override
+            protected void OnMoreClick(View view) {
+                FragmentManager fg = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fg.beginTransaction();
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                fragmentTransaction.add(R.id.main_root_lay,new CustomerFragment());
+                fragmentTransaction.addToBackStack("ddd");
+                fragmentTransaction.commit();
+            }
+
+            @Override
+            protected void OnMoreErrorClick() {
+
+            }
+        });
+        ConstraintLayout course_lay = view.findViewById(R.id.personal_course_lay);
+        course_lay.setOnClickListener(new NoMoreClickListener() {
+            @Override
+            protected void OnMoreClick(View view) {
+                mainViewModel.getParameter(getContext(),11).observe(requireActivity(), new Observer<SystemParam>() {
+                    @Override
+                    public void onChanged(SystemParam systemParam) {
+                        String target = systemParam.url;
+                        if (!StringUtil.isEmpty(target)){
+                            Intent intent = new Intent(getContext(), WebViewActivity.class);
+                            intent.putExtra("url",target);
+                            intent.putExtra("from","新手教程");
+                            requireActivity().startActivity(intent);
+                        }
+                    }
+                });
+
+
+            }
+
+            @Override
+            protected void OnMoreErrorClick() {
+
+            }
+        });
+        ConstraintLayout setting_lay = view.findViewById(R.id.personal_setting_lay);
+        setting_lay.setOnClickListener(new NoMoreClickListener() {
+            @Override
+            protected void OnMoreClick(View view) {
+                FragmentManager fg = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fg.beginTransaction();
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                fragmentTransaction.add(R.id.main_root_lay,new SettingsFragment());
+                fragmentTransaction.addToBackStack("ddd");
+                fragmentTransaction.commit();
+            }
+
+            @Override
+            protected void OnMoreErrorClick() {
+
+            }
+        });
+        all_order_lay = view.findViewById(R.id.id_all_order_lay);
+        more_lay = view.findViewById(R.id.personal_more_lay);
+        oil_order_lay = view.findViewById(R.id.personal_oil_order_lay);
+        oil_order_lay.setOnClickListener(new NoMoreClickListener() {
+            @Override
+            protected void OnMoreClick(View view) {
+                FragmentManager fg = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fg.beginTransaction();
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                fragmentTransaction.add(R.id.main_root_lay,new OilOrderListFragment() );
+                fragmentTransaction.addToBackStack("ddd");
+                fragmentTransaction.commit();
+            }
+
+            @Override
+            protected void OnMoreErrorClick() {
+
+            }
+        });
+        wash_order_lay = view.findViewById(R.id.personal_shop_order_lay);
+        wash_order_lay.setOnClickListener(new NoMoreClickListener() {
+            @Override
+            protected void OnMoreClick(View view) {
+                FragmentManager fg = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fg.beginTransaction();
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                fragmentTransaction.add(R.id.main_root_lay,new WashOrderListFragment() );
+                fragmentTransaction.addToBackStack("ddd");
+                fragmentTransaction.commit();
+            }
+
+            @Override
+            protected void OnMoreErrorClick() {
+
+            }
+        });
+        if (getUserVisibleHint()){
+//            mHasLoadedOnce = true;
+            refreshLayout.autoRefresh();
+        }
+    }
+
+    private void initView() {
+        checkLocation();
+        mainViewModel.getUserInfo(getContext()).observe(getActivity(), new Observer<UserBean>() {
+            @Override
+            public void onChanged(UserBean userBean) {
+                if (isRefresh) {
+                    refreshLayout.finishRefresh();
+                    isRefresh = false;
+                }
+                if (isLoadmore) {
+                    refreshLayout.finishLoadMore();
+                    isLoadmore = false;
+                }
+                if (null == userBean)
+                    return;
+                KWApplication.getInstance().loadImg(userBean.headPic,user_head_img);
+                user_name.setText(userBean.username);
+                user_balance.setText(String.valueOf(userBean.balance));
+
+            }
+        });
+        mainViewModel.getParameter(getContext(),10).observe(requireActivity(), new Observer<SystemParam>() {
+            @Override
+            public void onChanged(SystemParam systemParam) {
+                if (null  == systemParam)
+                    return;
+                try {
+                    JSONObject jsonObject = new JSONObject(systemParam.content);
+                    int showGas = jsonObject.optInt("gas");
+                    int showCarWash = jsonObject.optInt("carwash");
+                    if (showGas == 1 && showCarWash ==1 ) {
+                        all_order_lay.setVisibility(View.VISIBLE);
+                        wash_order_lay.setVisibility(View.VISIBLE);
+                        oil_order_lay.setVisibility(View.VISIBLE);
+
+                    }else if(showGas == 0 && showCarWash == 0){
+                        all_order_lay.setVisibility(View.GONE);
+                        wash_order_lay.setVisibility(View.GONE);
+                        oil_order_lay.setVisibility(View.GONE);
+                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(more_lay.getLayoutParams());
+                        layoutParams.setMargins(getResources().getDimensionPixelSize(R.dimen.dp_15)
+                                ,getResources().getDimensionPixelSize(R.dimen.dp_90)
+                                ,getResources().getDimensionPixelSize(R.dimen.dp_15)
+                                ,getResources().getDimensionPixelSize(R.dimen.dp_20));
+                        more_lay.setLayoutParams(layoutParams);
+
+                    } else {
+
+                        if (showCarWash == 1) {
+                            wash_order_lay.setVisibility(View.VISIBLE);
+                        }else{
+                            wash_order_lay.setVisibility(View.GONE);
+                        }
+                        if (showGas == 1) {
+                            oil_order_lay.setVisibility(View.VISIBLE);
+                        } else {
+                            oil_order_lay.setVisibility(View.GONE);
+                        }
+                        all_order_lay.setVisibility(View.VISIBLE);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    private void checkLocation() {
+        LocationManager.getSelf().startLocation();
+        LocationManager.getSelf().setLocationListener(new LocationCallback() {
+            @Override
+            public void onLocationChanged(AMapLocation location) {
+                if (location.getErrorCode() == 0) {
+//                    double latitude = location.getLatitude();
+//                    double longitude = location.getLongitude();
+                    mainViewModel.getReminder(getContext(),location.getCity()).observe(requireActivity(), new Observer<String>() {
+                        @Override
+                        public void onChanged(String parameter) {
+                            explain_content.setText(parameter);
+                        }
+                    });
+
+                } else {
+//                    checkLocation();
+                    MessageDialog.show((AppCompatActivity)getActivity(), "定位失败", "请重新定位", "重新定位").setCancelable(false)
+                            .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
+                                @Override
+                                public boolean onClick(BaseDialog baseDialog, View v) {
+                                    baseDialog.doDismiss();
+                                    checkLocation();
+                                    return true;
+                                }
+                            });
+                }
+            }
+        });
+    }
+}

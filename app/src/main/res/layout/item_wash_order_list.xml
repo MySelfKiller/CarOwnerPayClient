@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/dp_15"
+    android:paddingHorizontal="@dimen/dp_15"
+    android:paddingTop="@dimen/dp_15"
+    android:paddingBottom="@dimen/dp_10"
+    android:layout_marginTop="@dimen/dp_10"
+    android:background="@drawable/white_bg_shape_4">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/id_tag_img_cv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/dp_4"
+            app:cardElevation="@dimen/dp_0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/item_wash_order_img_bg"
+                android:layout_width="@dimen/dp_75"
+                android:layout_height="@dimen/dp_75"
+                android:background="@drawable/img_bg_shape"
+                android:scaleType="fitXY"
+                android:src="@mipmap/bg_oil" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/item_wash_order_name"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:ellipsize="end"
+            android:maxEms="11"
+            android:maxLines="1"
+            android:text="楚昊鼎胜"
+            android:textColor="@color/black1"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/item_wash_order_state"
+            app:layout_constraintStart_toEndOf="@id/id_tag_img_cv"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/item_wash_order_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="待使用"
+            android:textColor="@color/red_bg_def"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/id_tag_price_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="￥"
+            android:textColor="@color/red_bg_def"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@id/item_wash_order_price"
+            app:layout_constraintBottom_toBottomOf="@id/item_wash_order_price"
+            app:layout_constraintStart_toStartOf="@id/item_wash_order_name" />
+
+        <TextView
+            android:id="@+id/item_wash_order_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="28.09"
+            android:textColor="@color/red_bg_def"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/id_tag_price_unit"
+            app:layout_constraintTop_toBottomOf="@id/item_wash_order_name" />
+
+        <TextView
+            android:id="@+id/item_wash_order_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:gravity="center"
+            android:text="标准洗车"
+            android:textColor="@color/grayText4"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBaseline_toBaselineOf="@id/item_wash_order_price"
+            app:layout_constraintBottom_toBottomOf="@id/item_wash_order_price"
+            app:layout_constraintStart_toEndOf="@id/item_wash_order_price" />
+
+
+        <ImageView
+            android:id="@+id/id_tag_time_bg"
+            android:layout_width="@dimen/dp_15"
+            android:layout_height="@dimen/dp_15"
+            android:background="@mipmap/ic_clock"
+            app:layout_constraintBottom_toBottomOf="@id/item_wash_order_time"
+            app:layout_constraintEnd_toStartOf="@id/item_wash_order_time"
+            app:layout_constraintStart_toStartOf="@id/item_wash_order_name"
+            app:layout_constraintTop_toTopOf="@id/item_wash_order_time" />
+
+        <TextView
+            android:id="@+id/item_wash_order_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_7"
+            android:layout_marginTop="@dimen/dp_1"
+            android:text="营业中 | 08:00-18:00"
+            android:textColor="@color/black1"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintStart_toEndOf="@id/id_tag_time_bg"
+            app:layout_constraintTop_toBottomOf="@id/item_wash_order_price" />
+        <TextView
+            android:id="@+id/item_wash_order_vali_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_1"
+            android:text="请在29天内使用"
+            android:textColor="@color/black1"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintStart_toStartOf="@id/item_wash_order_name"
+            app:layout_constraintTop_toBottomOf="@id/item_wash_order_time" />
+
+        <View
+            android:id="@+id/id_tag_divider"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@color/divider2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/id_tag_img_cv" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item_wash_order_location_lay"
+        android:visibility="visible"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        app:layout_constraintTop_toBottomOf="@id/id_tag_divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <ImageView
+            android:id="@+id/id_tag_location_bg"
+            android:layout_width="@dimen/dp_16"
+            android:layout_height="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_3"
+            android:background="@mipmap/ic_location_bg1"
+            app:layout_constraintEnd_toStartOf="@id/item_wash_order_location"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/item_wash_order_location"
+            app:layout_constraintBottom_toBottomOf="@id/item_wash_order_location"/>
+
+        <TextView
+            android:id="@+id/item_wash_order_location"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_5"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:text="河北省唐山市路南区万达广场"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="@color/black1"
+            android:textSize="@dimen/sp_13"
+            app:layout_constraintStart_toEndOf="@id/id_tag_location_bg"
+            app:layout_constraintEnd_toStartOf="@id/item_wash_order_navi_lay"
+            app:layout_constraintTop_toTopOf="@id/item_wash_order_navi_lay"
+            app:layout_constraintBottom_toBottomOf="@id/item_wash_order_navi_lay"/>
+
+
+        <LinearLayout
+            android:id="@+id/item_wash_order_navi_lay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginEnd="@dimen/dp_5"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/item_wash_order_location"
+            app:layout_constraintEnd_toStartOf="@id/item_wash_order_phone_lay"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <ImageView
+                android:layout_width="@dimen/dp_15"
+                android:layout_height="@dimen/dp_15"
+                android:src="@mipmap/ic_navigation"/>
+
+            <TextView
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="wrap_content"
+                android:text="导航"
+                android:layout_marginTop="@dimen/dp_3"
+                android:gravity="center"
+                android:textColor="@color/black1"
+                android:textSize="@dimen/sp_12"/>
+        </LinearLayout>
+        <View
+            android:layout_width="@dimen/dp_1"
+            android:layout_height="@dimen/dp_0"
+            android:background="@color/divider"
+            app:layout_constraintTop_toTopOf="@id/item_wash_order_navi_lay"
+            app:layout_constraintBottom_toBottomOf="@id/item_wash_order_navi_lay"
+            app:layout_constraintStart_toEndOf="@id/item_wash_order_navi_lay"
+            app:layout_constraintEnd_toStartOf="@id/item_wash_order_phone_lay"/>
+        <LinearLayout
+            android:id="@+id/item_wash_order_phone_lay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginStart="@dimen/dp_5"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/item_wash_order_navi_lay"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+            <ImageView
+                android:layout_width="@dimen/dp_15"
+                android:layout_height="@dimen/dp_15"
+                android:src="@mipmap/ic_call_phone64"/>
+            <TextView
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_3"
+                android:text="电话"
+                android:gravity="center"
+                android:textColor="@color/black1"
+                android:textSize="@dimen/sp_12" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item_wash_order_pay_lay"
+        android:visibility="gone"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_5"
+        app:layout_constraintTop_toBottomOf="@id/id_tag_divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <TextView
+            android:id="@+id/item_wash_order_pay_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/wash_btn_shape"
+            android:paddingHorizontal="@dimen/dp_20"
+            android:paddingVertical="@dimen/dp_5"
+            android:text="再次购买"
+            android:textColor="@color/slight_yellow"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

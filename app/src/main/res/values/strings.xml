@@ -1,3 +1,28 @@
 <resources>
-    <string name="app_name">CarOwnerPayClient</string>
+    <string name="app_name">车友团</string>
+    <string name="title_home">首页</string>
+    <string name="title_shop">商城</string>
+    <string name="title_consult">咨询</string>
+    <string name="title_notifications">我的</string>
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+    <string name="explain_content">1. 完成支付可获得服务券1张，请前往汽车店进行消费，有效期29天！（过期自动退款，可随时申请退款）
+        \n2. 服务费包含：整车冲洗，喷洒泡沫，车身擦拭，内部除尘，不含虫尸、柏油等。
+        \n3. 请提前致电门店预约！
+        \n4. 部分MVP、大型SUV等特殊车型需向门店额外支付费用
+
+    </string>
+    <string name="dialog_rationale_ask_again">APP缺少正常运行时所必须的权限，请在系统设置内允许APP获得相应权限：</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -10,7 +10,15 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/FlycoTabLayout_Lib" />
+            <option value="$PROJECT_DIR$/GroupAdapter" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/banner" />
+            <option value="$PROJECT_DIR$/dialog" />
+            <option value="$PROJECT_DIR$/form_verify" />
+            <option value="$PROJECT_DIR$/library_update" />
+            <option value="$PROJECT_DIR$/pagerlayoutmanager" />
+            <option value="$PROJECT_DIR$/utils" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

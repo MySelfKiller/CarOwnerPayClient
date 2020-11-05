@@ -2,6 +2,16 @@ plugins {
     id 'com.android.application'
 }
 
+def isWindows() {
+    return org.gradle.internal.os.OperatingSystem.current().isWindows()
+}
+def keyDir = ""
+if (isWindows()){
+    keyDir = "C:\\Users\\Killer\\Documents\\CarOwnerPayClient\\app\\key\\"
+}else {
+    keyDir = "/Users/killer/AndroidStudioProjects/CarOwnerPayClient/app/key/"
+}
+
 android {
     compileSdkVersion 29
     buildToolsVersion "30.0.2"
@@ -11,8 +21,10 @@ android {
         minSdkVersion 16
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
+        renderscriptTargetApi 14
+        renderscriptSupportModeEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -26,14 +38,106 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    signingConfigs {
+        release {
+            storeFile file(keyDir+'key_kawan.jks')
+//            storeFile file('/Users/killer/StudioProjects/CourseKaYuApp/app/key/key_kawan.jks')
+            storePassword 'android'
+            keyAlias = 'kawan'
+            keyPassword 'android'
+            v1SigningEnabled = true
+            v2SigningEnabled = true
+        }
+        ddd {
+            storeFile file(keyDir+'debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+
+    //配置自定义打包名称
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            def fileName
+            def date = new Date()
+            def formattedDate = date.format('yyyyMMdd')
+            if (variant.buildType.name.equals('release')) {
+                fileName = "CarOwner_KaYu_${variant.mergedFlavor.versionName}_release_${formattedDate}.apk"
+            } else if (variant.buildType.name.equals('debug')) {
+                fileName = "CarOwner_KaYu_${variant.mergedFlavor.versionName}_debug_${formattedDate}.apk"
+            }
+            outputFileName = fileName
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            zipAlignEnabled true
+            multiDexEnabled true
+            debuggable true
+            jniDebuggable true
+//            applicationIdSuffix ".release"
+            buildConfigField("boolean", "LOG_DEBUG", "true")//配置Log日志
+            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/cyt/carfriend/"'  //正式环境
+//            buildConfigField "String", "BASE_URL", '"http://192.168.0.113:8080/"'  //正式环境
+        }
+        debug {
+//            signingConfig signingConfigs.ddd
+            debuggable true
+            jniDebuggable true
+            minifyEnabled false
+            shrinkResources false
+//            applicationIdSuffix ".debug"
+            buildConfigField("boolean", "LOG_DEBUG", "true")//配置Log日志
+//            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/"'  //测试环境
+            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/cyt/carfriend/"'  //测试环境
+
+        }
+    }
+
 }
 
 dependencies {
-
+    implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
     implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    testImplementation 'junit:junit:4.+'
+    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
+    implementation 'androidx.navigation:navigation-fragment:2.3.1'
+    implementation 'androidx.navigation:navigation-ui:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+
+//    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+//    implementation 'com.kongzue.dialog_v3x:dialog:3.2.4'
+    implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
+//    implementation 'com.github.GrenderG:Toasty:1.4.2'
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
+
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.5.8'
+
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-22'
+
+    implementation project(':banner')
+    implementation project(path: ':utils')
+    implementation project(path: ':pagerlayoutmanager')
+    implementation project(path: ':GroupAdapter')
+    implementation project(path: ':FlycoTabLayout_Lib')
+    implementation project(path: ':form_verify')
+    implementation project(path: ':library_update')
+    implementation project(path: ':dialog')
+
+    testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }

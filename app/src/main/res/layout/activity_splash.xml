@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activity.SplashActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom|center">
+        <ImageView
+            android:layout_width="@dimen/dp_360"
+            android:layout_height="@dimen/dp_360"
+            android:src="@mipmap/ic_login_shanpin"
+            android:scaleType="fitXY" />
+    </LinearLayout>
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:orientation="vertical">-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="7.5">-->
+            <!--<ImageView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:src="@mipmap/rachel_martin_bg"-->
+                <!--android:scaleType="center"-->
+                <!--/>-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="2.5">-->
+            <!--<ImageView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:src="@mipmap/rachel_martin_bg1"-->
+                <!--android:scaleType="center"-->
+                <!--/>-->
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/fullscreen_content"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="2.5"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:paddingLeft="20dp"-->
+            <!--android:paddingRight="20dp"-->
+            <!--android:weightSum="2">-->
+
+            <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="100dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="100dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:background="@mipmap/splash_bg"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:paddingLeft="20dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:paddingRight="20dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;tools:src="@tools:sample/avatars" />&ndash;&gt;-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:autoSizeMaxTextSize="40sp"-->
+                <!--android:autoSizeMinTextSize="20sp"-->
+                <!--android:visibility="gone"-->
+                <!--android:keepScreenOn="true"-->
+                <!--android:padding="10dp"-->
+                <!--android:singleLine="true"-->
+                <!--android:text="@string/app_name"-->
+                <!--android:textColor="@color/press_btu_col_white"-->
+                <!--android:textSize="40sp"-->
+                <!--android:textStyle="bold" />-->
+        <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
+
+</FrameLayout>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@color/slight_white1"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context=".ui.income.BalanceFragment">
+
+    <include layout="@layout/titlebar_white" />
+
+    <com.flyco.tablayout.CommonTabLayout
+        android:id="@+id/detailed_list_sl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="@color/white"
+        app:tl_iconVisible="false"
+        app:tl_indicator_color="@color/startBlueColor_btn"
+        app:tl_indicator_height="@dimen/dp_2"
+        app:tl_indicator_width="@dimen/dp_60"
+        app:tl_textSelectColor="@color/startBlueColor_btn"
+        app:tl_textUnselectColor="@color/black1"
+        app:tl_textsize="@dimen/sp_14" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/detailed_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

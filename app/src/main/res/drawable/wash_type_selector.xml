@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="false"
+        android:drawable="@mipmap/ic_unselected">
+<!--        <shape>-->
+<!--            <solid android:color="@color/white"/>-->
+
+<!--            <stroke android:color="@color/divider"-->
+<!--                android:width="@dimen/dp_1"/>-->
+<!--            <corners android:radius="@dimen/dp_4" />-->
+<!--        </shape>-->
+    </item>
+    <item android:state_focused="true"
+        android:drawable="@mipmap/ic_selected">
+<!--        <shape>-->
+<!--            <solid android:color="@color/white" />-->
+<!--            <corners android:radius="@dimen/dp_6" />-->
+<!--            <stroke android:color="@color/red_bg_def"-->
+<!--                android:width="@dimen/dp_1"/>-->
+<!--        </shape>-->
+    </item>
+
+    <item android:state_checked="true"
+        android:drawable="@mipmap/ic_selected">
+<!--        <shape>-->
+<!--            <solid android:color="@color/white" />-->
+<!--            <corners android:radius="@dimen/dp_4" />-->
+<!--            <stroke android:color="@color/red_bg_def"-->
+<!--                android:width="@dimen/dp_1"/>-->
+<!--        </shape>-->
+    </item>
+    <item android:state_selected="true"
+        android:drawable="@mipmap/ic_selected">
+<!--        <shape>-->
+<!--            <solid android:color="@color/white" />-->
+<!--            <corners android:radius="@dimen/dp_4" />-->
+<!--            <stroke android:color="@color/red_bg_def"-->
+<!--                android:width="@dimen/dp_1"/>-->
+<!--        </shape>-->
+    </item>
+
+</selector>

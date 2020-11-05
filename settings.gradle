@@ -1,2 +1,10 @@
+include ':library_update'
+include ':FlycoTabLayout_Lib'
+include ':form_verify'
+include ':GroupAdapter'
+include ':banner'
+include ':utils'
+include ':pagerlayoutmanager'
+include ':dialog'
 include ':app'
 rootProject.name = "CarOwnerPayClient"

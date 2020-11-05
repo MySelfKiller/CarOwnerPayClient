@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context=".ui.WashStationFragment">
+
+    <include layout="@layout/titlebar_white" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/slight_white3"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/dp_110">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_150"
+                    app:cardCornerRadius="@dimen/dp_5"
+                    app:cardElevation="@dimen/dp_1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.youth.banner.Banner
+                        android:id="@+id/wash_station_banner"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:image_scale_type="fit_xy"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/white_part_bg_shape"
+                    android:paddingHorizontal="@dimen/dp_15"
+                    android:paddingTop="@dimen/dp_20">
+
+                    <TextView
+                        android:id="@+id/wash_station_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxEms="13"
+                        android:maxLines="1"
+                        android:textColor="@color/black1"
+                        android:textSize="@dimen/sp_17"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/id_tag_time_bg"
+                        android:layout_width="@dimen/dp_16"
+                        android:layout_height="@dimen/dp_16"
+                        android:background="@mipmap/ic_clock"
+                        app:layout_constraintBottom_toBottomOf="@id/wash_station_time"
+                        app:layout_constraintEnd_toStartOf="@id/wash_station_time"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/wash_station_time" />
+
+                    <TextView
+                        android:id="@+id/wash_station_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp_7"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:textColor="@color/black1"
+                        android:textSize="@dimen/sp_13"
+                        app:layout_constraintStart_toEndOf="@id/id_tag_time_bg"
+                        app:layout_constraintTop_toBottomOf="@id/wash_station_name" />
+
+                    <ImageView
+                        android:id="@+id/id_tag_tag_bg"
+                        android:layout_width="@dimen/dp_15"
+                        android:layout_height="@dimen/dp_15"
+                        android:layout_marginEnd="@dimen/dp_5"
+                        android:background="@mipmap/ic_confirm_m"
+                        app:layout_constraintBottom_toBottomOf="@id/wash_station_tag"
+                        app:layout_constraintEnd_toStartOf="@id/wash_station_tag"
+                        app:layout_constraintTop_toTopOf="@id/wash_station_tag" />
+
+                    <TextView
+                        android:id="@+id/wash_station_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="随时退"
+                        android:textColor="@color/black1"
+                        android:textSize="@dimen/sp_13"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:id="@+id/id_tag_divider"
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="@dimen/dp_1"
+                        android:layout_marginTop="@dimen/dp_20"
+                        android:background="@color/divider2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/wash_station_time" />
+
+                    <ImageView
+                        android:id="@+id/id_tag_location_bg"
+                        android:layout_width="@dimen/dp_16"
+                        android:layout_height="@dimen/dp_16"
+                        android:layout_marginTop="@dimen/dp_3"
+                        android:background="@mipmap/ic_location_bg1"
+                        app:layout_constraintEnd_toStartOf="@id/wash_station_location"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/wash_station_location" />
+
+                    <TextView
+                        android:id="@+id/wash_station_location"
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp_5"
+                        android:layout_marginTop="@dimen/dp_20"
+                        android:layout_marginEnd="@dimen/dp_10"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textColor="@color/black1"
+                        android:textSize="@dimen/sp_13"
+                        app:layout_constraintStart_toEndOf="@id/id_tag_location_bg"
+                        app:layout_constraintEnd_toStartOf="@id/wash_station_navi_lay"
+                        app:layout_constraintTop_toBottomOf="@id/id_tag_divider" />
+
+                    <TextView
+                        android:id="@+id/wash_station_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:layout_marginBottom="@dimen/dp_15"
+                        android:textColor="@color/grayText2"
+                        android:textSize="@dimen/sp_12"
+                        app:layout_constraintTop_toBottomOf="@id/wash_station_location"
+                        app:layout_constraintStart_toStartOf="@id/wash_station_location"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    <LinearLayout
+                        android:id="@+id/wash_station_navi_lay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_15"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        app:layout_constraintTop_toTopOf="@id/wash_station_location"
+                        app:layout_constraintStart_toEndOf="@id/wash_station_location"
+                        app:layout_constraintEnd_toStartOf="@id/wash_station_phone_lay"
+                        app:layout_constraintBottom_toBottomOf="parent">
+                        <ImageView
+                            android:layout_width="@dimen/dp_20"
+                            android:layout_height="@dimen/dp_20"
+                            android:src="@mipmap/ic_navigation"/>
+
+                        <TextView
+                            android:layout_width="@dimen/dp_60"
+                            android:layout_height="wrap_content"
+                            android:text="导航"
+                            android:layout_marginTop="@dimen/dp_6"
+                            android:gravity="center"
+                            android:textColor="@color/black1"
+                            android:textSize="@dimen/sp_14"/>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="@dimen/dp_1"
+                        android:layout_height="@dimen/dp_0"
+                        android:background="@color/divider"
+                        app:layout_constraintTop_toTopOf="@id/wash_station_location"
+                        app:layout_constraintBottom_toBottomOf="@id/wash_station_navi_lay"
+                        app:layout_constraintStart_toEndOf="@id/wash_station_navi_lay"
+                        app:layout_constraintEnd_toStartOf="@id/wash_station_phone_lay"/>
+                    <LinearLayout
+                        android:id="@+id/wash_station_phone_lay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:layout_marginBottom="@dimen/dp_15"
+                        app:layout_constraintTop_toTopOf="@id/wash_station_location"
+                        app:layout_constraintStart_toEndOf="@id/wash_station_navi_lay"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+                        <ImageView
+                            android:layout_width="@dimen/dp_20"
+                            android:layout_height="@dimen/dp_20"
+                            android:src="@mipmap/ic_call_phone64"/>
+                        <TextView
+                            android:layout_width="@dimen/dp_60"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_6"
+                            android:text="电话"
+                            android:gravity="center"
+                            android:textColor="@color/black1"
+                            android:textSize="@dimen/sp_14" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:paddingHorizontal="@dimen/dp_15"
+                    android:orientation="vertical"
+                    android:background="@color/white">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/wash_station_type1_lay"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:paddingVertical="@dimen/dp_15"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/wash_station_type1_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="标准洗车"
+                            android:textSize="@dimen/sp_15"
+                            android:textColor="@color/black1"
+                            android:textStyle="bold"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"/>
+
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/wash_station_car_lay"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:paddingVertical="@dimen/dp_5"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toTopOf="@id/wash_station_suv_lay"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toEndOf="@id/wash_station_type1_name"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <ImageView
+                                android:id="@+id/id_tag_car_img"
+                                android:layout_width="@dimen/dp_30"
+                                android:layout_height="@dimen/dp_30"
+                                android:layout_marginStart="@dimen/dp_15"
+                                android:src="@mipmap/ic_small_car"
+                                app:layout_constraintBottom_toBottomOf="@id/wash_station_car_name"
+                                app:layout_constraintEnd_toStartOf="@id/wash_station_car_name"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/wash_station_car_name" />
+
+                            <TextView
+                                android:id="@+id/wash_station_car_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/dp_10"
+                                android:textColor="@color/black1"
+                                android:textSize="@dimen/sp_13"
+                                android:textStyle="bold"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/id_tag_car_img"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <ImageView
+                                android:id="@+id/wash_station_car_select_btn"
+                                android:layout_width="@dimen/dp_20"
+                                android:layout_height="@dimen/dp_20"
+
+                                android:background="@drawable/wash_type_selector"
+                                app:layout_constraintBottom_toBottomOf="@id/wash_station_car_name"
+                                app:layout_constraintEnd_toEndOf="parent" />
+
+                            <TextView
+                                android:id="@+id/id_tag_car_price_unit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="￥"
+                                android:textColor="@color/red_bg_def"
+                                android:textSize="@dimen/sp_11"
+                                android:textStyle="normal"
+                                app:layout_constraintBaseline_toBaselineOf="@id/wash_station_car_price"
+                                app:layout_constraintBottom_toBottomOf="@id/wash_station_car_price"
+                                app:layout_constraintEnd_toStartOf="@id/wash_station_car_price" />
+
+                            <TextView
+                                android:id="@+id/wash_station_car_price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="@dimen/dp_15"
+                                android:textSize="@dimen/sp_15"
+                                android:textStyle="bold"
+                                android:textColor="@color/red_bg_def"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/wash_station_car_select_btn"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+                            <TextView
+                                android:id="@+id/wash_station_car_price_sub"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="@dimen/dp_5"
+                                android:textColor="@color/black1"
+                                android:textSize="@dimen/sp_11"
+                                app:layout_constraintBaseline_toBaselineOf="@id/wash_station_car_price"
+                                app:layout_constraintBottom_toBottomOf="@id/wash_station_car_price"
+                                app:layout_constraintEnd_toStartOf="@id/id_tag_car_price_unit" />
+
+                            <View
+                                android:layout_width="@dimen/dp_0"
+                                android:layout_height="@dimen/dp_0_5"
+                                android:background="@color/black1"
+                                app:layout_constraintBottom_toBottomOf="@id/wash_station_car_price_sub"
+                                app:layout_constraintEnd_toEndOf="@id/wash_station_car_price_sub"
+                                app:layout_constraintStart_toStartOf="@id/wash_station_car_price_sub"
+                                app:layout_constraintTop_toTopOf="@id/wash_station_car_price_sub" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/wash_station_suv_lay"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:paddingVertical="@dimen/dp_5"
+                            app:layout_constraintStart_toEndOf="@id/wash_station_type1_name"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/wash_station_car_lay"
+                            app:layout_constraintBottom_toBottomOf="parent">
+                            <ImageView
+                                android:id="@+id/id_tag_suv_img"
+                                android:layout_width="@dimen/dp_30"
+                                android:layout_height="@dimen/dp_30"
+                                android:layout_marginStart="@dimen/dp_15"
+                                android:src="@mipmap/ic_suv_car"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/wash_station_suv_name"
+                                app:layout_constraintTop_toTopOf="@id/wash_station_suv_name"
+                                app:layout_constraintBottom_toBottomOf="@id/wash_station_suv_name"/>
+
+                            <TextView
+                                android:id="@+id/wash_station_suv_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/dp_10"
+                                android:textStyle="bold"
+                                android:textColor="@color/black1"
+                                android:textSize="@dimen/sp_13"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/id_tag_suv_img"/>
+                            <ImageView
+                                android:id="@+id/wash_station_suv_select_btn"
+                                android:layout_width="@dimen/dp_20"
+                                android:layout_height="@dimen/dp_20"
+                                android:background="@drawable/wash_type_selector"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/wash_station_suv_name"/>
+
+                            <TextView
+                                android:id="@+id/id_tag_suv_price_unit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="￥"
+                                android:textSize="@dimen/sp_11"
+                                android:textStyle="normal"
+                                android:textColor="@color/red_bg_def"
+                                app:layout_constraintBaseline_toBaselineOf="@id/wash_station_suv_price"
+                                app:layout_constraintEnd_toStartOf="@id/wash_station_suv_price"
+                                app:layout_constraintBottom_toBottomOf="@id/wash_station_suv_price"/>
+                            <TextView
+                                android:id="@+id/wash_station_suv_price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="@dimen/dp_15"
+                                android:textSize="@dimen/sp_15"
+                                android:textStyle="bold"
+                                android:textColor="@color/red_bg_def"
+                                app:layout_constraintEnd_toStartOf="@id/wash_station_suv_select_btn"
+                                app:layout_constraintTop_toTopOf="@id/wash_station_suv_name"/>
+                            <TextView
+                                android:id="@+id/wash_station_suv_price_sub"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="@dimen/dp_5"
+                                android:textSize="@dimen/sp_12"
+                                android:textColor="@color/black1"
+                                app:layout_constraintBaseline_toBaselineOf="@id/wash_station_suv_price"
+                                app:layout_constraintEnd_toStartOf="@id/id_tag_suv_price_unit"
+                                app:layout_constraintBottom_toBottomOf="@id/wash_station_suv_price"/>
+                            <View
+                                android:layout_width="@dimen/dp_0"
+                                android:layout_height="@dimen/dp_0_5"
+                                android:background="@color/black1"
+                                app:layout_constraintStart_toStartOf="@id/wash_station_suv_price_sub"
+                                app:layout_constraintEnd_toEndOf="@id/wash_station_suv_price_sub"
+                                app:layout_constraintTop_toTopOf="@id/wash_station_suv_price_sub"
+                                app:layout_constraintBottom_toBottomOf="@id/wash_station_suv_price_sub"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <View
+                        android:id="@+id/wash_station_divider1"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_1"
+                        android:background="@color/divider2"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/wash_station_type2_lay"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/dp_20">
+                        <TextView
+                            android:id="@+id/wash_station_type2_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="精致洗车"
+                            android:textSize="@dimen/sp_15"
+                            android:textColor="@color/black1"
+                            android:textStyle="bold"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <ImageView
+                            android:id="@+id/id_tag_fine_img"
+                            android:layout_width="@dimen/dp_30"
+                            android:layout_height="@dimen/dp_30"
+                            android:layout_marginStart="@dimen/dp_15"
+                            android:src="@mipmap/ic_fine_car"
+                            app:layout_constraintStart_toEndOf="@id/wash_station_type2_name"
+                            app:layout_constraintEnd_toStartOf="@id/wash_station_all_car_name"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+                        <TextView
+                            android:id="@+id/wash_station_all_car_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:layout_marginStart="@dimen/dp_10"
+                            android:textColor="@color/black1"
+                            android:textSize="@dimen/sp_13"
+                            app:layout_constraintStart_toEndOf="@id/id_tag_fine_img"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <ImageView
+                            android:id="@+id/wash_station_all_car_select_btn"
+                            android:layout_width="@dimen/dp_20"
+                            android:layout_height="@dimen/dp_20"
+                            android:background="@drawable/wash_type_selector"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <TextView
+                            android:id="@+id/id_tag_all_car_price_unit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="￥"
+                            android:textSize="@dimen/sp_11"
+                            android:textStyle="normal"
+                            android:textColor="@color/red_bg_def"
+                            app:layout_constraintBaseline_toBaselineOf="@id/wash_station_all_car_price"
+                            app:layout_constraintEnd_toStartOf="@id/wash_station_all_car_price"
+                            app:layout_constraintBottom_toBottomOf="@id/wash_station_all_car_price"/>
+                        <TextView
+                            android:id="@+id/wash_station_all_car_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_15"
+                            android:textSize="@dimen/sp_15"
+                            android:textStyle="bold"
+                            android:textColor="@color/red_bg_def"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/wash_station_all_car_select_btn"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+                        <TextView
+                            android:id="@+id/wash_station_all_car_price_sub"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_5"
+                            android:textSize="@dimen/sp_11"
+                            android:textColor="@color/black1"
+                            app:layout_constraintBaseline_toBaselineOf="@id/wash_station_all_car_price"
+                            app:layout_constraintEnd_toStartOf="@id/id_tag_all_car_price_unit"
+                            app:layout_constraintBottom_toBottomOf="@id/wash_station_all_car_price"/>
+                        <View
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="@dimen/dp_0_5"
+                            android:background="@color/black1"
+                            app:layout_constraintStart_toStartOf="@id/wash_station_all_car_price_sub"
+                            app:layout_constraintEnd_toEndOf="@id/wash_station_all_car_price_sub"
+                            app:layout_constraintTop_toTopOf="@id/wash_station_all_car_price_sub"
+                            app:layout_constraintBottom_toBottomOf="@id/wash_station_all_car_price_sub"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/wash_station_explain_lay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:paddingHorizontal="@dimen/dp_15"
+                    android:paddingBottom="@dimen/dp_20"
+                    android:background="@color/white">
+                    <TextView
+                        android:id="@+id/id_tag_explain_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxEms="13"
+                        android:maxLines="1"
+                        android:paddingVertical="@dimen/dp_15"
+                        android:text="标准洗车券"
+                        android:textColor="@color/black1"
+                        android:textSize="@dimen/sp_17"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/wash_station_explain_content"
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="wrap_content"
+                        android:text="@string/explain_content"
+                        android:textColor="@color/black1"
+                        android:textSize="@dimen/sp_13"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/id_tag_explain_name" />
+
+                    <ImageView
+                        android:id="@+id/id_tag_explain_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dp_44"
+                        android:layout_marginTop="@dimen/dp_15"
+                        android:src="@mipmap/ic_explain_img"
+                        app:layout_constraintTop_toBottomOf="@id/wash_station_explain_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+                    <TextView
+                        android:id="@+id/id_tag_explain_tv1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="支付成功"
+                        android:layout_marginStart="@dimen/dp_12"
+                        android:textColor="@color/black1"
+                        android:textSize="@dimen/sp_13"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/id_tag_explain_img" />
+                    <TextView
+                        android:id="@+id/id_tag_explain_tv2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="到店展示券"
+                        android:textColor="@color/black1"
+                        android:textSize="@dimen/sp_13"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/id_tag_explain_img" />
+                    <TextView
+                        android:id="@+id/id_tag_explain_tv3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/dp_12"
+                        android:text="洗车服务"
+                        android:textColor="@color/black1"
+                        android:textSize="@dimen/sp_13"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/id_tag_explain_img" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/wash_station_services"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:gravity="center"
+                android:textSize="@dimen/sp_11"
+                android:textColor="@color/black1"
+                android:layout_marginStart="@dimen/dp_15"
+                android:text="客服"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+            <TextView
+                android:id="@+id/wash_station_order_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_15"
+                android:gravity="center"
+                android:textSize="@dimen/sp_11"
+                android:textColor="@color/colorAccent"
+                android:text="我的订单"
+                app:layout_constraintStart_toEndOf="@id/wash_station_services"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+            <TextView
+                android:id="@+id/wash_station_pay_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/dp_10"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:textStyle="bold"
+                android:paddingHorizontal="@dimen/dp_80"
+                android:paddingVertical="@dimen/dp_12"
+                android:textColor="@color/slight_yellow"
+                android:textSize="@dimen/sp_13"
+                android:background="@drawable/wash_btn_shape"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/wash_station_rebate_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingVertical="@dimen/dp_5"
+            android:paddingHorizontal="@dimen/dp_7"
+            android:textSize="@dimen/sp_12"
+            android:textColor="@color/white"
+            app:layout_constraintHorizontal_bias="0.965"
+            app:layout_constraintVertical_bias="0.94"
+            android:background="@drawable/wash_red_tip_shape"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

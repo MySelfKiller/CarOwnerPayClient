@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context=".ui.ExchangeFragment">
+
+    <include layout="@layout/titlebar_white"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <EditText
+            android:id="@+id/exchange_code_et"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:background="@drawable/white_bg_shape_2"
+            android:paddingHorizontal="@dimen/dp_20"
+            android:paddingVertical="@dimen/dp_15"
+            android:hint="请输入兑换码"
+            android:textColorHint="@color/grayText2"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/black1"
+            android:maxLines="1"
+            android:maxLength="40"
+            android:ellipsize="end"
+            android:inputType="text"
+            android:layout_marginHorizontal="@dimen/dp_40"
+            android:layout_marginBottom="@dimen/dp_50"
+            android:elevation="@dimen/dp_10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/exchange_apply_btn"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/exchange_apply_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_40"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:background="@drawable/blue_bg_shape"
+            android:gravity="center"
+            android:minHeight="0dp"
+            android:paddingVertical="@dimen/dp_15"
+            android:text="去兑换"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>

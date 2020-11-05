@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 默认时的背景图片-->
+
+    <item android:state_window_focused="false">
+        <shape>
+            <!--<solid android:color="@color/colorAccent"/>-->
+            <corners android:radius="@dimen/dp_5" />
+            <gradient
+                android:startColor="@color/slight_blue"
+                android:endColor="@color/slight_blue"
+                android:angle="360"/>
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape>
+            <!--<solid android:color="@color/colorAccent" />-->
+            <corners android:radius="@dimen/dp_5" />
+            <gradient
+                android:startColor="@color/slight_blue"
+                android:endColor="@color/slight_blue"
+                android:angle="360"/>
+        </shape>
+    </item>
+    <item android:state_pressed="true">
+        <shape>
+            <!--<solid android:color="@color/colorAccent" />-->
+            <corners android:radius="@dimen/dp_5" />
+            <gradient
+                android:startColor="@color/slight_blue"
+                android:endColor="@color/slight_blue"
+                android:angle="360"/>
+        </shape>
+    </item>
+    <item android:state_selected="true">
+        <shape>
+            <!--<solid android:color="@color/colorAccent" />-->
+            <corners android:radius="@dimen/dp_5" />
+            <gradient
+                android:startColor="@color/slight_blue"
+                android:endColor="@color/slight_blue"
+                android:angle="360"/>
+        </shape>
+    </item>
+
+</selector>

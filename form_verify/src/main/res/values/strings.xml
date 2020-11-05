@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">FormVerify</string>
+
+    <string name="validator_email">非法的电子邮箱！</string>
+    <string name="validator_empty">输入不能为空！</string>
+    <string name="validator_url">网络地址不正确!</string>
+    <string name="validator_confirm">两次密码不一致！</string>
+    <string name="validator_alnum">输入只能为英文字母！</string>
+    <string name="validator_china_str">必须为汉字！</string>
+    <string name="validator_bank_card_str">非法银行卡号！</string>
+    <string name="validator_id_number">非法身份证！</string>
+    <string name="validator_hex">输入只能是十六进制数字！</string>
+    <string name="validator_regexp">输入不合法！</string>
+    <string name="validator_phone">非法电话号码！</string>
+    <string name="validator_number">只能输入数字！</string>
+
+
+</resources>
