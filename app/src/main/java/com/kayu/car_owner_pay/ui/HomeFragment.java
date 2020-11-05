@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -23,16 +25,22 @@ import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.TabEntity;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
+import com.gcssloop.widget.PagerGridLayoutManager;
+import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.BannerImageLoader;
 import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.activity.MyPagerAdapter;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
 import com.kayu.car_owner_pay.model.BannerBean;
+import com.kayu.car_owner_pay.model.CategoryBean;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.text_banner.TextBannerView;
+import com.kayu.car_owner_pay.ui.adapter.CategoryAdapter;
+import com.kayu.utils.ItemCallback;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
+import com.kayu.utils.ScreenUtils;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.callback.Callback;
 import com.kayu.utils.location.LocationCallback;
@@ -59,7 +67,7 @@ import java.util.List;
 public class HomeFragment extends Fragment {
     private MainViewModel mainViewModel;
     private Banner banner;
-//    private RecyclerView category_rv;
+    private RecyclerView category_rv;
     private TextBannerView hostTextBanner;
 
     private RefreshLayout refreshLayout;
@@ -127,7 +135,7 @@ public class HomeFragment extends Fragment {
 
             }
         });
-//        category_rv = view.findViewById(R.id.home_category_rv);
+        category_rv = view.findViewById(R.id.home_category_rv);
         hostTextBanner = view.findViewById(R.id.home_hostTextBanner);
         slidingTabLayout = view.findViewById(R.id.list_ctl);
         mViewPager = view.findViewById(R.id.list_vp);
@@ -296,52 +304,67 @@ public class HomeFragment extends Fragment {
             }
         });
 
-//        mainViewModel.getCategoryList(getContext()).observe(getActivity(), new Observer<List<CategoryBean>>() {
-//            @Override
-//            public void onChanged(List<CategoryBean> categoryBeans) {
-//                if (null == categoryBeans)
-//                    return;
-//                category_rv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dipToPx(getContext(),80)*2));
-//                PagerGridLayoutManager mLayoutManager = new PagerGridLayoutManager(2, 4, PagerGridLayoutManager
-//                        .HORIZONTAL);
-//                // 系统带的 RecyclerView，无需自定义
-//
-//
-//                // 水平分页布局管理器
-//                mLayoutManager.setPageListener(new PagerGridLayoutManager.PageListener() {
-//                    @Override
-//                    public void onPageSizeChanged(int pageSize) {
-//                    }
-//
-//                    @Override
-//                    public void onPageSelect(int pageIndex) {
-//                    }
-//                });    // 设置页面变化监听器
-//                category_rv.setLayoutManager(mLayoutManager);
-//                CategoryAdapter categoryAdapter = new CategoryAdapter(categoryBeans, new ItemCallback() {
-//                    @Override
-//                    public void onItemCallback(int position, Object obj) {
-//                        CategoryBean categoryBean = (CategoryBean)obj;
-//                        String target = categoryBean.href;
-//                        if (!StringUtil.isEmpty(target)) {
-//                            Intent intent = new Intent(getContext(), WebViewActivity.class);
-//                            intent.putExtra("url", target + "?token=" + KWApplication.getInstance().token);
-//                            intent.putExtra("from", "首页");
-//                            getActivity().startActivity(intent);
-//
-//                        } else {
-//                            MessageDialog.show((AppCompatActivity) getContext(),"温馨提示","功能未开启，敬请期待");
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onDetailCallBack(int position, Object obj) {
-//
-//                    }
-//                });
-//                category_rv.setAdapter(categoryAdapter);
-//            }
-//        });
+        mainViewModel.getCategoryList(getContext()).observe(getActivity(), new Observer<List<CategoryBean>>() {
+            @Override
+            public void onChanged(List<CategoryBean> categoryBeans) {
+                if (null == categoryBeans)
+                    return;
+
+                int mColumns,mRows;
+                if (categoryBeans.size() <= 5) {
+                    if (categoryBeans.size() == 5){
+                        mColumns = 5;
+                    }else {
+                        mColumns = 4;
+                    }
+                    mRows = 1;
+
+                } else {
+                    mRows = categoryBeans.size()%5 == 0 ? categoryBeans.size()/5 : categoryBeans.size()/5 +1;
+                    mColumns = 5;
+                }
+
+                category_rv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dipToPx(getContext(),80)*mRows));
+                PagerGridLayoutManager mLayoutManager = new PagerGridLayoutManager(mRows, mColumns, PagerGridLayoutManager
+                        .HORIZONTAL);
+                // 系统带的 RecyclerView，无需自定义
+
+
+                // 水平分页布局管理器
+                mLayoutManager.setPageListener(new PagerGridLayoutManager.PageListener() {
+                    @Override
+                    public void onPageSizeChanged(int pageSize) {
+                    }
+
+                    @Override
+                    public void onPageSelect(int pageIndex) {
+                    }
+                });    // 设置页面变化监听器
+                category_rv.setLayoutManager(mLayoutManager);
+                CategoryAdapter categoryAdapter = new CategoryAdapter(categoryBeans, new ItemCallback() {
+                    @Override
+                    public void onItemCallback(int position, Object obj) {
+                        CategoryBean categoryBean = (CategoryBean)obj;
+                        String target = categoryBean.href;
+                        if (!StringUtil.isEmpty(target)) {
+                            Intent intent = new Intent(getContext(), WebViewActivity.class);
+                            intent.putExtra("url", target + "?token=" + KWApplication.getInstance().token);
+                            intent.putExtra("from", "首页");
+                            getActivity().startActivity(intent);
+
+                        } else {
+                            MessageDialog.show((AppCompatActivity) getContext(),"温馨提示","功能未开启，敬请期待");
+                        }
+                    }
+
+                    @Override
+                    public void onDetailCallBack(int position, Object obj) {
+
+                    }
+                });
+                category_rv.setAdapter(categoryAdapter);
+            }
+        });
 
 
         // 设置滚动辅助工具
