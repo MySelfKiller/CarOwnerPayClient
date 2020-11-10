@@ -348,7 +348,12 @@ public class HomeFragment extends Fragment {
                         String target = categoryBean.href;
                         if (!StringUtil.isEmpty(target)) {
                             Intent intent = new Intent(getContext(), WebViewActivity.class);
-                            intent.putExtra("url", target + "?token=" + KWApplication.getInstance().token);
+                            StringBuilder sb = new StringBuilder();
+                            sb.append(target);
+                            if (StringUtil.equals(categoryBean.type,"KY_H5")){
+                                sb.append("&token=" ).append(KWApplication.getInstance().token);
+                            }
+                            intent.putExtra("url", target + sb.toString());
                             intent.putExtra("from", "首页");
                             getActivity().startActivity(intent);
 
