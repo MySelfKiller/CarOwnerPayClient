@@ -359,8 +359,8 @@
                         android:layout_marginTop="@dimen/dp_30"
                         android:layout_marginStart="@dimen/dp_40"
                         android:layout_marginBottom="@dimen/dp_5"
-                        android:layout_marginRight="@dimen/dp_5"
-                        app:cardCornerRadius="@dimen/dp_30"
+                        android:layout_marginEnd="@dimen/dp_5"
+                        app:cardCornerRadius="@dimen/dp_25"
                         app:cardElevation="@dimen/dp_3"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent">
