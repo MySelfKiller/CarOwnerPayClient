@@ -20,10 +20,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.AppManager;
+import com.kayu.car_owner_pay.activity.MainViewModel;
+import com.kayu.car_owner_pay.activity.WebViewActivity;
 import com.kayu.car_owner_pay.activity.login.LoginActivity;
 import com.kayu.car_owner_pay.data_parser.ParameterDataParser;
 import com.kayu.car_owner_pay.http.HttpConfig;
@@ -41,6 +45,7 @@ import com.kayu.utils.ItemCallback;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.callback.ImageCallback;
+import com.kayu.utils.location.LocationManager;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
@@ -58,7 +63,7 @@ public class SettingsFragment extends Fragment {
     private UserBean useData;
     private TextView user_name;
     private SystemParam mParamet;
-    private int popWidth;
+    private MainViewModel mainViewModel;
     private CustomDialog dialog;
     private ItemCallback itemCallback = new ItemCallback() {
         @Override
@@ -72,11 +77,14 @@ public class SettingsFragment extends Fragment {
         @Override
         public void onDetailCallBack(int position, Object obj) { }
     };
+    private TextView user_agreement;
+    private TextView user_privacy;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
+        mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
         View root = inflater.inflate(R.layout.fragment_setting, container, false);
 //        final TextView textView = root.findViewById(R.id.text_notifications);
 //        notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -151,6 +159,8 @@ public class SettingsFragment extends Fragment {
                         editor.apply();
                         editor.commit();
                         AppManager.getAppManager().finishAllActivity();
+                        LocationManager.getSelf().stopLocation();
+//                        LocationManager.getSelf().destroyLocation();
                         startActivity(new Intent(getActivity(), LoginActivity.class));
                         getActivity().finish();
                         return false;
@@ -163,7 +173,53 @@ public class SettingsFragment extends Fragment {
 
             }
         });
+        user_agreement = view.findViewById(R.id.setting_user_agreement_tv);
+        user_privacy = view.findViewById(R.id.setting_user_privacy_tv);
+//        WaitDialog.show((AppCompatActivity) requireContext(),"请稍等");
+        mainViewModel.getParameter(getContext(),3).observe(requireActivity(), new Observer<SystemParam>() {
+            @Override
+            public void onChanged(SystemParam systemParam) {
+//                WaitDialog.dismiss();
+                if (null != systemParam && systemParam.type ==3){
+                    String[] titles = systemParam.title.split("@@");
+                    String[] urls = systemParam.url.split("@@");
+                    user_agreement.setText(titles[0]);
+                    user_privacy.setText(titles[1]);
+                    user_agreement.setOnClickListener(new NoMoreClickListener() {
+                        @Override
+                        protected void OnMoreClick(View view) {
+                            jumpWeb(titles[0],urls[0]);
+                        }
+
+                        @Override
+                        protected void OnMoreErrorClick() {
+
+                        }
+                    });
+                    user_privacy.setOnClickListener(new NoMoreClickListener() {
+                        @Override
+                        protected void OnMoreClick(View view) {
+                            jumpWeb(titles[1],urls[1]);
+                        }
+
+                        @Override
+                        protected void OnMoreErrorClick() {
+
+                        }
+                    });
+                }
+
+            }
+        });
     }
+
+    private void jumpWeb(String title, String url){
+        Intent intent = new Intent(getContext(), WebViewActivity.class);
+        intent.putExtra("url",url);
+        intent.putExtra("from",title);
+        requireActivity().startActivity(intent);
+    }
+
     Bitmap qrcodeBitmap = null;
     private void showPop() {
         SystemParam systemParam = null;
@@ -233,7 +289,7 @@ public class SettingsFragment extends Fragment {
 
     private void initViewData() {
         if (null != useData){
-            user_name.setText(useData.wxName);
+            user_name.setText(useData.username);
         }
     }
 
@@ -264,34 +320,49 @@ public class SettingsFragment extends Fragment {
         if (null != itemCallback){
             WaitDialog.show((AppCompatActivity) getContext(),"请稍等");
         }
-        RequestInfo reques = new RequestInfo();
-        reques.context = getContext();
-        reques.reqUrl = HttpConfig.HOST+HttpConfig.INTERFACE_GET_PARAMETER;
-        HashMap<String,Object> dataMap = new HashMap<>();
-        dataMap.put("type",1);
-        reques.reqDataMap = dataMap;
-        reques.parser = new ParameterDataParser();
-        reques.handler = new Handler(){
+        mainViewModel.getParameter(getContext(),1).observe(requireActivity(), new Observer<SystemParam>() {
             @Override
-            public void handleMessage(Message msg) {
-                ResponseInfo resInfo = (ResponseInfo)msg.obj;
+            public void onChanged(SystemParam systemParam) {
                 if (null != itemCallback ){
                     WaitDialog.dismiss();
                 }
-                if (resInfo.status ==1){
-                    mParamet = (SystemParam) resInfo.responseData;
+                if (null != systemParam&& systemParam.type ==1){
+                    mParamet = systemParam;
                     if (null != itemCallback){
                         itemCallback.onItemCallback(0,mParamet);
                     }
-                }else {
-                    Toast.makeText(getContext(),resInfo.msg,Toast.LENGTH_SHORT).show();
                 }
-                super.handleMessage(msg);
+
             }
-        };
-        ResponseCallback callback = new ResponseCallback(reques);
-        ReqUtil.getInstance().setReqInfo(reques);
-        ReqUtil.getInstance().requestPostJSON(callback);
+        });
+//        RequestInfo reques = new RequestInfo();
+//        reques.context = getContext();
+//        reques.reqUrl = HttpConfig.HOST+HttpConfig.INTERFACE_GET_PARAMETER;
+//        HashMap<String,Object> dataMap = new HashMap<>();
+//        dataMap.put("type",1);
+//        reques.reqDataMap = dataMap;
+//        reques.parser = new ParameterDataParser();
+//        reques.handler = new Handler(){
+//            @Override
+//            public void handleMessage(Message msg) {
+//                ResponseInfo resInfo = (ResponseInfo)msg.obj;
+//                if (null != itemCallback ){
+//                    WaitDialog.dismiss();
+//                }
+//                if (resInfo.status ==1){
+//                    mParamet = (SystemParam) resInfo.responseData;
+//                    if (null != itemCallback){
+//                        itemCallback.onItemCallback(0,mParamet);
+//                    }
+//                }else {
+//                    Toast.makeText(getContext(),resInfo.msg,Toast.LENGTH_SHORT).show();
+//                }
+//                super.handleMessage(msg);
+//            }
+//        };
+//        ResponseCallback callback = new ResponseCallback(reques);
+//        ReqUtil.getInstance().setReqInfo(reques);
+//        ReqUtil.getInstance().requestPostJSON(callback);
     }
 
     @Override

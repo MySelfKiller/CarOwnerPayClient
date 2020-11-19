@@ -1,6 +1,7 @@
 package com.kayu.car_owner_pay.ui;
 
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -27,11 +28,7 @@ import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.model.WashStationDetailBean;
 import com.kayu.utils.GetJuLiUtils;
 import com.kayu.utils.NoMoreClickListener;
-import com.kayu.utils.location.LocationCallback;
 import com.kayu.utils.location.LocationManager;
-import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
-import com.kongzue.dialog.util.BaseDialog;
-import com.kongzue.dialog.v3.MessageDialog;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 
@@ -89,6 +86,7 @@ public class WashStationFragment extends Fragment {
         return root;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -304,12 +302,19 @@ public class WashStationFragment extends Fragment {
         }
         sb.append(washStation.openTimeStart).append("-").append(washStation.openTimeEnd);
 
-        checkLocation(Double.parseDouble(washStation.latitude), Double.parseDouble(washStation.longitude));
+//        checkLocation(Double.parseDouble(washStation.latitude), Double.parseDouble(washStation.longitude));
+        AMapLocation location = LocationManager.getSelf().getLoccation();
+        if (null != location){
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            double dis = GetJuLiUtils.getDistance(longitude, latitude, Double.parseDouble(washStation.longitude), Double.parseDouble(washStation.latitude));
+            station_distance.setText("距您" + dis + "km");
+        }
         station_open_time.setText(sb.toString());
         navi_lay.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                KWApplication.getInstance().toNavi(getContext(), washStation.latitude, washStation.longitude, washStation.address);
+                KWApplication.getInstance().toNavi(getContext(), washStation.latitude, washStation.longitude, washStation.address,"BD09");
             }
 
             @Override
@@ -417,32 +422,5 @@ public class WashStationFragment extends Fragment {
         }
 
 
-    }
-
-    private void checkLocation(double mLatitude, double mLongitude) {
-        LocationManager.getSelf().startLocation();
-        LocationManager.getSelf().setLocationListener(new LocationCallback() {
-            @Override
-            public void onLocationChanged(AMapLocation location) {
-                if (location.getErrorCode() == 0) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-                    double dis = GetJuLiUtils.getDistance(longitude, latitude, mLongitude, mLatitude);
-                    double dis2 = GetJuLiUtils.distance(latitude, longitude, mLatitude, mLongitude);
-                    station_distance.setText("距您" + dis + "km");
-
-                } else {
-                    MessageDialog.show((AppCompatActivity)getActivity(), "定位失败", "请重新定位", "重新定位").setCancelable(false)
-                            .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
-                                @Override
-                                public boolean onClick(BaseDialog baseDialog, View v) {
-                                    baseDialog.doDismiss();
-                                    checkLocation(mLatitude,mLongitude);
-                                    return true;
-                                }
-                            });
-                }
-            }
-        });
     }
 }

@@ -37,6 +37,7 @@ import com.kayu.utils.StringUtil;
 import com.kayu.utils.Utils;
 import com.kayu.utils.callback.Callback;
 import com.kayu.utils.callback.ImageCallback;
+import com.kayu.utils.location.CoordinateTransformUtil;
 import com.kayu.utils.location.LocationManager;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
@@ -289,7 +290,7 @@ public class KWApplication extends Application {
         });
     }
 
-    public void toNavi(Context context,String latitude, String longtitude, String address){
+    public void toNavi(Context context,String latitude, String longtitude, String address, String flag){
 
         final List<MapInfoModel> mapList = getMapInfoModels(context);
         if (mapList == null) return;
@@ -298,21 +299,41 @@ public class KWApplication extends Application {
             menuArr.add(model.mapName);
         }
 
+        double[] bdCoordinate;
+        double[] gcj02Coordinate;
+        switch (flag) {
+            case "WGS84":
+                bdCoordinate = CoordinateTransformUtil.wgs84tobd09(Double.parseDouble(longtitude),Double.parseDouble(latitude));
+                gcj02Coordinate = CoordinateTransformUtil.wgs84togcj02(Double.parseDouble(longtitude),Double.parseDouble(latitude));
+                break;
+            case "GCJ02":
+                bdCoordinate = CoordinateTransformUtil.gcj02tobd09(Double.parseDouble(longtitude),Double.parseDouble(latitude));
+                gcj02Coordinate = new double[]{Double.parseDouble(longtitude),Double.parseDouble(latitude)};
+                break;
+            case "BD09":
+                gcj02Coordinate = CoordinateTransformUtil.bd09togcj02(Double.parseDouble(longtitude),Double.parseDouble(latitude));
+                bdCoordinate = new double[]{Double.parseDouble(longtitude),Double.parseDouble(latitude)};
+                break;
+            default:
+                gcj02Coordinate = new double[]{Double.parseDouble(longtitude),Double.parseDouble(latitude)};
+                bdCoordinate = new double[]{Double.parseDouble(longtitude),Double.parseDouble(latitude)};
+                break;
+        }
         BottomMenu.show((AppCompatActivity) context, menuArr, new OnMenuItemClickListener() {
             @Override
             public void onClick(String text, int index) {
                 switch (text) {
                     case "高德地图":
-                        goGaodeMap(context, latitude, longtitude, address);
+                        goGaodeMap(context, String.valueOf(gcj02Coordinate[1]), String.valueOf(gcj02Coordinate[0]), address);
                         break;
                     case "谷歌地图":
-                        goGoogleMap(context, latitude, longtitude, address);
+                        goGoogleMap(context, String.valueOf(gcj02Coordinate[1]), String.valueOf(gcj02Coordinate[0]), address);
                         break;
                     case "百度地图":
-                        goBaiduMap(context, latitude, longtitude, address);
+                        goBaiduMap(context, String.valueOf(bdCoordinate[1]), String.valueOf(bdCoordinate[0]), address);
                         break;
                     case "腾讯地图":
-                        goTencentMap(context, latitude, longtitude, address);
+                        goTencentMap(context, String.valueOf(gcj02Coordinate[1]), String.valueOf(gcj02Coordinate[0]), address);
                         break;
                 }
             }

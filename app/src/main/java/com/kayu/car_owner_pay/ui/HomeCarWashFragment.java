@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,14 +53,14 @@ public class HomeCarWashFragment extends Fragment {
     private String mCityName;
     private double mLatitude = 0;//纬度
     private double mLongitude = 0;//经度
-    private Context context;
+//    private Context context;
 
-    public HomeCarWashFragment(Context context, MainViewModel mainViewModel , AdaptiveHeightViewPager viewPager, int fragment_id, Callback callback) {
+    public HomeCarWashFragment(AdaptiveHeightViewPager viewPager, int fragment_id, Callback callback) {
         this.fragment_id = fragment_id;
         this.viewPager = viewPager;
         this.callback = callback;
-        this.mainViewModel = mainViewModel;
-        this.context = context;
+//        this.mainViewModel = mainViewModel;
+//        this.context = context;
     }
 
     public HomeCarWashFragment setFragment_id(int fragment_id) {
@@ -76,6 +77,7 @@ public class HomeCarWashFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
         return inflater.inflate(R.layout.fragment_home_car_wash, container, false);
     }
 
@@ -99,7 +101,7 @@ public class HomeCarWashFragment extends Fragment {
         param_recycle_view.setAdapter(new ParamParentAdapter(getContext(), data, new ItemCallback() {
             @Override
             public void onItemCallback(int position, Object obj) {
-                ParamWashBean paramWashBean = mainViewModel.getParamWash(context).getValue();
+                ParamWashBean paramWashBean = mainViewModel.getParamWash(requireContext()).getValue();
                 if (null  == paramWashBean || null == obj)
                     return;
 
@@ -156,7 +158,7 @@ public class HomeCarWashFragment extends Fragment {
             callback.onSuccess();
         }
 
-        mainViewModel.getParamWash(context).observe((LifecycleOwner) context, new Observer<ParamWashBean>() {
+        mainViewModel.getParamWash(requireContext()).observe(requireActivity(), new Observer<ParamWashBean>() {
             @Override
             public void onChanged(ParamWashBean paramWashBean) {
                 if (null == paramWashBean)
@@ -213,7 +215,7 @@ public class HomeCarWashFragment extends Fragment {
                 viewPager.setObjectForPosition(view,fragment_id);
 
                 if (null == selectSortsParam || null == selectDistanceParam) {
-                    mainViewModel.getParamWash(context);
+                    mainViewModel.getParamWash(requireContext());
                     TipDialog.show((AppCompatActivity) getContext(),"查询参数错误,请重试", TipDialog.TYPE.WARNING);
                     return;
                 }
@@ -221,7 +223,8 @@ public class HomeCarWashFragment extends Fragment {
                 mLatitude = latitude;
                 mLongitude = longitude;
                 mCityName = cityName;
-
+                if (isRefresh && null != stationAdapter)
+                    stationAdapter.removeAllData();
                 HashMap<String,Object> dataMap = new HashMap<>();
                 dataMap.put("pageNum",pageIndex);
                 dataMap.put("pageSize",20);
@@ -230,7 +233,7 @@ public class HomeCarWashFragment extends Fragment {
                 dataMap.put("cityName",cityName);
                 dataMap.put("priority",selectDistanceParam.val);
                 dataMap.put("serviceCode",selectSortsParam.val);
-                mainViewModel.getWashStationList(context,dataMap).observe((LifecycleOwner) context, new Observer<List<WashStationBean>>() {
+                mainViewModel.getWashStationList(requireContext(),dataMap).observe(requireActivity(), new Observer<List<WashStationBean>>() {
                     @Override
                     public void onChanged(List<WashStationBean> oilStationBeans) {
                         if (null == refreshLayout) {
@@ -271,36 +274,5 @@ public class HomeCarWashFragment extends Fragment {
             }
         });
     }
-
-//    public void checkLocation(RefreshLayout refreshLayout, int pageIndex, boolean isRefresh, boolean isLoadmore, Callback callback) {
-//        this.callback = callback;
-//        if (isRefresh && null != stationAdapter)
-//            stationAdapter.removeAllData();
-//
-////        WaitDialog.show((AppCompatActivity) getContext(),"定位中...");
-//        LocationManager.getSelf().startLocation();
-//        LocationManager.getSelf().setLocationListener(new LocationCallback() {
-//            @Override
-//            public void onLocationChanged(AMapLocation location) {
-////                WaitDialog.dismiss();
-//                if (location.getErrorCode() == 0) {
-//                    latitude = location.getLatitude();
-//                    longitude = location.getLongitude();
-//                    cityName = location.getCity();
-////                    refreshLayout.autoRefresh();
-//                    reqData(refreshLayout,pageIndex, isRefresh, isLoadmore);
-//                } else {
-//                    MessageDialog.show((AppCompatActivity)getActivity(), "定位失败", "请重新定位", "重新定位")
-//                            .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
-//                                @Override
-//                                public boolean onClick(BaseDialog baseDialog, View v) {
-//                                    checkLocation(refreshLayout,pageIndex,isRefresh,isLoadmore,callback);
-//                                    return true;
-//                                }
-//                            });
-//                }
-//            }
-//        });
-//    }
 
 }

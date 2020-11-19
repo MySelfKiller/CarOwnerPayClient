@@ -150,9 +150,15 @@ public class OilStationFragment extends Fragment {
         select_oil_gun_rv.setLayoutManager(manager1);
 
 
-        if (getUserVisibleHint() && !mHasLoadedOnce){
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!mHasLoadedOnce){
             refreshLayout.autoRefresh();
-//            mHasLoadedOnce = true;
+            mHasLoadedOnce = true;
         }
         isCreated = true;
     }
@@ -160,14 +166,14 @@ public class OilStationFragment extends Fragment {
     private boolean mHasLoadedOnce = false;// 页面已经加载过
     private boolean isCreated = false;
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && !mHasLoadedOnce && isCreated) {
-            refreshLayout.autoRefresh();
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        if (isVisibleToUser && !mHasLoadedOnce && isCreated) {
+//            refreshLayout.autoRefresh();
 //            mHasLoadedOnce = true;
-        }
-    }
+//        }
+//    }
 
     private void loadView(){
 
@@ -221,14 +227,14 @@ public class OilStationFragment extends Fragment {
                             TipDialog.show((AppCompatActivity) getContext(),"请选择枪号", TipDialog.TYPE.WARNING);
                             return;
                         }
-                        mainViewModel.getPayUrl(getContext(), gasId, Integer.parseInt(gunNo)).observe(requireActivity(), new Observer<String>() {
+                        mainViewModel.getPayUrl(requireContext(), gasId, Integer.parseInt(gunNo)).observe(requireActivity(), new Observer<String>() {
                             @Override
                             public void onChanged(String s) {
                                 if (StringUtil.isEmpty(s)){
-                                    Toast.makeText(getContext(),"未获取到支付信息",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(requireContext(),"未获取到支付信息",Toast.LENGTH_LONG).show();
                                     return;
                                 }
-                                Intent intent = new Intent(getContext(), WebViewActivity.class);
+                                Intent intent = new Intent(requireContext(), WebViewActivity.class);
                                 intent.putExtra("url", s);
                                 intent.putExtra("title", "订单");
 //                                intent.putExtra("from", "首页");

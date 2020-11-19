@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
+import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -20,11 +21,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.AppManager;
 import com.kayu.car_owner_pay.activity.BaseActivity;
 import com.kayu.car_owner_pay.activity.MainActivity;
+import com.kayu.car_owner_pay.activity.MainViewModel;
+import com.kayu.car_owner_pay.activity.WebViewActivity;
 import com.kayu.car_owner_pay.http.HttpConfig;
 import com.kayu.car_owner_pay.http.ReqUtil;
 import com.kayu.car_owner_pay.http.RequestInfo;
@@ -33,6 +38,7 @@ import com.kayu.car_owner_pay.http.ResponseInfo;
 import com.kayu.car_owner_pay.http.parser.LoginDataParse;
 import com.kayu.car_owner_pay.http.parser.NormalParse;
 import com.kayu.car_owner_pay.model.LoginInfo;
+import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.form_verify.Form;
 import com.kayu.form_verify.Validate;
 import com.kayu.form_verify.validator.PhoneValidator;
@@ -41,6 +47,9 @@ import com.kayu.utils.GsonHelper;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.SMSCountDownTimer;
 import com.kayu.utils.StringUtil;
+import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
+import com.kongzue.dialog.util.BaseDialog;
+import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.WaitDialog;
 
 import java.util.HashMap;
@@ -59,6 +68,11 @@ public class LoginActivity extends BaseActivity {
     private TextView login_sms_target;
     private TextView login_forget_password;
     private boolean isSMSLogin = true;
+    private MainViewModel mViewModel;
+    private TextView user_agreement;
+    private TextView user_privacy;
+    private SharedPreferences sp;
+    private boolean isFirstShow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +92,8 @@ public class LoginActivity extends BaseActivity {
 //        });
 //        TextView back_tv = findViewById(R.id.title_back_tv);
 //        back_tv.setText("微信登录");
-
+        sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         login_send_sms_lay = findViewById(R.id.login_send_sms_lay);
         login_sms_target_lay = findViewById(R.id.login_sms_target_lay);
         password_target_lay = findViewById(R.id.login_password_target_lay);
@@ -290,9 +305,85 @@ public class LoginActivity extends BaseActivity {
 
             }
         });
+        user_agreement = findViewById(R.id.login_user_agreement_tv);
+        user_privacy = findViewById(R.id.login_user_privacy_tv);
+        WaitDialog.show(this,"请稍等...");
+        mViewModel.getParameter(this,3).observe(this, new Observer<SystemParam>() {
+            @Override
+            public void onChanged(SystemParam systemParam) {
+                WaitDialog.dismiss();
+                if (null != systemParam && systemParam.type ==3){
+                    String[] titles = systemParam.title.split("@@");
+                    String[] urls = systemParam.url.split("@@");
+                    isFirstShow = sp.getBoolean(Constants.isShowDialog,true);
+                    if (isFirstShow) {
+                        String menss = "请您务必谨慎阅读、充分理解\""+titles[0]+"\"和\""+titles[1]+"\"各条款，包括但不限于：为了向你提供及时通讯，内容分享等服务，我们需要收集你的定位信息，操作日志信息" +
+                                "等。你可以在\"设置\"中查看、变更、删除个人信息并管理你的授权。" +
+                                "<br>你可阅读<font color=\"#007aff\"><a href=\"" +urls[0]+"\" style=\"text-decoration:none;\">《"+titles[0]+"》</a></font>和<font color=\"#007aff\"><a href=\""+urls[1]+"\" style=\"text-decoration:none;\">《"+titles[1]+"》</a></font>了解详细信息" +
+                                "如您同意，请点击确定接收我们的服务";
+                        MessageDialog.show(LoginActivity.this,
+                                titles[0]+"和"+titles[1], Html.fromHtml(menss)
+                                ,"同意","暂不使用")
+                                .setCancelable(false).setOkButton(new OnDialogButtonClickListener() {
+                            @Override
+                            public boolean onClick(BaseDialog baseDialog, View v) {
+                                baseDialog.doDismiss();
+                                isFirstShow = false;
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putBoolean(Constants.isShowDialog, isFirstShow);
+                                editor.apply();
+                                editor.commit();
+                                return false;
+                            }
+                        }).setCancelButton(new OnDialogButtonClickListener() {
+                            @Override
+                            public boolean onClick(BaseDialog baseDialog, View v) {
+                                baseDialog.doDismiss();
+                                finish();
+                                return false;
+                            }
+                        });
+
+                    }
+
+
+                    user_agreement.setText(titles[0]);
+                    user_privacy.setText(titles[1]);
+                    user_agreement.setOnClickListener(new NoMoreClickListener() {
+                        @Override
+                        protected void OnMoreClick(View view) {
+                            jumpWeb(titles[0],urls[0]);
+                        }
+
+                        @Override
+                        protected void OnMoreErrorClick() {
+
+                        }
+                    });
+                    user_privacy.setOnClickListener(new NoMoreClickListener() {
+                        @Override
+                        protected void OnMoreClick(View view) {
+                            jumpWeb(titles[1],urls[1]);
+                        }
+
+                        @Override
+                        protected void OnMoreErrorClick() {
+
+                        }
+                    });
+                }
+
+            }
+        });
 
     }
 
+    private void jumpWeb(String title, String url){
+        Intent intent = new Intent(LoginActivity.this, WebViewActivity.class);
+        intent.putExtra("url",url);
+        intent.putExtra("from",title);
+        startActivity(intent);
+    }
 
     @SuppressLint("HandlerLeak")
     private void sendSubRequest() {
@@ -319,7 +410,7 @@ public class LoginActivity extends BaseActivity {
                 if (resInfo.status ==1 ){
                     LoginInfo user = (LoginInfo) resInfo.responseData;
                     if (null != user){
-                        SharedPreferences sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
+
                         SharedPreferences.Editor editor = sp.edit();
 //                        KWApplication.getInstance().sign = user.sign;
 //                        if (user.initPwd == 1){//是否需要设定密码 0:否 1:是

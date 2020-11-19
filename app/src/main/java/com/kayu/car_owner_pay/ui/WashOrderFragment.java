@@ -295,37 +295,15 @@ public class WashOrderFragment extends Fragment {
 
         String rebatePirce = String.valueOf(Double.parseDouble(selectedListDTO.price)-Double.parseDouble(selectedListDTO.finalPrice));
         order_rebate_price.setText("-￥"+rebatePirce);
-
-        checkLocation(Double.parseDouble(washStation.latitude), Double.parseDouble(washStation.longitude));
+        AMapLocation location = LocationManager.getSelf().getLoccation();
+        if (null != location){
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            double dis = GetJuLiUtils.getDistance(longitude, latitude, Double.parseDouble(washStation.longitude), Double.parseDouble(washStation.latitude));
+            order_distance.setText("距您" + dis + "km");
+        }
         order_open_time.setText(sb.toString());
     }
-
-    private void checkLocation(double mLatitude, double mLongitude) {
-        LocationManager.getSelf().startLocation();
-        LocationManager.getSelf().setLocationListener(new LocationCallback() {
-            @Override
-            public void onLocationChanged(AMapLocation location) {
-                if (location.getErrorCode() == 0) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-                    double dis = GetJuLiUtils.getDistance(longitude, latitude, mLongitude, mLatitude);
-                    order_distance.setText("距您" + dis + "km");
-
-                } else {
-                    MessageDialog.show((AppCompatActivity)getActivity(), "定位失败", "请重新定位", "重新定位").setCancelable(false)
-                            .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
-                                @Override
-                                public boolean onClick(BaseDialog baseDialog, View v) {
-                                    baseDialog.doDismiss();
-                                    checkLocation(mLatitude,mLongitude);
-                                    return true;
-                                }
-                            });
-                }
-            }
-        });
-    }
-
 
     private void wechatPayOrder() {
         wxShare = new WXShare(getContext());

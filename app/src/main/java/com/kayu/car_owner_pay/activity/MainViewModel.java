@@ -112,8 +112,8 @@ public class MainViewModel extends ViewModel {
 
 
     public LiveData<String> getPayUrl(Context context, String id, int gunNo) {
-        if (null == payUrlData)
-            payUrlData = new MutableLiveData<>();
+//        if (null == payUrlData)
+        payUrlData = new MutableLiveData<>();
         loadPayInfo(context, id, gunNo);
         return payUrlData;
     }
@@ -249,8 +249,8 @@ public class MainViewModel extends ViewModel {
     }
 
     public LiveData<OilStationBean> getOilStationDetail(Context context,String gasId) {
-        if (null == oilStationData) {
-        }
+//        if (null == oilStationData) {
+//        }
         oilStationData = new MutableLiveData<>();
         if (StringUtil.isEmpty(gasId)) {
             return oilStationData;
@@ -489,8 +489,8 @@ public class MainViewModel extends ViewModel {
 
     public LiveData<List<OilStationBean>> getStationList(Context context,HashMap<String,Object> dataMap){
         if (null == stationListData) {
+            stationListData = new MutableLiveData<>();
         }
-        stationListData = new MutableLiveData<>();
         loadStationList(context,dataMap);
         return stationListData;
     }
@@ -521,9 +521,9 @@ public class MainViewModel extends ViewModel {
     }
 
     public LiveData<List<WashStationBean>> getWashStationList(Context context,HashMap<String,Object> dataMap){
-//        if (null == stationListData) {
-//        }
-        washStationListData = new MutableLiveData<>();
+        if (null == washStationListData) {
+            washStationListData = new MutableLiveData<>();
+        }
         loadWashStationList(context,dataMap);
         return washStationListData;
     }

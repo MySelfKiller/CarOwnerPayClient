@@ -38,17 +38,15 @@ import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.text_banner.TextBannerView;
 import com.kayu.car_owner_pay.ui.adapter.CategoryAdapter;
 import com.kayu.utils.ItemCallback;
-import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.ScreenUtils;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.callback.Callback;
+import com.kayu.utils.location.CoordinateTransformUtil;
 import com.kayu.utils.location.LocationCallback;
 import com.kayu.utils.location.LocationManager;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
 import com.kayu.utils.view.AdaptiveHeightViewPager;
-import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
-import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.WaitDialog;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -108,7 +106,7 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        LogUtil.e("HomeFragment----","----onCreateView---");
+//        LogUtil.e("HomeFragment----","----onCreateView---");
         StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
         mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
         return inflater.inflate(R.layout.fragment_home, container, false);
@@ -117,6 +115,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+//        LogUtil.e("HomeFragment----","----onViewCreated---");
         banner = view.findViewById(R.id.home_smart_banner);
         location_tv = view.findViewById(R.id.home_location_tv);
         view.findViewById(R.id.home_exchange_code).setOnClickListener(new NoMoreClickListener() {
@@ -171,8 +170,8 @@ public class HomeFragment extends Fragment {
         });
         mTabEntities.add(new TabEntity("附近加油站",R.mipmap.ic_bg_close,R.mipmap.ic_bg_close));
         mTabEntities.add(new TabEntity("附近洗车",R.mipmap.ic_bg_close,R.mipmap.ic_bg_close));
-        mFragments.add(new HomeGasStationFragment(getContext(),mainViewModel, mViewPager,0,callback));
-        mFragments.add(new HomeCarWashFragment(getContext(),mainViewModel, mViewPager,1,callback));
+        mFragments.add(new HomeGasStationFragment( mViewPager,0,callback));
+        mFragments.add(new HomeCarWashFragment(mViewPager,1,callback));
         adapter = new MyPagerAdapter(getChildFragmentManager(),mFragments);
         mViewPager.setAdapter(adapter);
         slidingTabLayout.setTabData(mTabEntities);
@@ -208,7 +207,39 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        checkLocation();
+//        checkLocation();
+
+    }
+
+    private boolean mHasLoadedOnce = false;// 页面已经加载过
+    private boolean isCreated = false;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+//        LogUtil.e("HomeFragment----","----onStart---");
+        if (!isCreated) {
+//            LogUtil.e("HomeFragment----","----onStart------isCreated");
+            LocationManager.getSelf().setLocationListener(new LocationCallback() {
+                @Override
+                public void onLocationChanged(AMapLocation location) {
+//                    LogUtil.e("HomeFragment----","----onStart--------LocationCallback");
+                    if (location.getErrorCode() == 0) {
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
+                        cityName = location.getCity();
+                        location_tv.setText(cityName);
+                        if (!mHasLoadedOnce){
+                            refreshLayout.autoRefresh();
+                            mHasLoadedOnce = true;
+                        }
+
+                    }
+                }
+            });
+            isCreated = true;
+        }
+
     }
 
     private int fragIndex = 0;
@@ -225,8 +256,8 @@ public class HomeFragment extends Fragment {
                     int showCarWash = jsonObject.optInt("carwash");
                     if (showGas == 1 && showCarWash ==1 ) {
                         slidingTabLayout.setVisibility(View.VISIBLE);
-                        mViewPager.setCurrentItem(0);
-                        slidingTabLayout.setCurrentTab(0);
+                        mViewPager.setCurrentItem(fragIndex);
+                        slidingTabLayout.setCurrentTab(fragIndex);
                         mViewPager.setScrollble(true);
                     }else if(showGas == 0 && showCarWash == 0){
                         slidingTabLayout.setVisibility(View.GONE);
@@ -235,12 +266,12 @@ public class HomeFragment extends Fragment {
                         slidingTabLayout.setVisibility(View.GONE);
 
                         if (showCarWash == 1) {
-                            mViewPager.setCurrentItem(1);
-                            mViewPager.setScrollble(false);
                             fragIndex = 1;
+                            mViewPager.setCurrentItem(fragIndex);
+                            mViewPager.setScrollble(false);
                         }else if (showGas == 1){
-                            mViewPager.setCurrentItem(0);
                             fragIndex = 0;
+                            mViewPager.setCurrentItem(fragIndex);
                             mViewPager.setScrollble(false);
                         }
                     }
@@ -434,7 +465,8 @@ public class HomeFragment extends Fragment {
                 }
                 if (mFragments.get(x) instanceof HomeCarWashFragment) {
                     HomeCarWashFragment homeCarWashFragment = (HomeCarWashFragment) mFragments.get(x);
-                    homeCarWashFragment.reqData(refreshLayout, pageIndex, isRefresh,isLoadmore, latitude, longitude, cityName);
+                    double bddfsdfs[] = CoordinateTransformUtil.gcj02tobd09(longitude,latitude);
+                    homeCarWashFragment.reqData(refreshLayout, pageIndex, isRefresh, isLoadmore, bddfsdfs[1], bddfsdfs[0], cityName);
                 }
             }
             isFirstLoad = false;
@@ -444,7 +476,8 @@ public class HomeFragment extends Fragment {
                 homeGasStationFragment.reqData(refreshLayout, pageIndex, isRefresh, isLoadmore, latitude, longitude);
             } else if (fragIndex == 1) {
                 HomeCarWashFragment homeCarWashFragment = (HomeCarWashFragment) mFragments.get(fragIndex);
-                homeCarWashFragment.reqData(refreshLayout, pageIndex, isRefresh, isLoadmore, latitude, longitude, cityName);
+                double bddfsdfs[] = CoordinateTransformUtil.gcj02tobd09(longitude,latitude);
+                homeCarWashFragment.reqData(refreshLayout, pageIndex, isRefresh, isLoadmore, bddfsdfs[1], bddfsdfs[0], cityName);
             }
         }
     }
@@ -452,33 +485,9 @@ public class HomeFragment extends Fragment {
     private double latitude,longitude;
     private String cityName;
 
-    private void checkLocation() {
+    private void requestLocation() {
         WaitDialog.show((AppCompatActivity) getContext(),"定位中...");
         LocationManager.getSelf().startLocation();
-        LocationManager.getSelf().setLocationListener(new LocationCallback() {
-            @Override
-            public void onLocationChanged(AMapLocation location) {
-                WaitDialog.dismiss();
-                if (location.getErrorCode() == 0) {
-                    latitude = location.getLatitude();
-                    longitude = location.getLongitude();
-                    cityName = location.getCity();
-                    location_tv.setText(cityName);
-                    refreshLayout.autoRefresh();
-
-                } else {
-                    MessageDialog.show((AppCompatActivity)getActivity(), "定位失败", "请重新定位", "重新定位").setCancelable(false)
-                            .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
-                                @Override
-                                public boolean onClick(BaseDialog baseDialog, View v) {
-                                    baseDialog.doDismiss();
-                                    checkLocation();
-                                    return true;
-                                }
-                            });
-                }
-            }
-        });
     }
 //    @Override
 //    public void onAttach(@NonNull Context context) {
@@ -486,22 +495,11 @@ public class HomeFragment extends Fragment {
 //        LogUtil.e("HomeFragment----","----onAttach---");
 //    }
 //
-//    @Override
-//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//        LogUtil.e("HomeFragment----","----onViewCreated---");
-//    }
 //
 //    @Override
 //    public void onDestroyView() {
 //        super.onDestroyView();
 //        LogUtil.e("HomeFragment----","----onDestroyView---");
-//    }
-//
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        LogUtil.e("HomeFragment----","----onStart---");
 //    }
 //
 //    @Override

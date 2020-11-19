@@ -175,6 +175,83 @@
                 android:textSize="@dimen/sp_15" />
         </LinearLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/id_tag_user_agreement_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/dp_5"
+                android:text="登录即代表同意 汇车主 "
+                android:textColor="@color/black1"
+                android:textSize="@dimen/sp_10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/login_user_agreement_tv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/login_user_agreement_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/dp_5"
+                android:text="用户协议"
+                android:textColor="@color/black1"
+                android:textSize="@dimen/sp_10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/id_tag_and_tv"
+                app:layout_constraintStart_toEndOf="@id/id_tag_user_agreement_tv"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="@dimen/dp_0_5"
+                android:background="@color/grayText3"
+                android:layout_marginTop="@dimen/dp_15"
+                app:layout_constraintTop_toTopOf="@id/login_user_agreement_tv"
+                app:layout_constraintBottom_toBottomOf="@id/login_user_agreement_tv"
+                app:layout_constraintEnd_toEndOf="@id/login_user_agreement_tv"
+                app:layout_constraintStart_toStartOf="@id/login_user_agreement_tv" />
+
+            <TextView
+                android:id="@+id/id_tag_and_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/dp_5"
+                android:text=" 和 "
+                android:textColor="@color/black1"
+                android:textSize="@dimen/sp_10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/login_user_privacy_tv"
+                app:layout_constraintStart_toEndOf="@id/login_user_agreement_tv"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/login_user_privacy_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/dp_5"
+                android:text="隐私政策"
+                android:textColor="@color/black1"
+                android:textSize="@dimen/sp_10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/id_tag_and_tv"
+                app:layout_constraintTop_toTopOf="parent" />
+            <View
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="@dimen/dp_0_5"
+                android:background="@color/grayText3"
+                android:layout_marginTop="@dimen/dp_15"
+                app:layout_constraintTop_toTopOf="@id/login_user_privacy_tv"
+                app:layout_constraintBottom_toBottomOf="@id/login_user_privacy_tv"
+                app:layout_constraintEnd_toEndOf="@id/login_user_privacy_tv"
+                app:layout_constraintStart_toStartOf="@id/login_user_privacy_tv" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <LinearLayout
             android:id="@+id/login_password_target_lay"
             android:layout_width="match_parent"

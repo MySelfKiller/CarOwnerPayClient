@@ -40,7 +40,7 @@ public class LocationManager {
         return manager;
     }
 
-    public AMapLocation getLoc() {
+    public AMapLocation getLoccation() {
         return loc;
     }
 
@@ -77,7 +77,7 @@ public class LocationManager {
         mOption.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
         mOption.setInterval(2000);//可选，设置定位间隔。默认为2秒
         mOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是true
-        mOption.setOnceLocation(true);//可选，设置是否单次定位。默认是false
+        mOption.setOnceLocation(false);//可选，设置是否单次定位。默认是false
         mOption.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
         AMapLocationClientOption.setLocationProtocol(AMapLocationClientOption.AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
         mOption.setSensorEnable(false);//可选，设置是否使用传感器。默认是false
@@ -97,32 +97,35 @@ public class LocationManager {
 
                 StringBuffer sb = new StringBuffer();
                 //errCode等于0代表定位成功，其他的为定位失败，具体的可以参照官网定位错误码说明
-                listener.onLocationChanged(location);
+
                 if(location.getErrorCode() == 0){
                     if (location.getLongitude()>1.0 && location.getLongitude()>1.0){
                         loc = location;
                     }
-                    sb.append("定位成功" + "\n");
-                    sb.append("定位类型: " + location.getLocationType() + "\n");
-                    sb.append("经    度    : " + location.getLongitude() + "\n");
-                    sb.append("纬    度    : " + location.getLatitude() + "\n");
-                    sb.append("精    度    : " + location.getAccuracy() + "米" + "\n");
-                    sb.append("提供者    : " + location.getProvider() + "\n");
-
-                    sb.append("速    度    : " + location.getSpeed() + "米/秒" + "\n");
-                    sb.append("角    度    : " + location.getBearing() + "\n");
-                    // 获取当前提供定位服务的卫星个数
-                    sb.append("星    数    : " + location.getSatellites() + "\n");
-                    sb.append("国    家    : " + location.getCountry() + "\n");
-                    sb.append("省            : " + location.getProvince() + "\n");
-                    sb.append("市            : " + location.getCity() + "\n");
-                    sb.append("城市编码 : " + location.getCityCode() + "\n");
-                    sb.append("区            : " + location.getDistrict() + "\n");
-                    sb.append("区域 码   : " + location.getAdCode() + "\n");
-                    sb.append("地    址    : " + location.getAddress() + "\n");
-                    sb.append("兴趣点    : " + location.getPoiName() + "\n");
-                    //定位完成的时间
-                    sb.append("定位时间: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(location.getTime()) + "\n");
+                    if (null != listener) {
+                        listener.onLocationChanged(location);
+                    }
+//                    sb.append("定位成功" + "\n");
+//                    sb.append("定位类型: " + location.getLocationType() + "\n");
+//                    sb.append("经    度    : " + location.getLongitude() + "\n");
+//                    sb.append("纬    度    : " + location.getLatitude() + "\n");
+//                    sb.append("精    度    : " + location.getAccuracy() + "米" + "\n");
+//                    sb.append("提供者    : " + location.getProvider() + "\n");
+//
+//                    sb.append("速    度    : " + location.getSpeed() + "米/秒" + "\n");
+//                    sb.append("角    度    : " + location.getBearing() + "\n");
+//                    // 获取当前提供定位服务的卫星个数
+//                    sb.append("星    数    : " + location.getSatellites() + "\n");
+//                    sb.append("国    家    : " + location.getCountry() + "\n");
+//                    sb.append("省            : " + location.getProvince() + "\n");
+//                    sb.append("市            : " + location.getCity() + "\n");
+//                    sb.append("城市编码 : " + location.getCityCode() + "\n");
+//                    sb.append("区            : " + location.getDistrict() + "\n");
+//                    sb.append("区域 码   : " + location.getAdCode() + "\n");
+//                    sb.append("地    址    : " + location.getAddress() + "\n");
+//                    sb.append("兴趣点    : " + location.getPoiName() + "\n");
+//                    //定位完成的时间
+//                    sb.append("定位时间: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(location.getTime()) + "\n");
                 } else {
                     //定位失败
                     sb.append("定位失败" + "\n");
@@ -142,9 +145,9 @@ public class LocationManager {
 
                 //解析定位结果，
                 String result = sb.toString();
-                LogUtil.e("hm",result);
+//                LogUtil.e("hm",result);
             } else {
-                LogUtil.e("hm","定位失败，loc is null");
+//                LogUtil.e("hm","定位失败，loc is null");
             }
         }
     };
@@ -202,7 +205,8 @@ public class LocationManager {
      */
     public void stopLocation(){
         // 停止定位
-        locationClient.stopLocation();
+        if (null !=locationClient)
+            locationClient.stopLocation();
     }
 
     /**
@@ -212,7 +216,7 @@ public class LocationManager {
      * @author hongming.wang
      *
      */
-    private void destroyLocation(){
+    public void destroyLocation(){
         if (null != locationClient) {
             /**
              * 如果AMapLocationClient是在当前Activity实例化的，

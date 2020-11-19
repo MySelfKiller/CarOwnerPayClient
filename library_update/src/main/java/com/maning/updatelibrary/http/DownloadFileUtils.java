@@ -300,19 +300,14 @@ public class DownloadFileUtils {
 
 
     private static void checkDownloadFilePath(String localFilePath) {
-        File path = new File(localFilePath.substring(0,
-                localFilePath.lastIndexOf("/") + 1));
-        File file = new File(localFilePath);
-        if (!path.exists()) {
-            path.mkdirs();
+        File targetFile = new File(localFilePath);
+
+        if (!targetFile.getParentFile().exists()){
+            targetFile.getParentFile().mkdirs();
         }
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        if (!targetFile.exists()){
+//            targetFile.createNewFile();
+//        }
     }
 
     /**

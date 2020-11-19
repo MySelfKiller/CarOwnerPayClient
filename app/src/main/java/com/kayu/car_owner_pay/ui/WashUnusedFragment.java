@@ -183,11 +183,17 @@ public class WashUnusedFragment extends Fragment {
 //        }
 
         station_open_time.setText("营业时间：" + washStation.busTime);
-        checkLocation(Double.parseDouble(washStation.latitude), Double.parseDouble(washStation.longitude));
+        AMapLocation location = LocationManager.getSelf().getLoccation();
+        if (null != location){
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            double dis = GetJuLiUtils.getDistance(longitude, latitude, Double.parseDouble(washStation.longitude), Double.parseDouble(washStation.latitude));
+            station_distance.setText("距您" + dis + "km");
+        }
         navi_lay.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                KWApplication.getInstance().toNavi(getContext(), washStation.latitude, washStation.longitude, washStation.address);
+                KWApplication.getInstance().toNavi(getContext(), washStation.latitude, washStation.longitude, washStation.address,"BD09");
             }
 
             @Override
@@ -359,7 +365,7 @@ public class WashUnusedFragment extends Fragment {
             protected void OnMoreClick(View view) {
 
                 if (washStation.state == 1) {
-                    KWApplication.getInstance().toNavi(getContext(), washStation.latitude, washStation.longitude, washStation.address);
+                    KWApplication.getInstance().toNavi(getContext(), washStation.latitude, washStation.longitude, washStation.address,"BD09");
                 } else if (washStation.state == 3
                         || washStation.state == 4
                         || washStation.state == 5
@@ -382,32 +388,5 @@ public class WashUnusedFragment extends Fragment {
             }
         });
 
-    }
-
-    private void checkLocation(double mLatitude, double mLongitude) {
-        LocationManager.getSelf().startLocation();
-        LocationManager.getSelf().setLocationListener(new LocationCallback() {
-            @Override
-            public void onLocationChanged(AMapLocation location) {
-                if (location.getErrorCode() == 0) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-                    double dis = GetJuLiUtils.getDistance(longitude, latitude, mLongitude, mLatitude);
-                    double dis2 = GetJuLiUtils.distance(latitude, longitude, mLatitude, mLongitude);
-                    station_distance.setText("距您" + dis + "km");
-
-                } else {
-                    MessageDialog.show((AppCompatActivity)getActivity(), "定位失败", "请重新定位", "重新定位").setCancelable(false)
-                            .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
-                                @Override
-                                public boolean onClick(BaseDialog baseDialog, View v) {
-                                    baseDialog.doDismiss();
-                                    checkLocation(mLatitude,mLongitude);
-                                    return true;
-                                }
-                            });
-                }
-            }
-        });
     }
 }

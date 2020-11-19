@@ -171,7 +171,7 @@ public class WashOrderAllFragment extends Fragment {
                 @Override
                 public void onItemCallback(int position, Object obj) {
                     ItemWashOrderBean washOrderBean = (ItemWashOrderBean)obj;
-                    KWApplication.getInstance().toNavi(getContext(),washOrderBean.latitude,washOrderBean.longitude,washOrderBean.address);
+                    KWApplication.getInstance().toNavi(getContext(),washOrderBean.latitude,washOrderBean.longitude,washOrderBean.address,"BD09");
                 }
 
                 @Override

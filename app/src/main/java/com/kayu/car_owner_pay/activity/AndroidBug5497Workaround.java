@@ -1,4 +1,4 @@
-package com.kayu.car_owner_pay_pay.activity;
+package com.kayu.car_owner_pay.activity;
 
 import android.app.Activity;
 import android.graphics.Rect;

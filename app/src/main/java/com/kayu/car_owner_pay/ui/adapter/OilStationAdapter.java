@@ -65,7 +65,7 @@ public class OilStationAdapter extends RecyclerView.Adapter<OilStationAdapter.lo
         loanHolder.location.setText(oilStationBean.gasAddress);
         loanHolder.distance.setText(oilStationBean.distance+"km");
         loanHolder.oil_price.setText("￥"+oilStationBean.priceYfq);
-        loanHolder.oil_price_sub.setText( "降"+ DoubleUtils.sub(oilStationBean.priceOfficial,oilStationBean.priceYfq)+"元");
+        loanHolder.oil_price_sub.setText( "降"+DoubleUtils.sub(oilStationBean.priceOfficial,oilStationBean.priceYfq)+"元");
         loanHolder.mView.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
@@ -80,7 +80,7 @@ public class OilStationAdapter extends RecyclerView.Adapter<OilStationAdapter.lo
         loanHolder.navi.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                KWApplication.getInstance().toNavi(context,String.valueOf(oilStationBean.gasAddressLatitude),String.valueOf(oilStationBean.gasAddressLongitude),oilStationBean.gasAddress);
+                KWApplication.getInstance().toNavi(context,String.valueOf(oilStationBean.gasAddressLatitude),String.valueOf(oilStationBean.gasAddressLongitude),oilStationBean.gasAddress,"GCJ02");
             }
 
             @Override

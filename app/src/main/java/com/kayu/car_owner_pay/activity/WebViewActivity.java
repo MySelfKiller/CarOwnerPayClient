@@ -96,7 +96,7 @@ public class WebViewActivity extends AppCompatActivity {
 //        StatusBarUtil.setTranslucentStatus(this);
         StatusBarUtil.setStatusBarColor(this, getResources().getColor(R.color.white));
         setContentView(R.layout.activity_webview);
-        com.kayu.car_owner_pay_pay.activity.AndroidBug5497Workaround.assistActivity(this);
+        AndroidBug5497Workaround.assistActivity(this);
         LinearLayout webLay = findViewById(R.id.llWebView);
         if (AppUtil.hasNavBar(this)){
             int bottom = AppUtil.getNavigationBarHeight(this);
@@ -157,8 +157,6 @@ public class WebViewActivity extends AppCompatActivity {
         if (StringUtil.isEmpty(url)) {
             url = URL;
         }
-
-        headMap.put("Referer",url);
 //        url = "https://wallet.xiaoying.com/fe/wallet-landing/blueRegPage/index.html?landId=306&source=100016303";
 
         WebSettings webSettings = wvWebView.getSettings();
@@ -343,6 +341,7 @@ public class WebViewActivity extends AppCompatActivity {
                         onBackPressed();
                         return true;
                     }else {
+                        headMap.put("Referer",lastOpenUrl);
                         view.loadUrl(url,headMap);
                         lastOpenUrl = url;
                         return false;

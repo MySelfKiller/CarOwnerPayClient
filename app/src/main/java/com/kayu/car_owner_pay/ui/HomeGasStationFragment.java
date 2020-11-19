@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,14 +56,14 @@ public class HomeGasStationFragment extends Fragment {
     private View view;
     private AdaptiveHeightViewPager viewPager;
     private int fragment_id;
-    private Context context;
+//    private Context context;
 
-    public HomeGasStationFragment(Context context, MainViewModel mainViewModel, AdaptiveHeightViewPager viewPager, int fragment_id, Callback callback) {
+    public HomeGasStationFragment(AdaptiveHeightViewPager viewPager,int fragment_id,Callback callback) {
         this.fragment_id = fragment_id;
         this.viewPager = viewPager;
         this.callback = callback;
-        this.mainViewModel = mainViewModel;
-        this.context = context;
+//        this.mainViewModel = mainViewModel;
+//        this.context = context;
     }
 
     @Override
@@ -74,6 +75,7 @@ public class HomeGasStationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
         return inflater.inflate(R.layout.fragment_home_gas_station, container, false);
     }
 
@@ -97,7 +99,7 @@ public class HomeGasStationFragment extends Fragment {
         param_recycle_view.setAdapter(new ParamParentAdapter(getContext(), data, new ItemCallback() {
             @Override
             public void onItemCallback(int position, Object obj) {
-                ParamOilBean paramOilBean = mainViewModel.getParamSelect(context).getValue();
+                ParamOilBean paramOilBean = mainViewModel.getParamSelect(requireContext()).getValue();
                 if (null  == paramOilBean || null == obj)
                     return;
 
@@ -172,7 +174,7 @@ public class HomeGasStationFragment extends Fragment {
         } else {
             callback.onSuccess();
         }
-        mainViewModel.getParamSelect(context).observe((LifecycleOwner) context, new Observer<ParamOilBean>() {
+        mainViewModel.getParamSelect(requireContext()).observe( requireActivity(), new Observer<ParamOilBean>() {
 
             @Override
             public void onChanged(ParamOilBean paramOilBean) {
@@ -266,7 +268,7 @@ public class HomeGasStationFragment extends Fragment {
                 viewPager.setObjectForPosition(view,fragment_id);
 
                 if (null == selectSortsParam || null == selectDistanceParam || null == selectOilParam) {
-                    mainViewModel.getParamSelect(context);
+                    mainViewModel.getParamSelect(requireContext());
                     TipDialog.show((AppCompatActivity) getContext(),"查询参数错误,请重试", TipDialog.TYPE.WARNING);
                     return;
                 }
@@ -284,7 +286,7 @@ public class HomeGasStationFragment extends Fragment {
                 dataMap.put("distance",selectDistanceParam.val);
                 dataMap.put("oilNo",selectOilParam.oilNo);
                 dataMap.put("keyword",keyword);
-                mainViewModel.getStationList(context,dataMap).observe((LifecycleOwner) context, new Observer<List<OilStationBean>>() {
+                mainViewModel.getStationList(requireContext(),dataMap).observe(requireActivity(), new Observer<List<OilStationBean>>() {
                     @Override
                     public void onChanged(List<OilStationBean> oilStationBeans) {
                         if (null == refreshLayout) {
@@ -301,7 +303,7 @@ public class HomeGasStationFragment extends Fragment {
                                 }
                             }
                         } else {
-                            oilStationAdapter = new OilStationAdapter(getContext(), oilStationBeans, new ItemCallback() {
+                            oilStationAdapter = new OilStationAdapter(requireContext(), oilStationBeans, new ItemCallback() {
                                 @Override
                                 public void onItemCallback(int position, Object obj) {
                                     FragmentManager fg = requireActivity().getSupportFragmentManager();

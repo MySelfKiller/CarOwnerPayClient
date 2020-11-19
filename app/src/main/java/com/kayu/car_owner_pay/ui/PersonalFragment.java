@@ -208,13 +208,32 @@ public class PersonalFragment extends Fragment {
             }
         });
         if (getUserVisibleHint()){
-//            mHasLoadedOnce = true;
             refreshLayout.autoRefresh();
+            mHasLoadedOnce = true;
+        }
+    }
+
+    private boolean mHasLoadedOnce = false;// 页面已经加载过
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && !mHasLoadedOnce) {
+            refreshLayout.autoRefresh();
+            mHasLoadedOnce = true;
         }
     }
 
     private void initView() {
-        checkLocation();
+        if (null != LocationManager.getSelf().getLoccation()){
+            mainViewModel.getReminder(getContext(),LocationManager.getSelf().getLoccation().getCity()).observe(requireActivity(), new Observer<String>() {
+                @Override
+                public void onChanged(String parameter) {
+                    explain_content.setText(parameter);
+                }
+            });
+        }
+
         mainViewModel.getUserInfo(getContext()).observe(getActivity(), new Observer<UserBean>() {
             @Override
             public void onChanged(UserBean userBean) {
@@ -229,7 +248,7 @@ public class PersonalFragment extends Fragment {
                 if (null == userBean)
                     return;
                 KWApplication.getInstance().loadImg(userBean.headPic,user_head_img);
-                user_name.setText(userBean.username);
+                user_name.setText(userBean.phone);
                 user_balance.setText(String.valueOf(userBean.balance));
 
             }
@@ -277,37 +296,6 @@ public class PersonalFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-            }
-        });
-    }
-
-    private void checkLocation() {
-        LocationManager.getSelf().startLocation();
-        LocationManager.getSelf().setLocationListener(new LocationCallback() {
-            @Override
-            public void onLocationChanged(AMapLocation location) {
-                if (location.getErrorCode() == 0) {
-//                    double latitude = location.getLatitude();
-//                    double longitude = location.getLongitude();
-                    mainViewModel.getReminder(getContext(),location.getCity()).observe(requireActivity(), new Observer<String>() {
-                        @Override
-                        public void onChanged(String parameter) {
-                            explain_content.setText(parameter);
-                        }
-                    });
-
-                } else {
-//                    checkLocation();
-                    MessageDialog.show((AppCompatActivity)getActivity(), "定位失败", "请重新定位", "重新定位").setCancelable(false)
-                            .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
-                                @Override
-                                public boolean onClick(BaseDialog baseDialog, View v) {
-                                    baseDialog.doDismiss();
-                                    checkLocation();
-                                    return true;
-                                }
-                            });
-                }
             }
         });
     }

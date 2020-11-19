@@ -6,17 +6,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
+import androidx.viewpager.widget.ViewPager;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -26,14 +26,18 @@ import com.kayu.car_owner_pay.http.HttpConfig;
 import com.kayu.car_owner_pay.http.ReqUtil;
 import com.kayu.car_owner_pay.http.RequestInfo;
 import com.kayu.car_owner_pay.http.ResponseInfo;
+import com.kayu.car_owner_pay.ui.HomeFragment;
+import com.kayu.car_owner_pay.ui.PersonalFragment;
 import com.kayu.car_owner_pay.ui.adapter.BottomNavigationViewHelper;
 import com.kayu.car_owner_pay.update.UpdateCallBack;
 import com.kayu.car_owner_pay.update.UpdateInfo;
 import com.kayu.car_owner_pay.update.UpdateInfoParse;
 import com.kayu.utils.AppUtil;
 import com.kayu.utils.Constants;
+import com.kayu.utils.LogUtil;
 import com.kayu.utils.Md5Util;
 import com.kayu.utils.StringUtil;
+import com.kayu.utils.location.LocationManager;
 import com.kayu.utils.permission.EasyPermissions;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
@@ -43,32 +47,67 @@ import com.kongzue.dialog.v3.TipDialog;
 import com.maning.updatelibrary.InstallUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends BaseActivity {
-
+public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener{
+    private ViewPager view_pager;
     private MainViewModel mViewModel;
     private String apkDownloadPath;
     private InstallUtils.DownloadCallBack downloadCallBack;
     private MessageDialog progressDialog;
     private NumberProgressBar progressbar;
+    private int lastSelectItemid;
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//            Log.e("hm","NavigationItemSelected position="+item.getItemId());
+            if (lastSelectItemid == item.getItemId()){
+                return true;
+            }
+            lastSelectItemid = item.getItemId();
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    view_pager.setCurrentItem(0);
+                    break;
+                case R.id.navigation_personal:
+                    view_pager.setCurrentItem(1);
+                    break;
+            }
+            return true;
+        }
+    };
+    private BottomNavigationView navigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
-        navView.setSelectedItemId(navView.getMenu().getItem(0).getItemId());
-
-        BottomNavigationViewHelper.disableShiftMode(navView);
-        navView.setItemIconTintList(null);//设置item图标颜色为null，当menu里icon设置selector的时候，
+        navigation = findViewById(R.id.nav_view);
+        view_pager = (ViewPager) findViewById(R.id.view_pager);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        NavigationAdapter navigationAdapter = new NavigationAdapter(fragmentManager,getFragments());
+        view_pager.addOnPageChangeListener(this);
+        view_pager.setOffscreenPageLimit(2);
+        view_pager.setAdapter(navigationAdapter);
+        BottomNavigationViewHelper.disableShiftMode(navigation);
+        navigation.setItemIconTintList(null);//设置item图标颜色为null，当menu里icon设置selector的时候，
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         permissionsCheck();
     }
+
+    private List<Fragment> getFragments(){
+        List<Fragment> list = new ArrayList<Fragment>();
+        list.add(new HomeFragment());
+        list.add(new PersonalFragment());
+        return list;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -107,6 +146,8 @@ public class MainActivity extends BaseActivity {
                 return;
             } else {
                 appManager.finishAllActivity();
+                LocationManager.getSelf().stopLocation();
+//                LocationManager.getSelf().destroyLocation();
                 finish();
             }
         } else{//取出我们返回栈保存的Fragment,这里会从栈顶开始弹栈
@@ -123,6 +164,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void hasPermission(List<String> allPerms) {
                 mViewModel.sendOilPayInfo(MainActivity.this);
+                LocationManager.getSelf().startLocation();
                 reqUpdate();
             }
 
@@ -152,7 +194,6 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-
 
     private UpdateInfo updateInfo = null;
 
@@ -342,6 +383,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onFail(Exception e) {
                 progressDialog.doDismiss();
+                LogUtil.e("hm","下载失败"+e.toString());
                 TipDialog.show(MainActivity.this,"下载失败", TipDialog.TYPE.ERROR);
             }
 
@@ -383,5 +425,33 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mViewModel.onCleared();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        int selectedItemId = 0;
+        switch (position){
+            case 0:
+                selectedItemId = R.id.navigation_home;
+                break;
+            case 1:
+                selectedItemId = R.id.navigation_personal;
+                break;
+        }
+//        Log.e("hm","viewPage getSelectedItemId="+navigation.getSelectedItemId());
+//        Log.e("hm","viewPage selectedItemId="+selectedItemId);
+        if (navigation.getSelectedItemId()!= selectedItemId){
+            navigation.setSelectedItemId(selectedItemId);
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }

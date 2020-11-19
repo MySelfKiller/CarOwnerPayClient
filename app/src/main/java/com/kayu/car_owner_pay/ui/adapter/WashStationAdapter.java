@@ -97,7 +97,7 @@ public class WashStationAdapter extends RecyclerView.Adapter<WashStationAdapter.
         loanHolder.navi.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                KWApplication.getInstance().toNavi(context,washStationBean.latitude,washStationBean.longitude,washStationBean.address);
+                KWApplication.getInstance().toNavi(context,washStationBean.latitude,washStationBean.longitude,washStationBean.address,"BD09");
             }
 
             @Override

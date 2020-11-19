@@ -13,6 +13,7 @@ public class Constants {
   public static final String isLogin = "isLogin";
   public static final String token = "token";
   public static final String isSetPsd = "isSetPsd";
+  public static final String isShowDialog = "isShowDialog";
   public static final String userInfo = "user_info";
   public static final String creditCardInfo = "credit_card_info";
 //  public static final String recommender = "recommender_info";

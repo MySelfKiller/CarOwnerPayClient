@@ -35,7 +35,8 @@
                     android:padding="@dimen/dp_5"
                     android:singleLine="true"
                     android:text="姓名"
-                    android:textSize="@dimen/sp_14"
+                    android:textColor="@color/black1"
+                    android:textSize="@dimen/sp_13"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
@@ -71,7 +72,8 @@
                     android:padding="@dimen/dp_5"
                     android:singleLine="true"
                     android:text="当前版本"
-                    android:textSize="@dimen/sp_14"
+                    android:textColor="@color/black1"
+                    android:textSize="@dimen/sp_13"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
@@ -88,6 +90,55 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_marginHorizontal="@dimen/dp_17"
+                android:background="@color/divider2" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/dp_5"
+                android:paddingHorizontal="@dimen/dp_20">
+                <TextView
+                    android:id="@+id/setting_user_agreement_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/dp_5"
+                    android:singleLine="true"
+                    android:text="用户协议"
+                    android:textSize="@dimen/sp_13"
+                    android:textColor="@color/black1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_marginHorizontal="@dimen/dp_17"
+                android:background="@color/divider2" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/dp_5"
+                android:paddingHorizontal="@dimen/dp_20">
+                <TextView
+                    android:id="@+id/setting_user_privacy_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/dp_5"
+                    android:singleLine="true"
+                    android:text="隐私政策"
+                    android:textColor="@color/black1"
+                    android:textSize="@dimen/sp_13"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
@@ -112,7 +163,7 @@
                     android:singleLine="true"
                     android:text="下载APP"
                     android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/sp_14"
+                    android:textSize="@dimen/sp_13"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
