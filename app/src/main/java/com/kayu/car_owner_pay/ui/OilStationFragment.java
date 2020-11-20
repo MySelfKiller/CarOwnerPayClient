@@ -269,7 +269,7 @@ public class OilStationFragment extends Fragment {
             oil_price_sub2.setText("比油站降" + DoubleUtils.sub(param.priceGun, param.priceYfq) + "元");
 
             String[] gunArrs = param.gunNos.split(",");
-            gunNo = gunArrs[0];
+            gunNo = null;
             childTypeAdapter.addAllData(new ArrayList<>(Arrays.asList(gunArrs)), true);
         }
 
@@ -289,7 +289,7 @@ public class OilStationFragment extends Fragment {
             oil_price_sub2.setText("比油站降" + DoubleUtils.sub(param.priceGun, param.priceYfq) + "元");
 
             String[] gunArrs = param.gunNos.split(",");
-            gunNo = gunArrs[0];
+            gunNo = null;
             childTypeAdapter.addAllData(new ArrayList<>(Arrays.asList(gunArrs)), true);
         }
 
