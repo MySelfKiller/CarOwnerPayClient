@@ -28,7 +28,7 @@ import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.model.WashStationDetailBean;
 import com.kayu.utils.GetJuLiUtils;
 import com.kayu.utils.NoMoreClickListener;
-import com.kayu.utils.location.LocationManager;
+import com.kayu.utils.location.LocationManagerUtil;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 
@@ -303,7 +303,7 @@ public class WashStationFragment extends Fragment {
         sb.append(washStation.openTimeStart).append("-").append(washStation.openTimeEnd);
 
 //        checkLocation(Double.parseDouble(washStation.latitude), Double.parseDouble(washStation.longitude));
-        AMapLocation location = LocationManager.getSelf().getLoccation();
+        AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
         if (null != location){
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();

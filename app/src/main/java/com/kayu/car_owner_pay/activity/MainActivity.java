@@ -1,11 +1,14 @@
 package com.kayu.car_owner_pay.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -37,7 +40,7 @@ import com.kayu.utils.Constants;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.Md5Util;
 import com.kayu.utils.StringUtil;
-import com.kayu.utils.location.LocationManager;
+import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.permission.EasyPermissions;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
@@ -146,7 +149,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 return;
             } else {
                 appManager.finishAllActivity();
-                LocationManager.getSelf().stopLocation();
+                LocationManagerUtil.getSelf().stopLocation();
 //                LocationManager.getSelf().destroyLocation();
                 finish();
             }
@@ -164,7 +167,24 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             @Override
             public void hasPermission(List<String> allPerms) {
                 mViewModel.sendOilPayInfo(MainActivity.this);
-                LocationManager.getSelf().startLocation();
+                if (!isLocServiceEnable(MainActivity.this)){
+                    MessageDialog.show(MainActivity.this, "定位服务未开启", "请打开定位服务", "开启定位").setCancelable(false)
+                            .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
+                                @Override
+                                public boolean onClick(BaseDialog baseDialog, View v) {
+                                    baseDialog.doDismiss();
+                                    Intent intent = new Intent();
+                                    intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    appManager.finishAllActivity();
+                                    LocationManagerUtil.getSelf().stopLocation();
+                                    finish();
+                                    return true;
+                                }
+                            });
+                }
+                LocationManagerUtil.getSelf().startLocation();
                 reqUpdate();
             }
 
@@ -453,5 +473,18 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    /**
+     * 手机是否开启位置服务，如果没有开启那么所有app将不能使用定位功能
+     */
+    public static boolean isLocServiceEnable(Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        if (gps || network) {
+            return true;
+        }
+        return false;
     }
 }

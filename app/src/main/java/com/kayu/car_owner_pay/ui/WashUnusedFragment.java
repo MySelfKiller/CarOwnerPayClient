@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -28,11 +27,7 @@ import com.kayu.car_owner_pay.model.WashOrderDetailBean;
 import com.kayu.utils.GetJuLiUtils;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.QRCodeUtil;
-import com.kayu.utils.location.LocationCallback;
-import com.kayu.utils.location.LocationManager;
-import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
-import com.kongzue.dialog.util.BaseDialog;
-import com.kongzue.dialog.v3.MessageDialog;
+import com.kayu.utils.location.LocationManagerUtil;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 
@@ -183,7 +178,7 @@ public class WashUnusedFragment extends Fragment {
 //        }
 
         station_open_time.setText("营业时间：" + washStation.busTime);
-        AMapLocation location = LocationManager.getSelf().getLoccation();
+        AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
         if (null != location){
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();

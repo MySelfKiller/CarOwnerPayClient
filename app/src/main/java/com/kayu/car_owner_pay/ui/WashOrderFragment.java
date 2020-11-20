@@ -37,12 +37,8 @@ import com.kayu.car_owner_pay.wxapi.WxPayBean;
 import com.kayu.utils.GetJuLiUtils;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
-import com.kayu.utils.location.LocationCallback;
-import com.kayu.utils.location.LocationManager;
-import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
+import com.kayu.utils.location.LocationManagerUtil;
 import com.kongzue.dialog.interfaces.OnDismissListener;
-import com.kongzue.dialog.util.BaseDialog;
-import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.TipDialog;
 
 import java.util.Map;
@@ -295,7 +291,7 @@ public class WashOrderFragment extends Fragment {
 
         String rebatePirce = String.valueOf(Double.parseDouble(selectedListDTO.price)-Double.parseDouble(selectedListDTO.finalPrice));
         order_rebate_price.setText("-￥"+rebatePirce);
-        AMapLocation location = LocationManager.getSelf().getLoccation();
+        AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
         if (null != location){
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();

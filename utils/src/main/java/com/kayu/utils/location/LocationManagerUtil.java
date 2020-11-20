@@ -7,19 +7,18 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.AMapLocationQualityReport;
-import com.kayu.utils.LogUtil;
 
 import java.text.SimpleDateFormat;
 
-public class LocationManager {
+public class LocationManagerUtil {
 
     private AMapLocation loc = null;
 
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = null;
-    private static LocationManager manager = null;
+    private static LocationManagerUtil manager = null;
     private Context context;
-    private LocationManager(Context context){
+    private LocationManagerUtil(Context context){
         this.context = context;
         initLocation(context);
     }
@@ -29,10 +28,10 @@ public class LocationManager {
             throw new IllegalArgumentException("Context must not be null.");
         }
         if (null == manager){
-            manager = new LocationManager(context);
+            manager = new LocationManagerUtil(context);
         }
     }
-    public static LocationManager getSelf() {
+    public static LocationManagerUtil getSelf() {
         if (null == manager){
             throw new IllegalArgumentException("please init() before.");
 

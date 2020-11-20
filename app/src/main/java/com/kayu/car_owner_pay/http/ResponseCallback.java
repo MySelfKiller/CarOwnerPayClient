@@ -11,7 +11,7 @@ import com.kayu.car_owner_pay.activity.login.LoginActivity;
 import com.kayu.car_owner_pay.http.cookie.PersistentCookieStore;
 import com.kayu.utils.Constants;
 import com.kayu.utils.LogUtil;
-import com.kayu.utils.location.LocationManager;
+import com.kayu.utils.location.LocationManagerUtil;
 
 import java.io.IOException;
 
@@ -67,7 +67,7 @@ public class ResponseCallback implements Callback {
                     new PersistentCookieStore(KWApplication.getInstance()).removeAll();
                     OkHttpManager.getInstance().resetHttpClient();
                     AppManager.getAppManager().finishAllActivity();
-                    LocationManager.getSelf().stopLocation();
+                    LocationManagerUtil.getSelf().stopLocation();
 //                    LocationManager.getSelf().destroyLocation();
                     reqInfo.context.startActivity(new Intent(reqInfo.context, LoginActivity.class));
                 } else if (obj.status == Constants.response_code_1) {

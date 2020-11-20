@@ -44,7 +44,7 @@ import com.kayu.utils.StringUtil;
 import com.kayu.utils.callback.Callback;
 import com.kayu.utils.location.CoordinateTransformUtil;
 import com.kayu.utils.location.LocationCallback;
-import com.kayu.utils.location.LocationManager;
+import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
 import com.kayu.utils.view.AdaptiveHeightViewPager;
 import com.kongzue.dialog.v3.MessageDialog;
@@ -219,8 +219,9 @@ public class HomeFragment extends Fragment {
         super.onStart();
 //        LogUtil.e("HomeFragment----","----onStart---");
         if (!isCreated) {
+            initListView();
 //            LogUtil.e("HomeFragment----","----onStart------isCreated");
-            LocationManager.getSelf().setLocationListener(new LocationCallback() {
+            LocationManagerUtil.getSelf().setLocationListener(new LocationCallback() {
                 @Override
                 public void onLocationChanged(AMapLocation location) {
 //                    LogUtil.e("HomeFragment----","----onStart--------LocationCallback");
@@ -244,7 +245,7 @@ public class HomeFragment extends Fragment {
 
     private int fragIndex = 0;
 
-    private void initView() {
+    private void initListView(){
         mainViewModel.getParameter(getContext(),10).observe(requireActivity(), new Observer<SystemParam>() {
             @Override
             public void onChanged(SystemParam systemParam) {
@@ -282,6 +283,9 @@ public class HomeFragment extends Fragment {
 
             }
         });
+    }
+
+    private void initView() {
 
         mainViewModel.getNotifyList(getContext()).observe(requireActivity(), new Observer<List<String>>() {
             @Override
@@ -485,10 +489,10 @@ public class HomeFragment extends Fragment {
     private double latitude,longitude;
     private String cityName;
 
-    private void requestLocation() {
-        WaitDialog.show((AppCompatActivity) getContext(),"定位中...");
-        LocationManager.getSelf().startLocation();
-    }
+//    private void requestLocation() {
+//        WaitDialog.show((AppCompatActivity) getContext(),"定位中...");
+//        LocationManagerUtil.getSelf().startLocation();
+//    }
 //    @Override
 //    public void onAttach(@NonNull Context context) {
 //        super.onAttach(context);

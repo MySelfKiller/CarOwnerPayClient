@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -18,7 +17,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.amap.api.location.AMapLocation;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.MainViewModel;
@@ -28,13 +26,9 @@ import com.kayu.car_owner_pay.model.UserBean;
 import com.kayu.car_owner_pay.ui.income.BalanceFragment;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
-import com.kayu.utils.location.LocationCallback;
-import com.kayu.utils.location.LocationManager;
+import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
 import com.kayu.utils.view.RoundImageView;
-import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
-import com.kongzue.dialog.util.BaseDialog;
-import com.kongzue.dialog.v3.MessageDialog;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -225,8 +219,8 @@ public class PersonalFragment extends Fragment {
     }
 
     private void initView() {
-        if (null != LocationManager.getSelf().getLoccation()){
-            mainViewModel.getReminder(getContext(),LocationManager.getSelf().getLoccation().getCity()).observe(requireActivity(), new Observer<String>() {
+        if (null != LocationManagerUtil.getSelf().getLoccation()){
+            mainViewModel.getReminder(getContext(), LocationManagerUtil.getSelf().getLoccation().getCity()).observe(requireActivity(), new Observer<String>() {
                 @Override
                 public void onChanged(String parameter) {
                     explain_content.setText(parameter);

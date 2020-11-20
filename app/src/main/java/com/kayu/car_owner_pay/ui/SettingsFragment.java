@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,12 +27,6 @@ import com.kayu.car_owner_pay.activity.AppManager;
 import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
 import com.kayu.car_owner_pay.activity.login.LoginActivity;
-import com.kayu.car_owner_pay.data_parser.ParameterDataParser;
-import com.kayu.car_owner_pay.http.HttpConfig;
-import com.kayu.car_owner_pay.http.ReqUtil;
-import com.kayu.car_owner_pay.http.RequestInfo;
-import com.kayu.car_owner_pay.http.ResponseCallback;
-import com.kayu.car_owner_pay.http.ResponseInfo;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.model.UserBean;
 import com.kayu.utils.AppUtil;
@@ -45,15 +37,13 @@ import com.kayu.utils.ItemCallback;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.callback.ImageCallback;
-import com.kayu.utils.location.LocationManager;
+import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.v3.CustomDialog;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.WaitDialog;
-
-import java.util.HashMap;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -159,7 +149,7 @@ public class SettingsFragment extends Fragment {
                         editor.apply();
                         editor.commit();
                         AppManager.getAppManager().finishAllActivity();
-                        LocationManager.getSelf().stopLocation();
+                        LocationManagerUtil.getSelf().stopLocation();
 //                        LocationManager.getSelf().destroyLocation();
                         startActivity(new Intent(getActivity(), LoginActivity.class));
                         getActivity().finish();

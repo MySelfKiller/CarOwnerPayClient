@@ -38,7 +38,7 @@ import com.kayu.utils.Utils;
 import com.kayu.utils.callback.Callback;
 import com.kayu.utils.callback.ImageCallback;
 import com.kayu.utils.location.CoordinateTransformUtil;
-import com.kayu.utils.location.LocationManager;
+import com.kayu.utils.location.LocationManagerUtil;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
 import com.kongzue.dialog.util.BaseDialog;
@@ -76,7 +76,7 @@ public class KWApplication extends Application {
         super.onCreate();
 //        setFornts();
         initDialogSetting();
-        LocationManager.init(this);
+        LocationManagerUtil.init(this);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO );
 
 //        ZoomMediaLoader.getInstance().init(new TestImageLoader());
