@@ -45,14 +45,14 @@ public class PersonalFragment extends Fragment {
     private TextView user_name;
     private TextView user_balance;
     private TextView explain_content;
-    private ConstraintLayout oil_order_lay,wash_order_lay;
-    private LinearLayout all_order_lay,more_lay;
+    private ConstraintLayout oil_order_lay,wash_order_lay, all_order_lay;
+    private LinearLayout more_lay;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
         StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
-        View root = inflater.inflate(R.layout.fragment_personal_new, container, false);
+        View root = inflater.inflate(R.layout.fragment_personal, container, false);
         return root;
     }
 
