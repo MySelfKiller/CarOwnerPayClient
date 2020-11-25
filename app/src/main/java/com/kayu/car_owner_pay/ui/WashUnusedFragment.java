@@ -208,7 +208,7 @@ public class WashUnusedFragment extends Fragment {
             }
         });
         store_name.setText(washStation.shopName);
-        order_number.setText(washStation.serOrderNo);
+        order_number.setText(washStation.orderNo);
 
         String orderStateStr;
         int qr_color= Color.LTGRAY;
