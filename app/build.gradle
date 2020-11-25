@@ -9,7 +9,8 @@ def keyDir = ""
 if (isWindows()){
     keyDir = "C:\\Users\\Killer\\Documents\\CarOwnerPayClient\\app\\key\\"
 }else {
-    keyDir = "/Users/killer/AndroidStudioProjects/CarOwnerPayClient/app/key/"
+//    keyDir = "/Users/hm/AndroidStudioProjects/CarOwnerPayClient/app/key/"
+    keyDir = "../app/key/"
 }
 
 android {

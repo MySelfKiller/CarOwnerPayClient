@@ -412,7 +412,7 @@ public class KWApplication extends Application {
                         "&src=#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end");
                 activity.startActivity(intent);
             } catch (URISyntaxException e) {
-                Log.e("goError", e.getMessage());
+                LogUtil.e("goError", e.getMessage());
             }
         } else {
             Toast.makeText(activity, "您尚未安装百度地图", Toast.LENGTH_SHORT).show();
@@ -434,7 +434,7 @@ public class KWApplication extends Application {
                         + "&lon=" + longtitude + "&dev=0");
                 activity.startActivity(intent);
             } catch (URISyntaxException e) {
-                Log.e("goError", e.getMessage());
+                LogUtil.e("goError", e.getMessage());
             }
         } else {
             Toast.makeText(activity, "您尚未安装高德地图", Toast.LENGTH_SHORT).show();

@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.kayu.utils.LogUtil;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
@@ -20,7 +21,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("hm","WXPayEntryActivity");
+        LogUtil.e("hm","WXPayEntryActivity");
         WXShare share = new WXShare(this);
         api = share
 //                                .register()
@@ -41,7 +42,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        Log.e("hm","onNewIntent");
+        LogUtil.e("hm","onNewIntent");
         setIntent(intent);
         if (!api.handleIntent(intent, this)) {
             finish();

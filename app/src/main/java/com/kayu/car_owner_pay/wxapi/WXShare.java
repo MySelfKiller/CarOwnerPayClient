@@ -16,6 +16,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.kayu.utils.Constants;
 import com.kayu.utils.FileUtil;
 import com.kayu.utils.ItemCallback;
+import com.kayu.utils.LogUtil;
 import com.kayu.utils.StringUtil;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
@@ -129,7 +130,7 @@ public class WXShare {
         req.scene = mTargetScene;
 
         boolean result = api.sendReq(req);
-        Log.e("hm","text shared: " + result);
+        LogUtil.e("hm","text shared: " + result);
         return this;
     }
 
@@ -228,11 +229,11 @@ public class WXShare {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.e("hm","接收到广播");
+            LogUtil.e("hm","接收到广播");
             if (intent.getAction().equals(WXShare.TYPE_SHARE)){
                 Response response = intent.getParcelableExtra(EXTRA_RESULT);
-                Log.e("hm","type: " + response.getType());
-                Log.e("hm","errCode: " + response.errCode);
+                LogUtil.e("hm","type: " + response.getType());
+                LogUtil.e("hm","errCode: " + response.errCode);
                 String result;
                 if (listener != null) {
                     if (response.errCode == BaseResp.ErrCode.ERR_OK) {

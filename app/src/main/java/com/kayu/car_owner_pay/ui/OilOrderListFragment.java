@@ -83,7 +83,7 @@ public class OilOrderListFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.e("hm","CustomerListBankFragment---------setUserVisibleHint===="+isVisibleToUser);
+//        LogUtil.e("hm","CustomerListBankFragment---------setUserVisibleHint===="+isVisibleToUser);
         if (isVisibleToUser&& !mHasLoadedOnce && isCreated){
             initView();
             mHasLoadedOnce = true;

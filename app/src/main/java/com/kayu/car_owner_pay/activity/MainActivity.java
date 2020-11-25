@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//            Log.e("hm","NavigationItemSelected position="+item.getItemId());
+//            LogUtil.e("hm","NavigationItemSelected position="+item.getItemId());
             if (lastSelectItemid == item.getItemId()){
                 return true;
             }
@@ -463,8 +463,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 selectedItemId = R.id.navigation_personal;
                 break;
         }
-//        Log.e("hm","viewPage getSelectedItemId="+navigation.getSelectedItemId());
-//        Log.e("hm","viewPage selectedItemId="+selectedItemId);
+//        LogUtil.e("hm","viewPage getSelectedItemId="+navigation.getSelectedItemId());
+//        LogUtil.e("hm","viewPage selectedItemId="+selectedItemId);
         if (navigation.getSelectedItemId()!= selectedItemId){
             navigation.setSelectedItemId(selectedItemId);
         }

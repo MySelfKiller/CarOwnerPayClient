@@ -202,7 +202,7 @@ public class WebViewActivity extends AppCompatActivity {
 
 //开启DomStorage缓存
         webSettings.setDomStorageEnabled(true);
-        Log.e("WebView","UserAgent: "+webSettings.getUserAgentString());
+        LogUtil.e("WebView","UserAgent: "+webSettings.getUserAgentString());
 
         // android 5.0及以上默认不支持Mixed Content
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -331,7 +331,7 @@ public class WebViewActivity extends AppCompatActivity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.e("WebView","shouldOverrideUrlLoading: "+url);
+                LogUtil.e("WebView","shouldOverrideUrlLoading: "+url);
                 view.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
                 view.getSettings().setJavaScriptEnabled(true);
                 view.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -397,7 +397,7 @@ public class WebViewActivity extends AppCompatActivity {
                 CookieManager cookieManager = CookieManager.getInstance();
                 String CookieStr = cookieManager.getCookie(url);
                 lastOpenUrl = url;
-                Log.e("WebView","onPageFinished: "+url);
+                LogUtil.e("WebView","onPageFinished: "+url);
                 LogUtil.e("WebView", "Cookies = " + CookieStr);
 
                 super.onPageFinished(view, url);
@@ -427,8 +427,8 @@ public class WebViewActivity extends AppCompatActivity {
     class FileDownLoadListener implements DownloadListener {
         @Override
         public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-            Log.e("WebView","DownloadListener-->url=" + url);
-            Log.e("WebView","isDownload-->" + isDownload);
+            LogUtil.e("WebView","DownloadListener-->url=" + url);
+            LogUtil.e("WebView","isDownload-->" + isDownload);
             if (isDownload) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 Uri uri = Uri.parse(url);
