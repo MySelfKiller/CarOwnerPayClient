@@ -25,6 +25,7 @@ package com.kayu.car_owner_pay.ui.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -99,7 +100,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tv_title;
-        RoundImageView tv_img;
+        ImageView tv_img;
 
         public MyViewHolder(View itemView) {
             super(itemView);

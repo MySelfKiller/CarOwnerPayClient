@@ -15,6 +15,6 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
 //        assertEquals(4, 2 + 2);
-        ScreenUtils.getDp("/Users/killer/AndroidStudioProjects/CarOwnerPayClient/app/");
+        ScreenUtils.getDp("../app/");
     }
 }

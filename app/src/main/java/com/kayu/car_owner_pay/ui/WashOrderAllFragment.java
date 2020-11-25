@@ -27,6 +27,7 @@ import com.kayu.car_owner_pay.http.ResponseInfo;
 import com.kayu.car_owner_pay.model.ItemWashOrderBean;
 import com.kayu.car_owner_pay.ui.adapter.ItemWashOrderAdapter;
 import com.kayu.utils.ItemCallback;
+import com.kayu.utils.LogUtil;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -136,6 +137,10 @@ public class WashOrderAllFragment extends Fragment {
             @Override
             public void handleMessage(Message msg) {
                 ResponseInfo resInfo = (ResponseInfo) msg.obj;
+                if (null == WashOrderAllFragment.this.getActivity()){
+                    LogUtil.e("hm","WashOrderAllFragment 以销毁");
+                    return;
+                }
                 if (resInfo.status == 1) {
                     orderData = (ArrayList<ItemWashOrderBean>) resInfo.responseData;
                     initViewData();

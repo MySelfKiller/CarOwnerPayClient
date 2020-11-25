@@ -153,7 +153,7 @@ public class HomeFragment extends Fragment {
                     return;
                 isRefresh = true;
                 pageIndex = 1;
-                initView();
+                initListView();
 
             }
         });
@@ -219,7 +219,7 @@ public class HomeFragment extends Fragment {
         super.onStart();
 //        LogUtil.e("HomeFragment----","----onStart---");
         if (!isCreated) {
-            initListView();
+            initView();
 //            LogUtil.e("HomeFragment----","----onStart------isCreated");
             LocationManagerUtil.getSelf().setLocationListener(new LocationCallback() {
                 @Override
@@ -346,17 +346,17 @@ public class HomeFragment extends Fragment {
                     return;
 
                 int mColumns,mRows;
-                if (categoryBeans.size() <= 5) {
-                    if (categoryBeans.size() == 5){
-                        mColumns = 5;
-                    }else {
-                        mColumns = 4;
-                    }
+                if (categoryBeans.size() <= 4) {
+//                    if (categoryBeans.size() == 4){
+//                        mColumns = 5;
+//                    }else {
+//                    }
+                    mColumns = 4;
                     mRows = 1;
 
                 } else {
-                    mRows = categoryBeans.size()%5 == 0 ? categoryBeans.size()/5 : categoryBeans.size()/5 +1;
-                    mColumns = 5;
+                    mRows = categoryBeans.size()%4 == 0 ? categoryBeans.size()/4 : categoryBeans.size()/4 +1;
+                    mColumns = 4;
                 }
 
                 category_rv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dipToPx(getContext(),80)*mRows));

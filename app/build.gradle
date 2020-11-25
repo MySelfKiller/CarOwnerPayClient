@@ -65,9 +65,9 @@ android {
             def date = new Date()
             def formattedDate = date.format('yyyyMMdd')
             if (variant.buildType.name.equals('release')) {
-                fileName = "CarOwner_KaYu_${variant.mergedFlavor.versionName}_release_${formattedDate}.apk"
+                fileName = "CarOwnerPay_KaYu_${variant.mergedFlavor.versionName}_release_${formattedDate}.apk"
             } else if (variant.buildType.name.equals('debug')) {
-                fileName = "CarOwner_KaYu_${variant.mergedFlavor.versionName}_debug_${formattedDate}.apk"
+                fileName = "CarOwnerPay_KaYu_${variant.mergedFlavor.versionName}_debug_${formattedDate}.apk"
             }
             outputFileName = fileName
         }

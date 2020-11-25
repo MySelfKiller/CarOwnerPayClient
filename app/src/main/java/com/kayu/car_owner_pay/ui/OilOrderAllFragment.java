@@ -33,6 +33,7 @@ import com.kayu.car_owner_pay.model.ItemOilOrderBean;
 import com.kayu.car_owner_pay.ui.adapter.ItemOrderViewAdapter;
 import com.kayu.utils.ImageUtil;
 import com.kayu.utils.ItemCallback;
+import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.QRCodeUtil;
 import com.kayu.utils.StringUtil;
@@ -145,6 +146,10 @@ public class OilOrderAllFragment extends Fragment {
             @Override
             public void handleMessage(Message msg) {
                 ResponseInfo resInfo = (ResponseInfo) msg.obj;
+                if (null == OilOrderAllFragment.this.getActivity()){
+                    LogUtil.e("hm","OilOrderAllFragment 以销毁");
+                    return;
+                }
                 if (resInfo.status == 1) {
                     orderData = (ArrayList<ItemOilOrderBean>) resInfo.responseData;
                     initViewData();

@@ -226,6 +226,15 @@ public class HomeCarWashFragment extends Fragment {
                 if (isRefresh && null != stationAdapter)
                     stationAdapter.removeAllData();
                 HashMap<String,Object> dataMap = new HashMap<>();
+                /**
+                 * "pageNum":1,
+                 * "pageSize":100,
+                 * "cityName":"唐山市",
+                 * "cusLongitude":"112.5166368016669",
+                 * "cusLatitude":"32.97054428578949",
+                 * "serviceCode":"81",
+                 * "priority":"dis"
+                 */
                 dataMap.put("pageNum",pageIndex);
                 dataMap.put("pageSize",20);
                 dataMap.put("cusLatitude",String.valueOf(latitude));
