@@ -21,15 +21,18 @@ public class IncomeDetailedParser extends BaseParse {
         String msg = jsonObject.optString("message");
         ResponseInfo responseInfo = new ResponseInfo(status,msg);
 //        PersionalNotice notice = GsonHelper.fromJson(jsonStr,PersionalNotice.class);
-        JSONArray noticeArr = jsonObject.optJSONArray("data");
-        if (null != noticeArr &&noticeArr.length()>0){
-            List<IncomeDetailedData> dataList= new ArrayList<>();
-            for (int x = 0; x<noticeArr.length(); x++){
-                JSONObject obj = (JSONObject) noticeArr.get(x);
-                IncomeDetailedData noticeData = GsonHelper.fromJson(obj.toString(),IncomeDetailedData.class);
-                dataList.add(noticeData);
+        JSONObject dataObj = jsonObject.optJSONObject("data");
+        if (null != dataObj) {
+            JSONArray noticeArr = dataObj.optJSONArray("list");
+            if (null != noticeArr &&noticeArr.length()>0){
+                List<IncomeDetailedData> dataList= new ArrayList<>();
+                for (int x = 0; x<noticeArr.length(); x++){
+                    JSONObject obj = (JSONObject) noticeArr.get(x);
+                    IncomeDetailedData noticeData = GsonHelper.fromJson(obj.toString(),IncomeDetailedData.class);
+                    dataList.add(noticeData);
+                }
+                responseInfo.responseData = dataList;
             }
-            responseInfo.responseData = dataList;
         }
         return responseInfo;
     }
