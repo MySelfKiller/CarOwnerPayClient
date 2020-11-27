@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.PayOrderViewModel;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.MainViewModel;
+import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.model.WashStationDetailBean;
 import com.kayu.car_owner_pay.wxapi.AliPayBean;
 import com.kayu.car_owner_pay.wxapi.OnResponseListener;
@@ -37,6 +39,7 @@ import com.kayu.car_owner_pay.wxapi.WxPayBean;
 import com.kayu.utils.GetJuLiUtils;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
+import com.kayu.utils.StringUtil;
 import com.kayu.utils.location.LocationManagerUtil;
 import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.v3.TipDialog;
@@ -92,7 +95,7 @@ public class WashOrderFragment extends Fragment {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
 //                        showAlert(PayDemoActivity.this, getString(R.string.pay_success) + payResult);
-                        TipDialog.show((AppCompatActivity) getActivity(), "支付成功！", TipDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
+                        TipDialog.show((AppCompatActivity) getActivity(), "支付成功", TipDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
                             @Override
                             public void onDismiss() {
                                 if (null != mAliPayBean) {
@@ -113,7 +116,7 @@ public class WashOrderFragment extends Fragment {
                         if (null != mAliPayBean) {
                             payOrderViewModel.cancelPay(getContext(),mAliPayBean.orderId);
                         }
-                        TipDialog.show((AppCompatActivity) getActivity(), "支付失败！", TipDialog.TYPE.ERROR).setOnDismissListener(new OnDismissListener() {
+                        TipDialog.show((AppCompatActivity) getActivity(), "支付已取消", TipDialog.TYPE.WARNING).setOnDismissListener(new OnDismissListener() {
                             @Override
                             public void onDismiss() {
 
@@ -129,6 +132,7 @@ public class WashOrderFragment extends Fragment {
     };
 
     private String serviceType;
+    private LinearLayout pay_way_lay;
 
     public WashOrderFragment(WashStationDetailBean.ServicesDTO.ListDTO selectedListDTO,String serviceType ) {
         this.selectedListDTO = selectedListDTO;
@@ -183,13 +187,11 @@ public class WashOrderFragment extends Fragment {
         order_price_tg = view.findViewById(R.id.wash_order_price_tg);
         order_sub_price_tg = view.findViewById(R.id.wash_order_sub_price_tg);
 
+        pay_way_lay = view.findViewById(R.id.wash_order_pay_way_lay);
         wechat_option = view.findViewById(R.id.wash_order_wechat_option);
         wechat_checked = view.findViewById(R.id.wash_order_wechat_checked);
         alipay_option = view.findViewById(R.id.wash_order_alipay_option);
         alipay_checked = view.findViewById(R.id.wash_order_alipay_checked);
-        //默认选择支付宝支付
-        alipay_checked.setSelected(true);
-        payWay = 2;
 
         alipay_option.setOnClickListener(new NoMoreClickListener() {
             @Override
@@ -250,7 +252,37 @@ public class WashOrderFragment extends Fragment {
                     initViewData(washStationDetailBean);
             }
         });
-
+        mainViewModel.getParameter(getContext(),20).observe(requireActivity(), new Observer<SystemParam>() {
+            @Override
+            public void onChanged(SystemParam systemParam) {
+                if (null == systemParam){
+                    return;
+                }
+                if (!StringUtil.isEmpty(systemParam.content.trim())){
+                    String[] arr = systemParam.content.split("#");
+//                    LogUtil.e("hm","截取---"+arr[0]);
+                    for (int x = 0; x < arr.length; x++) {
+                        if (arr[x].equals("支付宝")) {
+                            alipay_option.setVisibility(View.VISIBLE);
+                            if (x ==0){
+                                alipay_checked.setSelected(true);
+                                payWay = 2;
+                                pay_way_lay.setVisibility(View.VISIBLE);
+                                order_pay_btn.setVisibility(View.VISIBLE);
+                            }
+                        } else if (arr[x].equals("微信")) {
+                            wechat_option.setVisibility(View.VISIBLE);
+                            if (x ==0){
+                                wechat_checked.setSelected(true);
+                                payWay = 1;
+                                pay_way_lay.setVisibility(View.VISIBLE);
+                                order_pay_btn.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void initViewData(WashStationDetailBean washStation) {
@@ -307,7 +339,7 @@ public class WashOrderFragment extends Fragment {
         wxShare.setListener(new OnResponseListener() {
             @Override
             public void onSuccess() {
-                LogUtil.e("hm", "支付成功");
+//                LogUtil.e("hm", "支付成功");
                 TipDialog.show((AppCompatActivity) getActivity(), "支付成功", TipDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss() {
@@ -327,11 +359,11 @@ public class WashOrderFragment extends Fragment {
 
             @Override
             public void onCancel() {
-                LogUtil.e("hm", "支付已取消");
+//                LogUtil.e("hm", "支付已取消");
                 if (null != mWxPayBean) {
                     payOrderViewModel.cancelPay(getContext(),mWxPayBean.orderId);
                 }
-                TipDialog.show((AppCompatActivity) getActivity(), "支付已取消", TipDialog.TYPE.ERROR).setOnDismissListener(new OnDismissListener() {
+                TipDialog.show((AppCompatActivity) getActivity(), "支付已取消", TipDialog.TYPE.WARNING).setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss() {
 

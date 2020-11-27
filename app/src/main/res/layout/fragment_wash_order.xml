@@ -328,9 +328,11 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
+                    android:id="@+id/wash_order_pay_way_lay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_15"
+                    android:visibility="gone"
                     android:background="@drawable/white_bg_shape_4"
                     android:orientation="vertical">
 
@@ -350,6 +352,7 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/wash_order_alipay_option"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -408,6 +411,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/wash_order_wechat_option"
                         android:layout_width="match_parent"
+                        android:visibility="gone"
                         android:layout_height="wrap_content">
 
                         <ImageView
@@ -551,6 +555,7 @@
                 android:id="@+id/wash_order_price_tg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/dp_15"
                 android:layout_marginTop="@dimen/dp_5"
                 android:textColor="@color/red_bg_def"
                 android:textSize="@dimen/sp_17"
@@ -581,6 +586,7 @@
                 app:layout_constraintTop_toTopOf="@id/wash_order_sub_price_tg" />
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/wash_order_pay_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

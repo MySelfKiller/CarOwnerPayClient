@@ -69,7 +69,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dp_10"
                             android:layout_marginTop="@dimen/dp_5"
-                            android:text="151****6046"
                             android:textColor="@color/black1"
                             android:textSize="@dimen/sp_16"
                             android:textStyle="bold"
