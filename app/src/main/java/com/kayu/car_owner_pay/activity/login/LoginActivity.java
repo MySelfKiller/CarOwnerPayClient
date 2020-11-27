@@ -24,6 +24,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.AppManager;
 import com.kayu.car_owner_pay.activity.BaseActivity;
@@ -432,6 +433,7 @@ public class LoginActivity extends BaseActivity {
                             editor.putString(Constants.login_info, GsonHelper.toJsonString(user));
                             editor.apply();
                             editor.commit();
+                            KWApplication.getInstance().token = user.token;
                             AppManager.getAppManager().finishAllActivity();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();

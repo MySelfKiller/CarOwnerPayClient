@@ -247,8 +247,13 @@ public class KWApplication extends Application {
 
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                view.setImageBitmap(resource);
-                callback.onSuccess(resource);
+                if (null != view) {
+
+                    view.setImageBitmap(resource);
+                }
+                if (null != callback) {
+                    callback.onSuccess(resource);
+                }
 
             }
 

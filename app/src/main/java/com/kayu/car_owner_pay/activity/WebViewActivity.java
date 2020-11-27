@@ -210,7 +210,7 @@ public class WebViewActivity extends AppCompatActivity {
             //或者
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         }
-
+        wvWebView.addJavascriptInterface(new LocalJavascriptInterface(this),"androidMethod");
         wvWebView.requestFocus();
         wvWebView.clearCache(true);
         wvWebView.clearHistory();
@@ -583,12 +583,13 @@ public class WebViewActivity extends AppCompatActivity {
     //系统自带监听方法
     @Override
     public void onBackPressed() {
-//        if (wvWebView.canGoBack()) {
-//            wvWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-//            wvWebView.goBack();
-//            return;
-//        }
-        finish();
+        if (wvWebView.canGoBack()) {
+            wvWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+            wvWebView.goBack();
+            return;
+        } else {
+            finish();
+        }
 
         super.onBackPressed();
     }

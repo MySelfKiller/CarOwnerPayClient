@@ -36,6 +36,8 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Random;
+
 public class PersonalFragment extends Fragment {
     private SmartRefreshLayout refreshLayout;
     boolean isLoadmore = false;
@@ -43,7 +45,7 @@ public class PersonalFragment extends Fragment {
     private MainViewModel mainViewModel;
     private RoundImageView user_head_img;
     private TextView user_name;
-    private TextView user_balance;
+    private TextView user_balance,web_info_tv;
     private TextView explain_content;
     private ConstraintLayout oil_order_lay,wash_order_lay, all_order_lay;
     private LinearLayout more_lay;
@@ -74,6 +76,7 @@ public class PersonalFragment extends Fragment {
         user_balance = view.findViewById(R.id.personal_user_balance);
         //账户提示语
         explain_content = view.findViewById(R.id.personal_explain_content);
+        web_info_tv = view.findViewById(R.id.personal_web_info);
 
         refreshLayout.setEnableAutoLoadMore(false);
         refreshLayout.setEnableLoadMore(false);
@@ -223,12 +226,12 @@ public class PersonalFragment extends Fragment {
             mainViewModel.getReminder(getContext(), LocationManagerUtil.getSelf().getLoccation().getCity()).observe(requireActivity(), new Observer<String>() {
                 @Override
                 public void onChanged(String parameter) {
-                    explain_content.setText(parameter);
+//                    explain_content.setText(parameter);
                 }
             });
         }
 
-        mainViewModel.getUserInfo(getContext()).observe(getActivity(), new Observer<UserBean>() {
+        mainViewModel.getUserInfo(getContext()).observe(requireActivity(), new Observer<UserBean>() {
             @Override
             public void onChanged(UserBean userBean) {
                 if (isRefresh) {
@@ -243,7 +246,31 @@ public class PersonalFragment extends Fragment {
                     return;
                 KWApplication.getInstance().loadImg(userBean.headPic,user_head_img);
                 user_name.setText(userBean.phone);
-                user_balance.setText(String.valueOf(userBean.balance));
+                user_balance.setText(String.valueOf(userBean.expAmt));
+                web_info_tv.setOnClickListener(new NoMoreClickListener() {
+                    @Override
+                    protected void OnMoreClick(View view) {
+                        StringBuilder jumpUrl = new StringBuilder();
+                        if (userBean.type == 1) {
+                            jumpUrl.append("https://www.ky808.cn/carfriend/static/cyt/index.html#/purchase?token=");
+                        } else {
+                            jumpUrl.append("https://www.ky808.cn/carfriend/static/cyt/index.html#/upgrade?token=");
+                        }
+                        int max=100,min=1;
+                        long randomNum = System.currentTimeMillis();
+                        int ran3 = (int) (randomNum%(max-min)+min);
+                        jumpUrl.append(KWApplication.getInstance().token).append("&").append(randomNum);
+                        Intent intent = new Intent(getContext(), WebViewActivity.class);
+                        intent.putExtra("url",jumpUrl.toString());
+                        intent.putExtra("from","新手教程");
+                        requireActivity().startActivity(intent);
+                    }
+
+                    @Override
+                    protected void OnMoreErrorClick() {
+
+                    }
+                });
 
             }
         });

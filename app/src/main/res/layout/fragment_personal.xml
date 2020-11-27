@@ -222,6 +222,7 @@
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintBottom_toBottomOf="parent"/>
                             <TextView
+                                android:id="@+id/personal_web_info"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingVertical="@dimen/dp_6"

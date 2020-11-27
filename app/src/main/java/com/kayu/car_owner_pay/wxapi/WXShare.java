@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.kayu.car_owner_pay.R;
 import com.kayu.utils.Constants;
 import com.kayu.utils.FileUtil;
 import com.kayu.utils.ItemCallback;
@@ -23,12 +24,15 @@ import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXImageObject;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXMusicObject;
 import com.tencent.mm.opensdk.modelmsg.WXTextObject;
+import com.tencent.mm.opensdk.modelmsg.WXVideoObject;
 import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 public class WXShare {
@@ -44,10 +48,10 @@ public class WXShare {
     private final IWXAPI api;
     private OnResponseListener listener;
     private ResponseReceiver receiver;
-    private int mTargetScene = SendMessageToWX.Req.WXSceneSession;
+//    private int mTargetScene = SendMessageToWX.Req.WXSceneSession;
 
     public WXShare(Context context) {
-        api = WXAPIFactory.createWXAPI(context, Constants.WX_APP_ID,false);
+        api = WXAPIFactory.createWXAPI(context, Constants.WX_APP_ID, false);
         this.context = context;
     }
 
@@ -77,6 +81,7 @@ public class WXShare {
 
     /**
      * 发起微信支付请求
+     *
      * @param wxPayBean 支付请求实体类
      * @param callback  支付结果回调
      */
@@ -96,11 +101,13 @@ public class WXShare {
             this.callback = callback;
         }
     }
+
     /**
      * 获取微信登录授权code
+     *
      * @return
      */
-    public WXShare getAuth(ItemCallback callback){
+    public WXShare getAuth(ItemCallback callback) {
         //发起登录请求
 
         if (!api.isWXAppInstalled()) {
@@ -127,19 +134,14 @@ public class WXShare {
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.transaction = buildTransaction("text");
         req.message = msg;
-        req.scene = mTargetScene;
+        req.scene = type == 0 ? SendMessageToWX.Req.WXSceneSession : SendMessageToWX.Req.WXSceneTimeline;
 
         boolean result = api.sendReq(req);
-        LogUtil.e("hm","text shared: " + result);
+        LogUtil.e("hm", "text shared: " + result);
         return this;
     }
 
     public WXShare shareImg(int type, String filePath) {
-        if (type == Constants.SHARED_TYPE1){
-            mTargetScene = SendMessageToWX.Req.WXSceneSession;
-        }else if (type == Constants.SHARED_TYPE2){
-            mTargetScene = SendMessageToWX.Req.WXSceneTimeline;
-        }
         File file = new File(filePath);
         if (!file.exists()) {
             String tip = "文件不存在";
@@ -154,63 +156,110 @@ public class WXShare {
         msg.mediaObject = imgObj;
 
         Bitmap bmp = BitmapFactory.decodeFile(filePath);
-        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 150, 200, true);
-        bmp.recycle();
+        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 100, 150, true);
         msg.thumbData = FileUtil.bmpToByteArray(thumbBmp, true);
 
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.transaction = buildTransaction("img");
         req.message = msg;
-        req.scene = mTargetScene;
+        req.scene = type == 0 ? SendMessageToWX.Req.WXSceneSession : SendMessageToWX.Req.WXSceneTimeline;
         api.sendReq(req);
         return this;
     }
-    public WXShare shareImg(int type, Bitmap bitmap) {
-        if (type == Constants.SHARED_TYPE1){
-            mTargetScene = SendMessageToWX.Req.WXSceneSession;
-        }else if (type == Constants.SHARED_TYPE2){
-            mTargetScene = SendMessageToWX.Req.WXSceneTimeline;
-        }
 
+    public WXShare shareImg(int type, Bitmap bitmap,String title, String descroption) {
         WXImageObject imgObj = new WXImageObject();
-
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] datas = baos.toByteArray();
+        imgObj.imageData = datas;
         WXMediaMessage msg = new WXMediaMessage();
         msg.mediaObject = imgObj;
-
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
-        bitmap.recycle();
-        msg.thumbData = FileUtil.bmpToByteArray(scaledBitmap, true);
+        msg.title = title;
+        msg.description = descroption;
+        Bitmap thumbBmp = Bitmap.createScaledBitmap(bitmap, 100, 150, true);
+        msg.thumbData = FileUtil.bmpToByteArray(thumbBmp, true);
 
         SendMessageToWX.Req req = new SendMessageToWX.Req();
-        req.transaction = buildTransaction("imgshareappdata");
+        req.transaction = buildTransaction("img");
         req.message = msg;
-        req.scene = mTargetScene;
+        req.scene = type == 0 ? SendMessageToWX.Req.WXSceneSession : SendMessageToWX.Req.WXSceneTimeline;
+        api.sendReq(req);
+        return this;
+    }
+
+    public WXShare shareMusic(int type, String url, String title, String descroption) {
+//初始化一个WXMusicObject，填写url
+        WXMusicObject music = new WXMusicObject();
+        music.musicUrl = url;
+
+//用 WXMusicObject 对象初始化一个 WXMediaMessage 对象
+        WXMediaMessage msg = new WXMediaMessage();
+        msg.mediaObject = music;
+        msg.title = title;
+        msg.description = descroption;
+        Bitmap thumbBmp = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
+//设置音乐缩略图
+        msg.thumbData = FileUtil.bmpToByteArray(thumbBmp, true);
+//构造一个Req
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = buildTransaction("music");
+        req.message = msg;
+        req.scene = type == 0 ? SendMessageToWX.Req.WXSceneSession : SendMessageToWX.Req.WXSceneTimeline;
+//        req.userOpenId = getOpenId();
+//调用api接口，发送数据到微信
+        api.sendReq(req);
+        return this;
+    }
+
+    public WXShare shareVideo(int type, String url, String title, String descroption){
+//初始化一个WXVideoObject，填写url
+        WXVideoObject video = new WXVideoObject();
+        video.videoUrl = url;
+
+//用 WXVideoObject 对象初始化一个 WXMediaMessage 对象
+        WXMediaMessage msg = new WXMediaMessage(video);
+        msg.title = title;
+        msg.description = descroption;
+        Bitmap thumbBmp = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
+        msg.thumbData =FileUtil.bmpToByteArray(thumbBmp,true);
+//        msg.setThumbImage(null);
+//构造一个Req
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = buildTransaction("video");
+        req.message =msg;
+        req.scene = type == 0 ? SendMessageToWX.Req.WXSceneSession : SendMessageToWX.Req.WXSceneTimeline;
+//        req.userOpenId = getOpenId();
+
+//调用api接口，发送数据到微信
         api.sendReq(req);
         return this;
     }
 
 
-    public WXShare shareUrl(int flag, String url, String title, String descroption, String filePath){//初始化一个WXWebpageObject填写url          
-        WXWebpageObject webpageObject =new WXWebpageObject();
-        webpageObject.webpageUrl =url;
+    public WXShare shareUrl(int type, String url, String title, String descroption, String filePath) {//初始化一个WXWebpageObject填写url          
+        WXWebpageObject webpageObject = new WXWebpageObject();
+        webpageObject.webpageUrl = url;
         //用WXWebpageObject对象初始化一个WXMediaMessage，天下标题，描述
-        WXMediaMessage msg =new WXMediaMessage(webpageObject);
-        msg.title =title;
-        msg.description =descroption;
+        WXMediaMessage msg = new WXMediaMessage(webpageObject);
+        msg.title = title;
+        msg.description = descroption;
         //这块需要注意，图片的像素千万不要太大，不然的话会调不起来微信分享，
-        if (!StringUtil.isEmpty(filePath)){
+        if (!StringUtil.isEmpty(filePath)) {
             Bitmap bmp = BitmapFactory.decodeFile(filePath);
             Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 50, 50, true);
-            bmp.recycle();
+            msg.thumbData = FileUtil.bmpToByteArray(thumbBmp, true);
+        }else {
+            Bitmap thumbBmp = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
             msg.thumbData = FileUtil.bmpToByteArray(thumbBmp, true);
         }
-        SendMessageToWX.Req req =new SendMessageToWX.Req();
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.transaction = String.valueOf(System.currentTimeMillis());
-        req.message =msg;
-        req.scene=flag==1? SendMessageToWX.Req.WXSceneSession: SendMessageToWX.Req.WXSceneTimeline;
-        api.sendReq(req);return this;
+        req.message = msg;
+        req.scene = type == 0 ? SendMessageToWX.Req.WXSceneSession : SendMessageToWX.Req.WXSceneTimeline;
+        api.sendReq(req);
+        return this;
     }
-
 
 
     public IWXAPI getApi() {
@@ -229,11 +278,11 @@ public class WXShare {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            LogUtil.e("hm","接收到广播");
-            if (intent.getAction().equals(WXShare.TYPE_SHARE)){
+            LogUtil.e("hm", "接收到广播");
+            if (intent.getAction().equals(WXShare.TYPE_SHARE)) {
                 Response response = intent.getParcelableExtra(EXTRA_RESULT);
-                LogUtil.e("hm","type: " + response.getType());
-                LogUtil.e("hm","errCode: " + response.errCode);
+                LogUtil.e("hm", "type: " + response.getType());
+                LogUtil.e("hm", "errCode: " + response.errCode);
                 String result;
                 if (listener != null) {
                     if (response.errCode == BaseResp.ErrCode.ERR_OK) {
@@ -255,10 +304,10 @@ public class WXShare {
                         listener.onFail(result);
                     }
                 }
-            }else if (intent.getAction().equals(WXShare.TYPE_LOGIN)){
+            } else if (intent.getAction().equals(WXShare.TYPE_LOGIN)) {
                 String code = intent.getStringExtra(WXShare.EXTRA_RESULT);
-                if (null != callback){
-                    callback.onItemCallback(0,code);
+                if (null != callback) {
+                    callback.onItemCallback(0, code);
                 }
             } else if (intent.getAction().equals(WXShare.TYPE_PAY)) {
                 Response response = intent.getParcelableExtra(EXTRA_RESULT);
@@ -274,7 +323,7 @@ public class WXShare {
                     }
                 }
                 if (null != callback) {
-                    callback.onItemCallback(0,null);
+                    callback.onItemCallback(0, null);
                 }
             }
 
