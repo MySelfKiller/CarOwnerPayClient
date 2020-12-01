@@ -65,6 +65,9 @@ public class OilStationAdapter extends RecyclerView.Adapter<OilStationAdapter.lo
         loanHolder.location.setText(oilStationBean.gasAddress);
         loanHolder.distance.setText(oilStationBean.distance+"km");
         loanHolder.oil_price.setText("￥"+oilStationBean.priceYfq);
+        loanHolder.oil_price_full.setText("￥"+oilStationBean.priceOfficial);
+        loanHolder.oil_rebate.setText(oilStationBean.offDiscount+"折");
+        loanHolder.oil_rebate.setVisibility(View.VISIBLE);
         loanHolder.oil_price_sub.setText( "降"+DoubleUtils.sub(oilStationBean.priceOfficial,oilStationBean.priceYfq)+"元");
         loanHolder.mView.setOnClickListener(new NoMoreClickListener() {
             @Override
@@ -98,7 +101,7 @@ public class OilStationAdapter extends RecyclerView.Adapter<OilStationAdapter.lo
 
 
     class loanHolder extends RecyclerView.ViewHolder{
-        private final TextView name, location,distance,oil_price,oil_price_sub,navi;
+        private final TextView name, location,distance,oil_price,oil_price_sub,navi,oil_price_full,oil_rebate;
         private View mView;
         private final ImageView img;
 
@@ -109,8 +112,10 @@ public class OilStationAdapter extends RecyclerView.Adapter<OilStationAdapter.lo
             name = itemView.findViewById(R.id.item_station_name);
             location = itemView.findViewById(R.id.item_station_location);
             distance = itemView.findViewById(R.id.item_station_distance);
+            oil_price_full = itemView.findViewById(R.id.item_station_oil_price_full);
             oil_price = itemView.findViewById(R.id.item_station_oil_price);
             oil_price_sub = itemView.findViewById(R.id.item_station_oil_price_sub);
+            oil_rebate = itemView.findViewById(R.id.item_station_oil_rebate);
             navi = itemView.findViewById(R.id.item_station_navi);
 //            pay_oil = itemView.findViewById(R.id.item_station_pay_oil);
         }

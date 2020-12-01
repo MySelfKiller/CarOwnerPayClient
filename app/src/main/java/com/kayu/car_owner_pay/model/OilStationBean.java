@@ -28,5 +28,7 @@ public class OilStationBean {
     public double priceYfq;   //油团价/元
     public double priceOfficial;     //国标价/元
     public double priceGun;     //枪价/元
+    public String offDiscount;//国标折扣/百分比
+    public String gunDiscount;//油站折扣/百分比
     public List<OilsTypeParam> oilsTypeList;
 }
