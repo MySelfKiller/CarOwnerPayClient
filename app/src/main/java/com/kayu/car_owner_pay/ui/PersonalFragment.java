@@ -45,7 +45,7 @@ public class PersonalFragment extends Fragment {
     private MainViewModel mainViewModel;
     private RoundImageView user_head_img;
     private TextView user_name;
-    private TextView user_balance,web_info_tv;
+    private TextView user_balance,web_info_tv,card_num;
     private TextView explain_content;
     private ConstraintLayout oil_order_lay,wash_order_lay, all_order_lay;
     private LinearLayout more_lay;
@@ -74,8 +74,9 @@ public class PersonalFragment extends Fragment {
         user_name = view.findViewById(R.id.personal_user_name);
         //卡余额
         user_balance = view.findViewById(R.id.personal_user_balance);
+        card_num = view.findViewById(R.id.personal_card_num);
         //账户提示语
-        explain_content = view.findViewById(R.id.personal_explain_content);
+//        explain_content = view.findViewById(R.id.personal_explain_content);
         web_info_tv = view.findViewById(R.id.personal_web_info);
 
         refreshLayout.setEnableAutoLoadMore(false);
@@ -247,6 +248,7 @@ public class PersonalFragment extends Fragment {
                 KWApplication.getInstance().loadImg(userBean.headPic,user_head_img);
                 user_name.setText(userBean.phone);
                 user_balance.setText(String.valueOf(userBean.expAmt));
+                card_num.setText("卡号："+userBean.inviteNo);
                 web_info_tv.setOnClickListener(new NoMoreClickListener() {
                     @Override
                     protected void OnMoreClick(View view) {

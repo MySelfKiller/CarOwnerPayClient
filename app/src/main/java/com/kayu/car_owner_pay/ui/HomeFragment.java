@@ -1,10 +1,13 @@
 package com.kayu.car_owner_pay.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,6 +41,7 @@ import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.text_banner.TextBannerView;
 import com.kayu.car_owner_pay.ui.adapter.CategoryAdapter;
 import com.kayu.utils.ItemCallback;
+import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.ScreenUtils;
 import com.kayu.utils.StringUtil;
@@ -96,8 +100,9 @@ public class HomeFragment extends Fragment {
             pageIndex = 1;
         }
     };
-    private TextView location_tv;
+    private TextView location_tv,notify_show;
     private PagerAdapter adapter;
+    private ImageView title_iv;
     //    private List<Fragment> subFragmentList;
 
 //    private double distance;//距离/km
@@ -107,7 +112,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 //        LogUtil.e("HomeFragment----","----onCreateView---");
-        StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
         mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
@@ -124,7 +128,7 @@ public class HomeFragment extends Fragment {
                 FragmentManager fg = requireActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fg.beginTransaction();
                 fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                fragmentTransaction.add(R.id.main_root_lay,new ExchangeFragment());
+                fragmentTransaction.add(R.id.main_root_lay, new MessageFragment());
                 fragmentTransaction.addToBackStack("ddd");
                 fragmentTransaction.commit();
             }
@@ -134,6 +138,8 @@ public class HomeFragment extends Fragment {
 
             }
         });
+        notify_show = view.findViewById(R.id.home_notify_show);
+        title_iv = view.findViewById(R.id.home_title_iv);
         category_rv = view.findViewById(R.id.home_category_rv);
         hostTextBanner = view.findViewById(R.id.home_hostTextBanner);
         slidingTabLayout = view.findViewById(R.id.list_ctl);
@@ -168,11 +174,11 @@ public class HomeFragment extends Fragment {
 
             }
         });
-        mTabEntities.add(new TabEntity("附近加油站",R.mipmap.ic_bg_close,R.mipmap.ic_bg_close));
-        mTabEntities.add(new TabEntity("附近洗车",R.mipmap.ic_bg_close,R.mipmap.ic_bg_close));
-        mFragments.add(new HomeGasStationFragment( mViewPager,0,callback));
-        mFragments.add(new HomeCarWashFragment(mViewPager,1,callback));
-        adapter = new MyPagerAdapter(getChildFragmentManager(),mFragments);
+        mTabEntities.add(new TabEntity("加油", R.mipmap.ic_bg_close, R.mipmap.ic_bg_close));
+        mTabEntities.add(new TabEntity("洗车", R.mipmap.ic_bg_close, R.mipmap.ic_bg_close));
+        mFragments.add(new HomeGasStationFragment(mViewPager, 0, callback));
+        mFragments.add(new HomeCarWashFragment(mViewPager, 1, callback));
+        adapter = new MyPagerAdapter(getChildFragmentManager(), mFragments);
         mViewPager.setAdapter(adapter);
         slidingTabLayout.setTabData(mTabEntities);
         slidingTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
@@ -230,7 +236,7 @@ public class HomeFragment extends Fragment {
                         longitude = location.getLongitude();
                         cityName = location.getCity();
                         location_tv.setText(cityName);
-                        if (!mHasLoadedOnce){
+                        if (!mHasLoadedOnce) {
                             refreshLayout.autoRefresh();
                             mHasLoadedOnce = true;
                         }
@@ -245,22 +251,22 @@ public class HomeFragment extends Fragment {
 
     private int fragIndex = 0;
 
-    private void initListView(){
-        mainViewModel.getParameter(getContext(),10).observe(requireActivity(), new Observer<SystemParam>() {
+    private void initListView() {
+        mainViewModel.getParameter(getContext(), 10).observe(requireActivity(), new Observer<SystemParam>() {
             @Override
             public void onChanged(SystemParam systemParam) {
-                if (null  == systemParam)
+                if (null == systemParam)
                     return;
                 try {
                     JSONObject jsonObject = new JSONObject(systemParam.content);
                     int showGas = jsonObject.optInt("gas");
                     int showCarWash = jsonObject.optInt("carwash");
-                    if (showGas == 1 && showCarWash ==1 ) {
+                    if (showGas == 1 && showCarWash == 1) {
                         slidingTabLayout.setVisibility(View.VISIBLE);
                         mViewPager.setCurrentItem(fragIndex);
                         slidingTabLayout.setCurrentTab(fragIndex);
                         mViewPager.setScrollble(true);
-                    }else if(showGas == 0 && showCarWash == 0){
+                    } else if (showGas == 0 && showCarWash == 0) {
                         slidingTabLayout.setVisibility(View.GONE);
                         mViewPager.setVisibility(View.GONE);
                     } else {
@@ -270,7 +276,7 @@ public class HomeFragment extends Fragment {
                             fragIndex = 1;
                             mViewPager.setCurrentItem(fragIndex);
                             mViewPager.setScrollble(false);
-                        }else if (showGas == 1){
+                        } else if (showGas == 1) {
                             fragIndex = 0;
                             mViewPager.setCurrentItem(fragIndex);
                             mViewPager.setScrollble(false);
@@ -286,7 +292,18 @@ public class HomeFragment extends Fragment {
     }
 
     private void initView() {
-
+        mainViewModel.getNotifyNum(getContext()).observe(requireActivity(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if (null == integer)
+                    return;
+                if (integer == 0) {
+                    notify_show.setVisibility(View.GONE);
+                } else {
+                    notify_show.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         mainViewModel.getNotifyList(getContext()).observe(requireActivity(), new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> strings) {
@@ -317,21 +334,42 @@ public class HomeFragment extends Fragment {
                 for (BannerBean item : bannerBeans) {
                     urlList.add(item.img);
                 }
+                title_iv.setBackgroundColor(Color.parseColor(bannerBeans.get(0).bgColor));
+                StatusBarUtil.setStatusBarColor(getActivity(), Color.parseColor(bannerBeans.get(0).bgColor));
                 banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR)
                         .setIndicatorGravity(BannerConfig.RIGHT)
                         .setImageLoader(new BannerImageLoader())
                         .setImages(urlList)
 //                .setBannerTitles(titles)
                         .setDelayTime(2000)
-                        .start();
+                        .start()
+                        .setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                            @Override
+                            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                            }
+
+                            @Override
+                            public void onPageSelected(int position) {
+                                if (getUserVisibleHint()) {
+                                    title_iv.setBackgroundColor(Color.parseColor(bannerBeans.get(position).bgColor));
+                                    StatusBarUtil.setStatusBarColor(getActivity(), Color.parseColor(bannerBeans.get(position).bgColor));
+                                }
+                            }
+
+                            @Override
+                            public void onPageScrollStateChanged(int state) {
+
+                            }
+                        });
                 banner.setOnBannerListener(new OnBannerListener() {
                     @Override
                     public void OnBannerClick(int position) {
                         String target = bannerBeans.get(position).href;
-                        if (!StringUtil.isEmpty(target)){
+                        if (!StringUtil.isEmpty(target.trim())) {
                             Intent intent = new Intent(getContext(), WebViewActivity.class);
-                            intent.putExtra("url",target);
-                            intent.putExtra("from","首页");
+                            intent.putExtra("url", target);
+                            intent.putExtra("from", "首页");
                             getActivity().startActivity(intent);
                         }
                     }
@@ -345,7 +383,7 @@ public class HomeFragment extends Fragment {
                 if (null == categoryBeans)
                     return;
 
-                int mColumns,mRows;
+                int mColumns, mRows;
                 if (categoryBeans.size() <= 4) {
 //                    if (categoryBeans.size() == 4){
 //                        mColumns = 5;
@@ -355,11 +393,11 @@ public class HomeFragment extends Fragment {
                     mRows = 1;
 
                 } else {
-                    mRows = categoryBeans.size()%4 == 0 ? categoryBeans.size()/4 : categoryBeans.size()/4 +1;
+                    mRows = categoryBeans.size() % 4 == 0 ? categoryBeans.size() / 4 : categoryBeans.size() / 4 + 1;
                     mColumns = 4;
                 }
 
-                category_rv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dipToPx(getContext(),80)*mRows));
+                category_rv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dipToPx(getContext(), 80) * mRows));
                 PagerGridLayoutManager mLayoutManager = new PagerGridLayoutManager(mRows, mColumns, PagerGridLayoutManager
                         .HORIZONTAL);
                 // 系统带的 RecyclerView，无需自定义
@@ -379,22 +417,29 @@ public class HomeFragment extends Fragment {
                 CategoryAdapter categoryAdapter = new CategoryAdapter(categoryBeans, new ItemCallback() {
                     @Override
                     public void onItemCallback(int position, Object obj) {
-                        CategoryBean categoryBean = (CategoryBean)obj;
+                        CategoryBean categoryBean = (CategoryBean) obj;
                         String target = categoryBean.href;
-                        if (!StringUtil.isEmpty(target)) {
-                            Intent intent = new Intent(getContext(), WebViewActivity.class);
-                            StringBuilder sb = new StringBuilder();
-                            sb.append(target);
-                            if (StringUtil.equals(categoryBean.type,"KY_H5")){
-                                sb.append("&token=" ).append(KWApplication.getInstance().token);
-                            }
-                            intent.putExtra("url", target + sb.toString());
-                            intent.putExtra("from", "首页");
-                            getActivity().startActivity(intent);
+                        if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
+                            // FIXME: 2020/12/1 添加加油跳转本地页面
+                        }else if (StringUtil.equals(categoryBean.type, "KY_WASH")){
+                            // FIXME: 2020/12/1 添加洗车跳转本地页面
+                        }else {
+                            if (!StringUtil.isEmpty(target)) {
+                                Intent intent = new Intent(getContext(), WebViewActivity.class);
+                                StringBuilder sb = new StringBuilder();
+                                sb.append(target);
+                                if (StringUtil.equals(categoryBean.type, "KY_H5")) {
+                                    sb.append("&token=").append(KWApplication.getInstance().token);
+                                }
+                                intent.putExtra("url", target + sb.toString());
+                                intent.putExtra("from", "首页");
+                                getActivity().startActivity(intent);
 
-                        } else {
-                            MessageDialog.show((AppCompatActivity) getContext(),"温馨提示","功能未开启，敬请期待");
+                            } else {
+                                MessageDialog.show((AppCompatActivity) getContext(), "温馨提示", "功能未开启，敬请期待");
+                            }
                         }
+
                     }
 
                     @Override
@@ -469,7 +514,7 @@ public class HomeFragment extends Fragment {
                 }
                 if (mFragments.get(x) instanceof HomeCarWashFragment) {
                     HomeCarWashFragment homeCarWashFragment = (HomeCarWashFragment) mFragments.get(x);
-                    double bddfsdfs[] = CoordinateTransformUtil.gcj02tobd09(longitude,latitude);
+                    double bddfsdfs[] = CoordinateTransformUtil.gcj02tobd09(longitude, latitude);
                     homeCarWashFragment.reqData(refreshLayout, pageIndex, isRefresh, isLoadmore, bddfsdfs[1], bddfsdfs[0], cityName);
                 }
             }
@@ -480,78 +525,87 @@ public class HomeFragment extends Fragment {
                 homeGasStationFragment.reqData(refreshLayout, pageIndex, isRefresh, isLoadmore, latitude, longitude);
             } else if (fragIndex == 1) {
                 HomeCarWashFragment homeCarWashFragment = (HomeCarWashFragment) mFragments.get(fragIndex);
-                double bddfsdfs[] = CoordinateTransformUtil.gcj02tobd09(longitude,latitude);
+                double bddfsdfs[] = CoordinateTransformUtil.gcj02tobd09(longitude, latitude);
                 homeCarWashFragment.reqData(refreshLayout, pageIndex, isRefresh, isLoadmore, bddfsdfs[1], bddfsdfs[0], cityName);
             }
         }
     }
 
-    private double latitude,longitude;
+    private double latitude, longitude;
     private String cityName;
 
 //    private void requestLocation() {
 //        WaitDialog.show((AppCompatActivity) getContext(),"定位中...");
 //        LocationManagerUtil.getSelf().startLocation();
 //    }
-//    @Override
-//    public void onAttach(@NonNull Context context) {
-//        super.onAttach(context);
-//        LogUtil.e("HomeFragment----","----onAttach---");
-//    }
-//
-//
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//        LogUtil.e("HomeFragment----","----onDestroyView---");
-//    }
-//
-//    @Override
-//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        LogUtil.e("HomeFragment----","----onActivityCreated---");
-//    }
-//
-//    @Override
-//    public void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        LogUtil.e("HomeFragment----","----onCreate---");
-//    }
-//
-//    @Override
-//    public void onAttachFragment(@NonNull Fragment childFragment) {
-//        super.onAttachFragment(childFragment);
-//        LogUtil.e("HomeFragment----","----onAttachFragment---");
-//    }
-//
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        LogUtil.e("HomeFragment----","----onDestroy---");
-//    }
-//
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        LogUtil.e("HomeFragment----","----onResume---");
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        LogUtil.e("HomeFragment----","----onPause---");
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        LogUtil.e("HomeFragment----","----onStop---");
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        LogUtil.e("HomeFragment----","----onDetach---");
-//    }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        LogUtil.e("HomeFragment----","----onAttach---");
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        LogUtil.e("HomeFragment----","----setUserVisibleHint---");
+        if (!isVisibleToUser && isCreated){
+            StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LogUtil.e("HomeFragment----","----onDestroyView---");
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        LogUtil.e("HomeFragment----","----onActivityCreated---");
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LogUtil.e("HomeFragment----","----onCreate---");
+    }
+
+    @Override
+    public void onAttachFragment(@NonNull Fragment childFragment) {
+        super.onAttachFragment(childFragment);
+        LogUtil.e("HomeFragment----","----onAttachFragment---");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LogUtil.e("HomeFragment----","----onDestroy---");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LogUtil.e("HomeFragment----","----onResume---");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LogUtil.e("HomeFragment----","----onPause---");
+        StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        LogUtil.e("HomeFragment----","----onStop---");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        LogUtil.e("HomeFragment----","----onDetach---");
+    }
 
 }

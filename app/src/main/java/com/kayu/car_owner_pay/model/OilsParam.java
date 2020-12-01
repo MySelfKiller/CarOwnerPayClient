@@ -34,5 +34,7 @@ public class OilsParam {
     public double priceYfq;//团油价/元
     public double priceGun;//油枪价/元
     public double priceOfficial;//国标价/元
+    public double offDiscount;//国标折扣/百分比
+    public double gunDiscount;//油站折扣/百分比
 
 }

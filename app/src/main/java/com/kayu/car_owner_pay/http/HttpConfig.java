@@ -43,6 +43,8 @@ public class HttpConfig {
     public static final String INTERFACE_USER_INFO = "api/v1/user/getdetail";        //用户信息
     public static final String INTERFACE_BALANCE_DEAIL = "api/v1/ioitem/list";        //收入明细
     public static final String INTERFACE_CHECK_UPDAGE = "api/parameter/editionAndroid"; //检查版本更新接口
+    public static final String INTERFACE_MESSAGE_LIST = "api/v1/notify/list";        //消息列表
+    public static final String INTERFACE_MESSAGE_NUM = "api/v1/notify/getUnreadCnt";        //消息列表
 
     //    public String authorization = "";
     //    public static final MediaType JSON =MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");

@@ -17,7 +17,8 @@
 
     <color name="startBlackColor_btn">#4e4e4e</color>
     <color name="endBlackColor_btn">#262321</color>
-    <color name="startBlueColor_btn">#577AEF</color>
+    <color name="startBlueColor_btn">#363636</color>
+    <color name="select_text_color">#EBDFCD</color>
     <color name="startOrgColor_btn">#e7c28e</color>
     <color name="slight_yellow">#FFFFFFFF</color>
     <color name="dark_grey">#F5F5F5</color>

@@ -17,13 +17,13 @@
         android:id="@+id/detailed_list_sl"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_40"
-        android:background="@color/white"
+        android:background="@color/select_text_color"
         app:tl_iconVisible="false"
         app:tl_indicator_color="@color/startBlueColor_btn"
         app:tl_indicator_height="@dimen/dp_2"
         app:tl_indicator_width="@dimen/dp_60"
-        app:tl_textSelectColor="@color/startBlueColor_btn"
-        app:tl_textUnselectColor="@color/black1"
+        app:tl_textSelectColor="@color/select_text_color"
+        app:tl_textUnselectColor="@color/startBlueColor_btn"
         app:tl_textsize="@dimen/sp_14" />
 
     <androidx.viewpager.widget.ViewPager

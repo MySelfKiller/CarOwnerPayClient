@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/slight_white3">
+
+    <TextView
+        android:id="@+id/item_message_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2020-11-11 10:23:55"
+        android:layout_marginTop="@dimen/dp_10"
+        android:paddingVertical="@dimen/dp_5"
+        android:paddingHorizontal="@dimen/dp_20"
+        android:textColor="@color/black1"
+        android:textSize="@dimen/sp_10"
+        android:background="@drawable/white_bg_shape_4"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:paddingHorizontal="@dimen/dp_10"
+        android:layout_marginHorizontal="@dimen/dp_15"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:background="@drawable/white_bg_shape_4">
+        <TextView
+            android:id="@+id/item_message_title_tv"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingVertical="@dimen/dp_6"
+            android:text="asdfasdfasdf"
+            android:textColor="@color/black1"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/item_message_content_tv"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/dp_10"
+            android:text="asdfasdfasdfasdfzasdfasdfasdfasdfasdfasdasdfasdfasdfasdfasdfadsfasdfasdfasdfasdfasdfasdf"
+            android:textColor="@color/black1"
+            android:textSize="@dimen/sp_11"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_message_title_tv"/>
+
+
+
+        <View
+            android:id="@+id/id_tag_divider1"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/divider2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_message_title_tv" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
+

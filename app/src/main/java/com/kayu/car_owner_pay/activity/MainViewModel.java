@@ -628,6 +628,43 @@ public class MainViewModel extends ViewModel {
         ReqUtil.getInstance().setReqInfo(reques);
         ReqUtil.getInstance().requestGetJSON(callback);
     }
+    private MutableLiveData<Integer> notifyNumLiveData;
+    /**
+     * 获取Notify数据
+     * @return
+     */
+    public LiveData<Integer> getNotifyNum(Context mContext){
+        if (null == notifyNumLiveData) {
+            notifyNumLiveData = new MutableLiveData<Integer>();
+            loadNotifyNum(mContext);
+        }
+        return notifyNumLiveData;
+    }
+
+    @SuppressLint("HandlerLeak")
+    private void loadNotifyNum(Context mContext) {
+        RequestInfo reques = new RequestInfo();
+        reques.context = mContext;
+        reques.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_MESSAGE_NUM;
+        reques.parser = new NormalIntParse();
+        reques.handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                ResponseInfo resInfo = (ResponseInfo) msg.obj;
+                Integer data = null;
+                if (resInfo.status ==1 ){
+                    data = (Integer) resInfo.responseData;
+                }else {
+                    Toast.makeText(mContext,resInfo.msg,Toast.LENGTH_SHORT).show();
+                }
+                notifyNumLiveData.setValue(data);
+                super.handleMessage(msg);
+            }
+        };
+        ResponseCallback callback = new ResponseCallback(reques);
+        ReqUtil.getInstance().setReqInfo(reques);
+        ReqUtil.getInstance().requestGetJSON(callback);
+    }
 
     /**
      * 获取类型列表数据

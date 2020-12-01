@@ -29,8 +29,8 @@
         app:tl_indicator_height="@dimen/dp_35"
         app:tl_indicator_style="BLOCK"
         app:tl_textBold="NONE"
-        app:tl_textSelectColor="@color/white"
-        app:tl_textUnselectColor="@color/colorAccent"
+        app:tl_textSelectColor="@color/select_text_color"
+        app:tl_textUnselectColor="@color/startBlueColor_btn"
         app:tl_textsize="@dimen/sp_14" />
 
     <androidx.viewpager.widget.ViewPager
