@@ -18,6 +18,6 @@
     <!--<item android:state_selected="true" android:drawable="@color/navigation_text_pressed" />-->
 
     <!--获得焦点时的图片背景-->
-    <item android:state_checked="true" android:color="@color/colorAccent" />
+    <item android:state_checked="true" android:color="@color/startBlueColor_btn" />
 
 </selector>
