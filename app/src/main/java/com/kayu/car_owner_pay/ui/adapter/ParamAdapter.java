@@ -56,7 +56,7 @@ public class ParamAdapter extends RecyclerView.Adapter<ParamAdapter.NoticeHolder
             DistancesParam sortsParam = (DistancesParam) dataList.get(i);
             if (sortsParam.isDefault == 1) {
                 viewHolder.nameText.setSelected(true);
-                viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.red_bg_def));
+                viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.colorAccent));
                 viewHolder.nameText.setTypeface(Typeface.DEFAULT_BOLD);
                 selectedView = viewHolder;
                 callback.onItemCallback(i,null);
@@ -66,7 +66,7 @@ public class ParamAdapter extends RecyclerView.Adapter<ParamAdapter.NoticeHolder
             OilsParam sortsParam = (OilsParam) dataList.get(i);
             if (sortsParam.isDefault == 1) {
                 viewHolder.nameText.setSelected(true);
-                viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.red_bg_def));
+                viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.colorAccent));
                 viewHolder.nameText.setTypeface(Typeface.DEFAULT_BOLD);
                 selectedView = viewHolder;
                 callback.onItemCallback(i,null);
@@ -76,7 +76,7 @@ public class ParamAdapter extends RecyclerView.Adapter<ParamAdapter.NoticeHolder
             SortsParam sortsParam = (SortsParam) dataList.get(i);
             if (sortsParam.isDefault == 1) {
                 viewHolder.nameText.setSelected(true);
-                viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.red_bg_def));
+                viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.colorAccent));
                 viewHolder.nameText.setTypeface(Typeface.DEFAULT_BOLD);
                 selectedView = viewHolder;
                 callback.onItemCallback(i,null);
@@ -86,7 +86,7 @@ public class ParamAdapter extends RecyclerView.Adapter<ParamAdapter.NoticeHolder
             WashParam sortsParam = (WashParam) dataList.get(i);
             if (sortsParam.isDefault == 1) {
                 viewHolder.nameText.setSelected(true);
-                viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.red_bg_def));
+                viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.colorAccent));
                 viewHolder.nameText.setTypeface(Typeface.DEFAULT_BOLD);
                 selectedView = viewHolder;
                 callback.onItemCallback(i,null);
@@ -100,13 +100,13 @@ public class ParamAdapter extends RecyclerView.Adapter<ParamAdapter.NoticeHolder
                 if (!viewHolder.nameText.isSelected()){
                     if (null != selectedView) {
                         selectedView.nameText.setSelected(false);
-                        selectedView.nameText.setTextColor(context.getResources().getColor(R.color.black));
+                        selectedView.nameText.setTextColor(context.getResources().getColor(R.color.colorAccent));
                         selectedView.nameText.setTypeface(Typeface.DEFAULT);
                     } else {
                         parentCallback.onItemCallback(parentIndex,null);
                     }
 
-                    viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.red_bg_def));
+                    viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.colorAccent));
                     viewHolder.nameText.setTypeface(Typeface.DEFAULT_BOLD);
                     viewHolder.nameText.setSelected(true);
                     selectedView = viewHolder;

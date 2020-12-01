@@ -195,20 +195,24 @@ public class LoginActivity extends BaseActivity {
                         ask_btn.setClickable(true);
                         ask_btn.setEnabled(true);
                         ask_btn.setBackground(getResources().getDrawable(R.drawable.blue_bg_shape));
+                        ask_btn.setTextColor(getResources().getColor(R.color.slight_yellow));
                     }else {
                         ask_btn.setEnabled(false);
                         ask_btn.setClickable(false);
                         ask_btn.setBackground(getResources().getDrawable(R.drawable.gray_bg_shape));
+                        ask_btn.setTextColor(getResources().getColor(R.color.white));
                     }
                 }else {
                     if (pattern.matcher(s).matches() && !StringUtil.isEmpty(sms_code.getText().toString().trim())){
                         ask_btn.setClickable(true);
                         ask_btn.setEnabled(true);
                         ask_btn.setBackground(getResources().getDrawable(R.drawable.blue_bg_shape));
+                        ask_btn.setTextColor(getResources().getColor(R.color.slight_yellow));
                     }else {
                         ask_btn.setEnabled(false);
                         ask_btn.setClickable(false);
                         ask_btn.setBackground(getResources().getDrawable(R.drawable.gray_bg_shape));
+                        ask_btn.setTextColor(getResources().getColor(R.color.white));
                     }
                 }
 

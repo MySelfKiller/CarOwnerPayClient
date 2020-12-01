@@ -28,7 +28,7 @@ public class ProductTypeAdapter extends RecyclerView.Adapter<ProductTypeAdapter.
             this.dataList.clear();
             if (null != selectedView) {
                 selectedView.nameText.setSelected(false);
-                selectedView.nameText.setTextColor(context.getResources().getColor(R.color.black));
+                selectedView.nameText.setTextColor(context.getResources().getColor(R.color.colorAccent));
                 selectedView.nameText.setTypeface(Typeface.DEFAULT);
                 selectedView = null;
             }
@@ -78,7 +78,7 @@ public class ProductTypeAdapter extends RecyclerView.Adapter<ProductTypeAdapter.
         }
         if (i == 0 && flag != 2) {
             viewHolder.nameText.setSelected(true);
-            viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.red_bg_def));
+            viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.colorAccent));
             viewHolder.nameText.setTypeface(Typeface.DEFAULT_BOLD);
             selectedView = viewHolder;
         }
@@ -90,10 +90,10 @@ public class ProductTypeAdapter extends RecyclerView.Adapter<ProductTypeAdapter.
                 if (!viewHolder.nameText.isSelected()){
                     if (null != selectedView) {
                         selectedView.nameText.setSelected(false);
-                        selectedView.nameText.setTextColor(context.getResources().getColor(R.color.black));
+                        selectedView.nameText.setTextColor(context.getResources().getColor(R.color.colorAccent));
                         selectedView.nameText.setTypeface(Typeface.DEFAULT);
                     }
-                    viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.red_bg_def));
+                    viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.colorAccent));
                     viewHolder.nameText.setTypeface(Typeface.DEFAULT_BOLD);
                     viewHolder.nameText.setSelected(true);
                     selectedView = viewHolder;

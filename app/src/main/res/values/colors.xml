@@ -5,7 +5,7 @@
 
     <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#ffffff</color>
-    <color name="colorAccent">#6579F5</color>
+    <color name="colorAccent">#363636</color>
     <color name="colorAccentA">#0D4A148C</color>
     <color name="colorAccentB">#eceefd</color>
     <color name="colorAccentC">#DEE7F9</color>
@@ -20,7 +20,8 @@
     <color name="startBlueColor_btn">#363636</color>
     <color name="select_text_color">#EBDFCD</color>
     <color name="startOrgColor_btn">#e7c28e</color>
-    <color name="slight_yellow">#FFFFFFFF</color>
+    <color name="slight_yellow">#FFF1DC</color>
+    <color name="slight_yellow1">#FFFBF0</color>
     <color name="dark_grey">#F5F5F5</color>
     <color name="dark_grey_1">#F0F0F0</color>
     <color name="dark_grey_2">#D2D2D2</color>
@@ -43,6 +44,7 @@
 
     <color name="deep_yellow">#d19a0a</color>
     <color name="deep_yellow1">#d6cab8</color>
+    <color name="deep_yellow2">#C3985A</color>
 
     <color name="red_text">#ff531e</color>
     <color name="red_text1">#ed5453</color>

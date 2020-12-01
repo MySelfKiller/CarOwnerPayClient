@@ -157,6 +157,7 @@
                             android:layout_marginStart="@dimen/dp_105"
                             android:textColor="#fff1dd"
                             android:textSize="@dimen/sp_20"
+                            android:textStyle="bold"
                             android:layout_marginBottom="@dimen/dp_5"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent" />

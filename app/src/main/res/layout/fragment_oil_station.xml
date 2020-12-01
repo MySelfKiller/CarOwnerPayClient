@@ -304,7 +304,7 @@
         android:paddingTop="@dimen/dp_12"
         android:paddingBottom="@dimen/dp_12"
         android:text="下一步"
-        android:textColor="@color/white"
+        android:textColor="@color/slight_yellow"
         android:textSize="@dimen/sp_15"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
