@@ -12,9 +12,10 @@ public class CategoryBean {
     public String title;//主键
     public String icon;//图标加载url
     public String tag;//小标签
+    public String remark;//小标题
     public String href;//H5跳转链接
     //"type": "KY_H5"
-    public String type;//H5跳转链接
+    public String type;//跳转类型
 
 
 }

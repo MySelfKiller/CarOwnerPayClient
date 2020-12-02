@@ -35,6 +35,7 @@ import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.model.CategoryBean;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.NoMoreClickListener;
+import com.kayu.utils.StringUtil;
 import com.kayu.utils.view.RoundImageView;
 
 import java.util.ArrayList;
@@ -77,6 +78,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         holder.tv_title.setText(dataList.get(position).title);
+        holder.tv_title_sub.setText(dataList.get(position).remark);
+        if (!StringUtil.isEmpty(dataList.get(position).tag.trim())) {
+            holder.tv_tag.setText(dataList.get(position).tag);
+            holder.tv_tag.setVisibility(View.VISIBLE);
+        } else {
+            holder.tv_tag.setVisibility(View.GONE);
+        }
+
         KWApplication.getInstance().loadImg(dataList.get(position).icon,holder.tv_img);
         holder.itemView.setOnClickListener(new NoMoreClickListener() {
             @Override
@@ -99,12 +108,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_title;
+        TextView tv_title,tv_title_sub,tv_tag;
         ImageView tv_img;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             tv_title = itemView.findViewById(R.id.item_cate_text);
+            tv_tag = itemView.findViewById(R.id.item_cate_tag);
+            tv_title_sub = itemView.findViewById(R.id.item_cate_text_sub);
             tv_img = itemView.findViewById(R.id.item_cate_img);
         }
     }

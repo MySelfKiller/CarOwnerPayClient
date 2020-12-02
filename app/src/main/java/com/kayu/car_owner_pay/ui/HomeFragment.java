@@ -396,8 +396,10 @@ public class HomeFragment extends Fragment {
                     mRows = categoryBeans.size() % 4 == 0 ? categoryBeans.size() / 4 : categoryBeans.size() / 4 + 1;
                     mColumns = 4;
                 }
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dipToPx(getContext(), 86) * mRows);
+                layoutParams.topMargin = ScreenUtils.dipToPx(getContext(), 10);
+                category_rv.setLayoutParams(layoutParams);
 
-                category_rv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dipToPx(getContext(), 80) * mRows));
                 PagerGridLayoutManager mLayoutManager = new PagerGridLayoutManager(mRows, mColumns, PagerGridLayoutManager
                         .HORIZONTAL);
                 // 系统带的 RecyclerView，无需自定义
