@@ -57,7 +57,7 @@ public class ParamParentAdapter extends RecyclerView.Adapter<ParamParentAdapter.
                     if (x != position){
                         if (null != childAdapterList.get(x).selectedView) {
                             childAdapterList.get(x).selectedView.nameText.setSelected(false);
-                            childAdapterList.get(x).selectedView.nameText.setTextColor(context.getResources().getColor(R.color.black));
+                            childAdapterList.get(x).selectedView.nameText.setTextColor(context.getResources().getColor(R.color.colorAccent));
                             childAdapterList.get(x).selectedView.nameText.setTypeface(Typeface.DEFAULT);
                             childAdapterList.get(x).selectedView = null;
                         }

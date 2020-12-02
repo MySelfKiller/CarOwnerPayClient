@@ -78,7 +78,7 @@ public class ProductTypeAdapter extends RecyclerView.Adapter<ProductTypeAdapter.
         }
         if (i == 0 && flag != 2) {
             viewHolder.nameText.setSelected(true);
-            viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.colorAccent));
+            viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.deep_yellow2));
             viewHolder.nameText.setTypeface(Typeface.DEFAULT_BOLD);
             selectedView = viewHolder;
         }
@@ -93,7 +93,7 @@ public class ProductTypeAdapter extends RecyclerView.Adapter<ProductTypeAdapter.
                         selectedView.nameText.setTextColor(context.getResources().getColor(R.color.colorAccent));
                         selectedView.nameText.setTypeface(Typeface.DEFAULT);
                     }
-                    viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                    viewHolder.nameText.setTextColor(context.getResources().getColor(R.color.deep_yellow2));
                     viewHolder.nameText.setTypeface(Typeface.DEFAULT_BOLD);
                     viewHolder.nameText.setSelected(true);
                     selectedView = viewHolder;
