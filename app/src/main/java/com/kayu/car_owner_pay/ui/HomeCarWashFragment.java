@@ -1,6 +1,6 @@
 package com.kayu.car_owner_pay.ui;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.MainViewModel;
+import com.kayu.car_owner_pay.activity.WashStationActivity;
 import com.kayu.car_owner_pay.model.ParamParent;
 import com.kayu.car_owner_pay.model.ParamWashBean;
 import com.kayu.car_owner_pay.model.WashParam;
@@ -261,12 +259,15 @@ public class HomeCarWashFragment extends Fragment {
                             stationAdapter = new WashStationAdapter(getContext(),oilStationBeans, selectSortsParam.val,new ItemCallback() {
                                 @Override
                                 public void onItemCallback(int position, Object obj) {
-                                    FragmentManager fg = requireActivity().getSupportFragmentManager();
-                                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
-                                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                                    fragmentTransaction.add(R.id.main_root_lay,new WashStationFragment(((WashStationBean)obj).shopCode));
-                                    fragmentTransaction.addToBackStack("ddd");
-                                    fragmentTransaction.commit();
+//                                    FragmentManager fg = requireActivity().getSupportFragmentManager();
+//                                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
+//                                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                                    fragmentTransaction.add(R.id.main_root_lay,new WashStationActivity(((WashStationBean)obj).shopCode));
+//                                    fragmentTransaction.addToBackStack("ddd");
+//                                    fragmentTransaction.commit();
+                                    Intent intent = new Intent(getContext(), WashStationActivity.class);
+                                    intent.putExtra("shopCode",((WashStationBean)obj).shopCode);
+                                    startActivity(intent);
                                 }
 
                                 @Override

@@ -144,10 +144,10 @@ public class HomeFragment extends Fragment {
         slidingTabLayout = view.findViewById(R.id.list_ctl);
         mViewPager = view.findViewById(R.id.list_vp);
         refreshLayout = (RefreshLayout) view.findViewById(R.id.refreshLayout);
-        refreshLayout.setEnableNestedScroll(true);
+//        refreshLayout.setEnableNestedScroll(false);
         refreshLayout.setEnableAutoLoadMore(false);
-//        refreshLayout.setEnableLoadMore(true);
-        refreshLayout.setEnableLoadMoreWhenContentNotFull(false);//是否在列表不满一页时候开启上拉加载功能
+        refreshLayout.setEnableLoadMore(true);
+        refreshLayout.setEnableLoadMoreWhenContentNotFull(true);//是否在列表不满一页时候开启上拉加载功能
         refreshLayout.setEnableOverScrollBounce(true);//是否启用越界回弹
         refreshLayout.setEnableOverScrollDrag(true);
 

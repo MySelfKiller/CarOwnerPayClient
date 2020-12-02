@@ -1,20 +1,15 @@
-package com.kayu.car_owner_pay.ui;
+package com.kayu.car_owner_pay.activity;
 
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
@@ -23,9 +18,9 @@ import androidx.lifecycle.ViewModelProviders;
 import com.amap.api.location.AMapLocation;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
-import com.kayu.car_owner_pay.activity.BannerImageLoader;
-import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.model.WashStationDetailBean;
+import com.kayu.car_owner_pay.ui.WashOrderFragment;
+import com.kayu.car_owner_pay.ui.WashOrderListFragment;
 import com.kayu.utils.GetJuLiUtils;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.location.LocationManagerUtil;
@@ -39,7 +34,7 @@ import java.util.List;
  * Author by killer, Email xx@xx.com, Date on 2020/10/15.
  * PS: Not easy to write code, please indicate.
  */
-public class WashStationFragment extends Fragment {
+public class WashStationActivity extends BaseActivity {
     private String shopCode;//洗车店编号
     private MainViewModel mainViewModel;
     private TextView pay_btn;
@@ -72,30 +67,23 @@ public class WashStationFragment extends Fragment {
     private TextView station_type2_name;
     private TextView station_all_car_name;
 
-    public WashStationFragment(String shopCode) {
-        this.shopCode = shopCode;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-//        StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
-        View root = inflater.inflate(R.layout.fragment_wash_station, container, false);
-        mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
-        return root;
-    }
+//    public WashStationFragment(String shopCode) {
+//        this.shopCode = shopCode;
+//    }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_wash_station);
+        shopCode = getIntent().getStringExtra("shopCode");
+        mainViewModel = ViewModelProviders.of(WashStationActivity.this).get(MainViewModel.class);
 
         //标题栏
-        view.findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
+        findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                requireActivity().onBackPressed();
+                onBackPressed();
             }
 
             @Override
@@ -103,49 +91,49 @@ public class WashStationFragment extends Fragment {
 
             }
         });
-        TextView back_tv = view.findViewById(R.id.title_back_tv);
-        TextView title_name = view.findViewById(R.id.title_name_tv);
+        TextView back_tv = findViewById(R.id.title_back_tv);
+        TextView title_name = findViewById(R.id.title_name_tv);
         title_name.setText("全国汽车特惠");
 //        title_name.setVisibility(View.GONE);
 //        back_tv.setText("我的");
 
-        station_banner = view.findViewById(R.id.wash_station_banner);
-        station_name = view.findViewById(R.id.wash_station_name);
-        station_tag = view.findViewById(R.id.wash_station_tag);
-        station_open_time = view.findViewById(R.id.wash_station_time);
-        station_address = view.findViewById(R.id.wash_station_location);
-        station_distance = view.findViewById(R.id.wash_station_distance);
-        navi_lay = view.findViewById(R.id.wash_station_navi_lay);
-        phone_lay = view.findViewById(R.id.wash_station_phone_lay);
+        station_banner = findViewById(R.id.wash_station_banner);
+        station_name = findViewById(R.id.wash_station_name);
+        station_tag = findViewById(R.id.wash_station_tag);
+        station_open_time = findViewById(R.id.wash_station_time);
+        station_address = findViewById(R.id.wash_station_location);
+        station_distance = findViewById(R.id.wash_station_distance);
+        navi_lay = findViewById(R.id.wash_station_navi_lay);
+        phone_lay = findViewById(R.id.wash_station_phone_lay);
 
 
-        station_type1_lay = view.findViewById(R.id.wash_station_type1_lay);
-        station_type1_name = view.findViewById(R.id.wash_station_type1_name);
-        station_divider1 = view.findViewById(R.id.wash_station_divider1);
+        station_type1_lay = findViewById(R.id.wash_station_type1_lay);
+        station_type1_name = findViewById(R.id.wash_station_type1_name);
+        station_divider1 = findViewById(R.id.wash_station_divider1);
 
-        station_car_lay = view.findViewById(R.id.wash_station_car_lay);
-        car_select_btn = view.findViewById(R.id.wash_station_car_select_btn);
-        station_car_name = view.findViewById(R.id.wash_station_car_name);
-        station_car_price = view.findViewById(R.id.wash_station_car_price);
-        station_car_sub_price = view.findViewById(R.id.wash_station_car_price_sub);
+        station_car_lay = findViewById(R.id.wash_station_car_lay);
+        car_select_btn = findViewById(R.id.wash_station_car_select_btn);
+        station_car_name = findViewById(R.id.wash_station_car_name);
+        station_car_price = findViewById(R.id.wash_station_car_price);
+        station_car_sub_price = findViewById(R.id.wash_station_car_price_sub);
 
-        station_suv_lay = view.findViewById(R.id.wash_station_suv_lay);
-        suv_select_btn = view.findViewById(R.id.wash_station_suv_select_btn);
-        station_suv_name = view.findViewById(R.id.wash_station_suv_name);
-        station_suv_price = view.findViewById(R.id.wash_station_suv_price);
-        station_suv_sub_price = view.findViewById(R.id.wash_station_suv_price_sub);
+        station_suv_lay = findViewById(R.id.wash_station_suv_lay);
+        suv_select_btn = findViewById(R.id.wash_station_suv_select_btn);
+        station_suv_name = findViewById(R.id.wash_station_suv_name);
+        station_suv_price = findViewById(R.id.wash_station_suv_price);
+        station_suv_sub_price = findViewById(R.id.wash_station_suv_price_sub);
 
-        station_type2_lay = view.findViewById(R.id.wash_station_type2_lay);
-        station_type2_name = view.findViewById(R.id.wash_station_type2_name);
-        all_car_select_btn = view.findViewById(R.id.wash_station_all_car_select_btn);
-        station_all_car_name = view.findViewById(R.id.wash_station_all_car_name);
-        station_all_car_price = view.findViewById(R.id.wash_station_all_car_price);
-        station_all_car_sub_price = view.findViewById(R.id.wash_station_all_car_price_sub);
+        station_type2_lay = findViewById(R.id.wash_station_type2_lay);
+        station_type2_name = findViewById(R.id.wash_station_type2_name);
+        all_car_select_btn = findViewById(R.id.wash_station_all_car_select_btn);
+        station_all_car_name = findViewById(R.id.wash_station_all_car_name);
+        station_all_car_price = findViewById(R.id.wash_station_all_car_price);
+        station_all_car_sub_price = findViewById(R.id.wash_station_all_car_price_sub);
 
-        rebate_price = view.findViewById(R.id.wash_station_rebate_price);
-        pay_btn = view.findViewById(R.id.wash_station_pay_btn);
-        TextView station_order_list = view.findViewById(R.id.wash_station_order_list);
-        TextView station_services = view.findViewById(R.id.wash_station_services);
+        rebate_price = findViewById(R.id.wash_station_rebate_price);
+        pay_btn = findViewById(R.id.wash_station_pay_btn);
+        TextView station_order_list = findViewById(R.id.wash_station_order_list);
+        TextView station_services = findViewById(R.id.wash_station_services);
         Drawable drawable = getResources().getDrawable(R.mipmap.ic_order_list);
         Drawable drawable1 = getResources().getDrawable(R.mipmap.ic_services);
         drawable1.setBounds(0, 0, 50, 50);
@@ -161,7 +149,7 @@ public class WashStationFragment extends Fragment {
         station_order_list.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                FragmentManager fg = requireActivity().getSupportFragmentManager();
+                FragmentManager fg = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fg.beginTransaction();
                 fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 fragmentTransaction.add(R.id.main_root_lay, new WashOrderListFragment());
@@ -178,7 +166,7 @@ public class WashStationFragment extends Fragment {
         pay_btn.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                FragmentManager fg = requireActivity().getSupportFragmentManager();
+                FragmentManager fg = WashStationActivity.this.getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fg.beginTransaction();
                 fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 fragmentTransaction.add(R.id.main_root_lay, new WashOrderFragment(selectedListDTO,serviceType));
@@ -260,14 +248,31 @@ public class WashStationFragment extends Fragment {
             }
         });
 
-        mainViewModel.getWashStoreDetail(getContext(), shopCode).observe(requireActivity(), new Observer<WashStationDetailBean>() {
+        mainViewModel.getWashStoreDetail(WashStationActivity.this, shopCode).observe(WashStationActivity.this, new Observer<WashStationDetailBean>() {
             @Override
             public void onChanged(WashStationDetailBean washStationDetailBean) {
                 if (null != washStationDetailBean)
                     initViewData(washStationDetailBean);
             }
         });
+
     }
+
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//        // Inflate the layout for this fragment
+////        StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
+//        View root = inflater.inflate(R.layout.fragment_wash_station, container, false);
+//        mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
+//        return root;
+//    }
+
+//    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+//    @Override
+//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//    }
 
     private String serviceType = "";
     private WashStationDetailBean.ServicesDTO.ListDTO selectedListDTO = null;
@@ -314,7 +319,7 @@ public class WashStationFragment extends Fragment {
         navi_lay.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                KWApplication.getInstance().toNavi(getContext(), washStation.latitude, washStation.longitude, washStation.address,"BD09");
+                KWApplication.getInstance().toNavi(WashStationActivity.this, washStation.latitude, washStation.longitude, washStation.address,"BD09");
             }
 
             @Override
@@ -325,7 +330,7 @@ public class WashStationFragment extends Fragment {
         phone_lay.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                KWApplication.getInstance().callPhone(getActivity(), washStation.telephone);
+                KWApplication.getInstance().callPhone(WashStationActivity.this, washStation.telephone);
             }
 
             @Override

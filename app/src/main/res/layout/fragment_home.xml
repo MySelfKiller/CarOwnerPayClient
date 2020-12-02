@@ -23,11 +23,11 @@
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <!--                <include layout="@layout/search_lay" />-->
@@ -199,7 +199,7 @@
                 <com.kayu.utils.view.AdaptiveHeightViewPager
                     android:id="@+id/list_vp"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_100" />
+                    android:layout_height="@dimen/dp_200" />
 
 
             </LinearLayout>

@@ -1,5 +1,6 @@
 package com.kayu.car_owner_pay.ui;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.BannerImageLoader;
 import com.kayu.car_owner_pay.activity.MainViewModel;
+import com.kayu.car_owner_pay.activity.WashStationActivity;
 import com.kayu.car_owner_pay.model.WashOrderDetailBean;
 import com.kayu.utils.GetJuLiUtils;
 import com.kayu.utils.NoMoreClickListener;
@@ -366,12 +368,15 @@ public class WashUnusedFragment extends Fragment {
                         || washStation.state == 5
                         || washStation.state == 7) {
                     requireActivity().onBackPressed();
-                    FragmentManager fg = requireActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
-                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    fragmentTransaction.add(R.id.main_root_lay, new WashStationFragment(washStation.shopCode));
-                    fragmentTransaction.addToBackStack("ddd");
-                    fragmentTransaction.commit();
+//                    FragmentManager fg = requireActivity().getSupportFragmentManager();
+//                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
+//                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                    fragmentTransaction.add(R.id.main_root_lay, new WashStationActivity(washStation.shopCode));
+//                    fragmentTransaction.addToBackStack("ddd");
+//                    fragmentTransaction.commit();
+                    Intent intent = new Intent(getContext(), WashStationActivity.class);
+                    intent.putExtra("shopCode",washStation.shopCode);
+                    startActivity(intent);
 
                 }
 

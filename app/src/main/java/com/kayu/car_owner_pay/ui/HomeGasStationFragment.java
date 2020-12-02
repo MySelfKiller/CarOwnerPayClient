@@ -265,8 +265,6 @@ public class HomeGasStationFragment extends Fragment {
     public void reqData(RefreshLayout refreshLayout, int pageIndex, final boolean isRefresh, final boolean isLoadmore, double latitude, double longitude) {
         if (null == refreshLayout) {
             WaitDialog.show((AppCompatActivity) getContext(), "刷新数据！稍等");
-        } else {
-            callback.onSuccess();
         }
 
         if (null == selectSortsParam || null == selectDistanceParam || null == selectOilParam) {
@@ -293,8 +291,9 @@ public class HomeGasStationFragment extends Fragment {
             public void onChanged(List<OilStationBean> oilStationBeans) {
                 if (null == refreshLayout) {
                     WaitDialog.dismiss();
+                } else {
+                    callback.onSuccess();
                 }
-                callback.onSuccess();
                 if (null == oilStationBeans)
                     return;
                 if (isLoadmore) {

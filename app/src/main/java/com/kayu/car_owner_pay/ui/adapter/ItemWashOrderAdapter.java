@@ -1,6 +1,7 @@
 package com.kayu.car_owner_pay.ui.adapter;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.model.ItemWashOrderBean;
-import com.kayu.car_owner_pay.ui.WashStationFragment;
+import com.kayu.car_owner_pay.activity.WashStationActivity;
+import com.kayu.car_owner_pay.model.WashStationBean;
 import com.kayu.car_owner_pay.ui.WashUnusedFragment;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.NoMoreClickListener;
@@ -175,12 +177,15 @@ public class ItemWashOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                 vh.pay_btn.setOnClickListener(new NoMoreClickListener() {
                     @Override
                     protected void OnMoreClick(View view) {
-                        FragmentManager fg = context.getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fg.beginTransaction();
-                        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        fragmentTransaction.add(R.id.main_root_lay, new WashStationFragment(oilOrderData.shopCode));
-                        fragmentTransaction.addToBackStack("ddd");
-                        fragmentTransaction.commit();
+//                        FragmentManager fg = context.getSupportFragmentManager();
+//                        FragmentTransaction fragmentTransaction = fg.beginTransaction();
+//                        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                        fragmentTransaction.add(R.id.main_root_lay, new WashStationActivity(oilOrderData.shopCode));
+//                        fragmentTransaction.addToBackStack("ddd");
+//                        fragmentTransaction.commit();
+                        Intent intent = new Intent(context, WashStationActivity.class);
+                        intent.putExtra("shopCode",oilOrderData.shopCode);
+                        context.startActivity(intent);
                     }
 
                     @Override
