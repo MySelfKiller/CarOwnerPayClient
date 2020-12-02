@@ -15,8 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +31,7 @@ import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.BannerImageLoader;
 import com.kayu.car_owner_pay.activity.MainViewModel;
+import com.kayu.car_owner_pay.activity.MessageActivity;
 import com.kayu.car_owner_pay.activity.MyPagerAdapter;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
 import com.kayu.car_owner_pay.model.BannerBean;
@@ -52,7 +51,6 @@ import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
 import com.kayu.utils.view.AdaptiveHeightViewPager;
 import com.kongzue.dialog.v3.MessageDialog;
-import com.kongzue.dialog.v3.WaitDialog;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -125,12 +123,13 @@ public class HomeFragment extends Fragment {
         view.findViewById(R.id.home_exchange_code).setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                FragmentManager fg = requireActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fg.beginTransaction();
-                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                fragmentTransaction.add(R.id.main_root_lay, new MessageFragment());
-                fragmentTransaction.addToBackStack("ddd");
-                fragmentTransaction.commit();
+//                FragmentManager fg = requireActivity().getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fg.beginTransaction();
+//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                fragmentTransaction.add(R.id.main_root_lay, new MessageActivity());
+//                fragmentTransaction.addToBackStack("ddd");
+//                fragmentTransaction.commit();
+                startActivity(new Intent(getContext(), MessageActivity.class));
             }
 
             @Override
