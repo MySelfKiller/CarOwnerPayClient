@@ -38,9 +38,9 @@ import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.QRCodeUtil;
 import com.kayu.utils.StringUtil;
 import com.kongzue.dialog.v3.CustomDialog;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;

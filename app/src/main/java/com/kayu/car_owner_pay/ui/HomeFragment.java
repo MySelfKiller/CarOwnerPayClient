@@ -51,9 +51,9 @@ import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
 import com.kayu.utils.view.AdaptiveHeightViewPager;
 import com.kongzue.dialog.v3.MessageDialog;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerListener;
@@ -144,10 +144,10 @@ public class HomeFragment extends Fragment {
         slidingTabLayout = view.findViewById(R.id.list_ctl);
         mViewPager = view.findViewById(R.id.list_vp);
         refreshLayout = (RefreshLayout) view.findViewById(R.id.refreshLayout);
-
+        refreshLayout.setEnableNestedScroll(true);
         refreshLayout.setEnableAutoLoadMore(false);
-        refreshLayout.setEnableLoadMore(true);
-        refreshLayout.setEnableLoadMoreWhenContentNotFull(true);//是否在列表不满一页时候开启上拉加载功能
+//        refreshLayout.setEnableLoadMore(true);
+        refreshLayout.setEnableLoadMoreWhenContentNotFull(false);//是否在列表不满一页时候开启上拉加载功能
         refreshLayout.setEnableOverScrollBounce(true);//是否启用越界回弹
         refreshLayout.setEnableOverScrollDrag(true);
 
@@ -291,6 +291,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void initView() {
+        mainViewModel.getParamSelect(requireContext());
         mainViewModel.getNotifyNum(getContext()).observe(requireActivity(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
@@ -334,7 +335,7 @@ public class HomeFragment extends Fragment {
                     urlList.add(item.img);
                 }
                 title_iv.setBackgroundColor(Color.parseColor(bannerBeans.get(0).bgColor));
-                StatusBarUtil.setStatusBarColor(getActivity(), Color.parseColor(bannerBeans.get(0).bgColor));
+//                StatusBarUtil.setStatusBarColor(getActivity(), Color.parseColor(bannerBeans.get(0).bgColor));
                 banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR)
                         .setIndicatorGravity(BannerConfig.RIGHT)
                         .setImageLoader(new BannerImageLoader())
@@ -352,7 +353,7 @@ public class HomeFragment extends Fragment {
                             public void onPageSelected(int position) {
                                 if (getUserVisibleHint()) {
                                     title_iv.setBackgroundColor(Color.parseColor(bannerBeans.get(position).bgColor));
-                                    StatusBarUtil.setStatusBarColor(getActivity(), Color.parseColor(bannerBeans.get(position).bgColor));
+//                                    StatusBarUtil.setStatusBarColor(getActivity(), Color.parseColor(bannerBeans.get(position).bgColor));
                                 }
                             }
 
@@ -434,7 +435,7 @@ public class HomeFragment extends Fragment {
                                 }
                                 intent.putExtra("url", target + sb.toString());
                                 intent.putExtra("from", "首页");
-                                getActivity().startActivity(intent);
+                                startActivity(intent);
 
                             } else {
                                 MessageDialog.show((AppCompatActivity) getContext(), "温馨提示", "功能未开启，敬请期待");

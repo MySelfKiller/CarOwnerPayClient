@@ -29,9 +29,9 @@ import com.kayu.utils.StringUtil;
 import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
 import com.kayu.utils.view.RoundImageView;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;

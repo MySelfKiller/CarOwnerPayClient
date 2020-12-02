@@ -10,12 +10,12 @@
     android:orientation="vertical"
     tools:context=".ui.OilOrderAllFragment">
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.scwang.smartrefresh.layout.header.ClassicsHeader
+        <com.scwang.smart.refresh.header.ClassicsHeader
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:srlAccentColor="@color/black"
@@ -28,11 +28,11 @@
             android:layout_height="match_parent"
             android:overScrollMode="never" />
 
-        <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+        <com.scwang.smart.refresh.footer.ClassicsFooter
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:srlAccentColor="@color/black"
             app:srlClassicsSpinnerStyle="FixedBehind"
             app:srlPrimaryColor="@color/transparent" />
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 </LinearLayout>

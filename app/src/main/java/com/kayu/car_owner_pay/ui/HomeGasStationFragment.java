@@ -1,6 +1,6 @@
 package com.kayu.car_owner_pay.ui;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.MainViewModel;
+import com.kayu.car_owner_pay.activity.OilStationActivity;
 import com.kayu.car_owner_pay.model.DistancesParam;
 import com.kayu.car_owner_pay.model.OilStationBean;
 import com.kayu.car_owner_pay.model.OilsParam;
@@ -35,7 +35,7 @@ import com.kayu.utils.callback.Callback;
 import com.kayu.utils.view.AdaptiveHeightViewPager;
 import com.kongzue.dialog.v3.TipDialog;
 import com.kongzue.dialog.v3.WaitDialog;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,91 +91,8 @@ public class HomeGasStationFragment extends Fragment {
 
         param_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
         station_rv.setLayoutManager(new LinearLayoutManager(getContext()));
-    }
 
-    private void showParamViewData(int flag, List<ParamParent> data) {
-        if (param_recycle_view.getVisibility() != View.VISIBLE)
-            param_recycle_view.setVisibility(View.VISIBLE);
-        param_recycle_view.setAdapter(new ParamParentAdapter(getContext(), data, new ItemCallback() {
-            @Override
-            public void onItemCallback(int position, Object obj) {
-                ParamOilBean paramOilBean = mainViewModel.getParamSelect(requireContext()).getValue();
-                if (null  == paramOilBean || null == obj)
-                    return;
-
-                if (flag == 1 ){
-                    selectDistanceParam = (DistancesParam) obj;
-                    selectDistanceParam.isDefault = 1;
-                    for (DistancesParam item : paramOilBean.distancesParamList){
-                        if (item.isDefault == 1){
-                            item.isDefault = 0;
-                        }
-                        if (item.val == selectDistanceParam.val){
-                            item.isDefault = 1;
-                            item = selectDistanceParam;
-                            param_distance.setText(item.name);
-                        }
-                    }
-
-                } else if (flag == 2) {
-                    selectOilParam= (OilsParam) obj;
-
-                    for (OilsTypeParam oilsTypeParam : paramOilBean.oilsTypeParamList) {
-                        for (OilsParam item : oilsTypeParam.oilsParamList) {
-                            if (item.isDefault == 1){
-                                item.isDefault = 0;
-                            }
-                            if (item.oilNo == selectOilParam.oilNo){
-                                item.isDefault = 1;
-                                item = selectOilParam;
-                                param_oil_type.setText(item.oilName);
-                            }
-                        }
-                    }
-                } else if (flag == 3) {
-                    selectSortsParam = (SortsParam) obj;
-                    for (SortsParam item : paramOilBean.sortsParamList) {
-                        if (item.isDefault == 1){
-                            item.isDefault = 0;
-                        }
-                        if (item.val == selectSortsParam.val){
-                            item.isDefault = 1;
-                            item = selectSortsParam;
-                            param_sort.setText(item.name);
-                        }
-                    }
-                }
-                if (param_sort.isSelected() ){
-                    param_sort.setSelected(false);
-                }
-                if (param_oil_type.isSelected() ){
-                    param_oil_type.setSelected(false);
-                }
-                if (param_distance.isSelected() ){
-                    param_distance.setSelected(false);
-                }
-                param_recycle_view.setVisibility(View.GONE);
-
-                int pageIndex = 1;
-                callback.onError();
-                reqData(null, pageIndex, true,false,mLatitude,mLongitude);
-            }
-
-            @Override
-            public void onDetailCallBack(int position, Object obj) {
-
-            }
-        },flag));
-    }
-
-    public void reqData(RefreshLayout refreshLayout, int pageIndex, final boolean isRefresh, final boolean isLoadmore,double latitude,double longitude) {
-        if (null == refreshLayout) {
-            WaitDialog.show((AppCompatActivity) getContext(), "刷新数据！稍等");
-        } else {
-            callback.onSuccess();
-        }
         mainViewModel.getParamSelect(requireContext()).observe( requireActivity(), new Observer<ParamOilBean>() {
-
             @Override
             public void onChanged(ParamOilBean paramOilBean) {
                 if (null == paramOilBean)
@@ -266,68 +183,152 @@ public class HomeGasStationFragment extends Fragment {
                     }
                 });
                 viewPager.setObjectForPosition(view,fragment_id);
-
-                if (null == selectSortsParam || null == selectDistanceParam || null == selectOilParam) {
-                    mainViewModel.getParamSelect(requireContext());
-                    TipDialog.show((AppCompatActivity) getContext(),"查询参数错误,请重试", TipDialog.TYPE.WARNING);
-                    return;
-                }
-                mLatitude = latitude;
-                mLongitude = longitude;
-                if (isRefresh && null != oilStationAdapter)
-                    oilStationAdapter.removeAllData();
-
-                HashMap<String,Object> dataMap = new HashMap<>();
-                dataMap.put("pageNow",pageIndex);
-                dataMap.put("pageSize",20);
-                dataMap.put("sort",selectSortsParam.val);
-                dataMap.put("latitude",latitude);
-                dataMap.put("longitude",longitude);
-                dataMap.put("distance",selectDistanceParam.val);
-                dataMap.put("oilNo",selectOilParam.oilNo);
-                dataMap.put("keyword",keyword);
-                mainViewModel.getStationList(requireContext(),dataMap).observe(requireActivity(), new Observer<List<OilStationBean>>() {
-                    @Override
-                    public void onChanged(List<OilStationBean> oilStationBeans) {
-                        if (null == refreshLayout) {
-                            WaitDialog.dismiss();
-                        }
-                        callback.onSuccess();
-                        if (null == oilStationBeans)
-                            return;
-                        if (isLoadmore) {
-                            if (null != oilStationAdapter) {
-                                if (null != oilStationBeans && oilStationBeans.size() > 0) {
-                                    oilStationAdapter.addAllData(oilStationBeans, false);
-
-                                }
-                            }
-                        } else {
-                            oilStationAdapter = new OilStationAdapter(requireContext(), oilStationBeans, new ItemCallback() {
-                                @Override
-                                public void onItemCallback(int position, Object obj) {
-                                    FragmentManager fg = requireActivity().getSupportFragmentManager();
-                                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
-                                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                                    fragmentTransaction.add(R.id.main_root_lay,new OilStationFragment(((OilStationBean)obj).gasId));
-                                    fragmentTransaction.addToBackStack("ddd");
-                                    fragmentTransaction.commit();
-                                }
-
-                                @Override
-                                public void onDetailCallBack(int position, Object obj) {
-
-                                }
-                            });
-                            station_rv.setAdapter(oilStationAdapter);
-
-                        }
-                        viewPager.setObjectForPosition(view,fragment_id);
-                    }
-                });
             }
         });
+    }
 
+    private void showParamViewData(int flag, List<ParamParent> data) {
+        if (param_recycle_view.getVisibility() != View.VISIBLE)
+            param_recycle_view.setVisibility(View.VISIBLE);
+        param_recycle_view.setAdapter(new ParamParentAdapter(getContext(), data, new ItemCallback() {
+            @Override
+            public void onItemCallback(int position, Object obj) {
+                ParamOilBean paramOilBean = mainViewModel.getParamSelect(requireContext()).getValue();
+                if (null  == paramOilBean || null == obj)
+                    return;
 
+                if (flag == 1 ){
+                    selectDistanceParam = (DistancesParam) obj;
+                    selectDistanceParam.isDefault = 1;
+                    for (DistancesParam item : paramOilBean.distancesParamList){
+                        if (item.isDefault == 1){
+                            item.isDefault = 0;
+                        }
+                        if (item.val == selectDistanceParam.val){
+                            item.isDefault = 1;
+                            item = selectDistanceParam;
+                            param_distance.setText(item.name);
+                        }
+                    }
+
+                } else if (flag == 2) {
+                    selectOilParam= (OilsParam) obj;
+
+                    for (OilsTypeParam oilsTypeParam : paramOilBean.oilsTypeParamList) {
+                        for (OilsParam item : oilsTypeParam.oilsParamList) {
+                            if (item.isDefault == 1){
+                                item.isDefault = 0;
+                            }
+                            if (item.oilNo == selectOilParam.oilNo){
+                                item.isDefault = 1;
+                                item = selectOilParam;
+                                param_oil_type.setText(item.oilName);
+                            }
+                        }
+                    }
+                } else if (flag == 3) {
+                    selectSortsParam = (SortsParam) obj;
+                    for (SortsParam item : paramOilBean.sortsParamList) {
+                        if (item.isDefault == 1){
+                            item.isDefault = 0;
+                        }
+                        if (item.val == selectSortsParam.val){
+                            item.isDefault = 1;
+                            item = selectSortsParam;
+                            param_sort.setText(item.name);
+                        }
+                    }
+                }
+                if (param_sort.isSelected() ){
+                    param_sort.setSelected(false);
+                }
+                if (param_oil_type.isSelected() ){
+                    param_oil_type.setSelected(false);
+                }
+                if (param_distance.isSelected() ){
+                    param_distance.setSelected(false);
+                }
+                param_recycle_view.setVisibility(View.GONE);
+
+                int pageIndex = 1;
+                callback.onError();
+                reqData(null, pageIndex, true,false,mLatitude,mLongitude);
+            }
+
+            @Override
+            public void onDetailCallBack(int position, Object obj) {
+
+            }
+        },flag));
+    }
+
+    public void reqData(RefreshLayout refreshLayout, int pageIndex, final boolean isRefresh, final boolean isLoadmore, double latitude, double longitude) {
+        if (null == refreshLayout) {
+            WaitDialog.show((AppCompatActivity) getContext(), "刷新数据！稍等");
+        } else {
+            callback.onSuccess();
+        }
+
+        if (null == selectSortsParam || null == selectDistanceParam || null == selectOilParam) {
+            mainViewModel.getParamSelect(requireContext());
+            TipDialog.show((AppCompatActivity) getContext(),"查询参数错误,请重试", TipDialog.TYPE.WARNING);
+            return;
+        }
+        mLatitude = latitude;
+        mLongitude = longitude;
+        if (isRefresh && null != oilStationAdapter)
+            oilStationAdapter.removeAllData();
+
+        HashMap<String,Object> dataMap = new HashMap<>();
+        dataMap.put("pageNow",pageIndex);
+        dataMap.put("pageSize",20);
+        dataMap.put("sort",selectSortsParam.val);
+        dataMap.put("latitude",latitude);
+        dataMap.put("longitude",longitude);
+        dataMap.put("distance",selectDistanceParam.val);
+        dataMap.put("oilNo",selectOilParam.oilNo);
+        dataMap.put("keyword",keyword);
+        mainViewModel.getStationList(requireContext(),dataMap).observe(requireActivity(), new Observer<List<OilStationBean>>() {
+            @Override
+            public void onChanged(List<OilStationBean> oilStationBeans) {
+                if (null == refreshLayout) {
+                    WaitDialog.dismiss();
+                }
+                callback.onSuccess();
+                if (null == oilStationBeans)
+                    return;
+                if (isLoadmore) {
+                    if (null != oilStationAdapter) {
+                        if (null != oilStationBeans && oilStationBeans.size() > 0) {
+                            oilStationAdapter.addAllData(oilStationBeans, false);
+
+                        }
+                    }
+                } else {
+                    oilStationAdapter = new OilStationAdapter(requireContext(), oilStationBeans, new ItemCallback() {
+                        @Override
+                        public void onItemCallback(int position, Object obj) {
+//                                    FragmentManager fg = requireActivity().getSupportFragmentManager();
+//                                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
+//                                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                                    fragmentTransaction.add(R.id.main_root_lay,new OilStationActivity(((OilStationBean)obj).gasId));
+//                                    fragmentTransaction.addToBackStack("ddd");
+//                                    fragmentTransaction.commit();
+                            Intent intent = new Intent(getContext(),OilStationActivity.class);
+                            intent.putExtra("gasId",((OilStationBean)obj).gasId);
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onDetailCallBack(int position, Object obj) {
+
+                        }
+                    });
+                    station_rv.setAdapter(oilStationAdapter);
+
+                }
+                viewPager.setObjectForPosition(view,fragment_id);
+            }
+        });
     }
 }

@@ -1,20 +1,16 @@
-package com.kayu.car_owner_pay.ui;
+package com.kayu.car_owner_pay.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,8 +18,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
-import com.kayu.car_owner_pay.activity.MainViewModel;
-import com.kayu.car_owner_pay.activity.WebViewActivity;
 import com.kayu.car_owner_pay.model.OilStationBean;
 import com.kayu.car_owner_pay.model.OilsParam;
 import com.kayu.car_owner_pay.model.OilsTypeParam;
@@ -35,14 +29,14 @@ import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
 import com.kongzue.dialog.v3.TipDialog;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class OilStationFragment extends Fragment {
+public class OilStationActivity extends BaseActivity {
 
 
     private String gasId;
@@ -68,33 +62,22 @@ public class OilStationFragment extends Fragment {
     boolean isLoadmore = false;
     boolean isRefresh = false;
 
-    public OilStationFragment(String gasId) {
-        this.gasId = gasId;
-    }
+//    public OilStationActivity(String gasId) {
+//        this.gasId = gasId;
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         LogUtil.e("StationFragment----", "----onCreate---");
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_oil_station, container, false);
-        return root;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        setContentView(R.layout.fragment_oil_station);
+        mainViewModel = ViewModelProviders.of(OilStationActivity.this).get(MainViewModel.class);
+        gasId = getIntent().getStringExtra("gasId");
         //标题栏
-        view.findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
+        findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                requireActivity().onBackPressed();
+                onBackPressed();
             }
 
             @Override
@@ -102,13 +85,13 @@ public class OilStationFragment extends Fragment {
 
             }
         });
-        TextView back_tv = view.findViewById(R.id.title_back_tv);
-        TextView title_name = view.findViewById(R.id.title_name_tv);
+        TextView back_tv = findViewById(R.id.title_back_tv);
+        TextView title_name = findViewById(R.id.title_name_tv);
         title_name.setVisibility(View.VISIBLE);
         title_name.setText("详情");
 //        back_tv.setText("首页");
 
-        refreshLayout = (RefreshLayout) view.findViewById(R.id.refreshLayout);
+        refreshLayout = (RefreshLayout) findViewById(R.id.refreshLayout);
         refreshLayout.setEnableAutoLoadMore(false);
         refreshLayout.setEnableLoadMore(false);
         refreshLayout.setEnableLoadMoreWhenContentNotFull(true);//是否在列表不满一页时候开启上拉加载功能
@@ -125,20 +108,20 @@ public class OilStationFragment extends Fragment {
         });
 
 
-        station_img = view.findViewById(R.id.station_img);
-        station_name = view.findViewById(R.id.station_name);
-        station_location = view.findViewById(R.id.station_location);
-        oil_price = view.findViewById(R.id.station_oil_price);
-        oil_price_sub1 = view.findViewById(R.id.station_oil_price_sub1);
-        oil_price_sub2 = view.findViewById(R.id.station_oil_price_sub2);
-        next_ask_btn = view.findViewById(R.id.station_next_tv);
-        tip_lay = view.findViewById(R.id.oil_station_tip_lay);
-        tip_title = view.findViewById(R.id.oil_station_tip_title);
-        tip_content = view.findViewById(R.id.oil_station_tip_content);
+        station_img = findViewById(R.id.station_img);
+        station_name = findViewById(R.id.station_name);
+        station_location = findViewById(R.id.station_location);
+        oil_price = findViewById(R.id.station_oil_price);
+        oil_price_sub1 = findViewById(R.id.station_oil_price_sub1);
+        oil_price_sub2 = findViewById(R.id.station_oil_price_sub2);
+        next_ask_btn = findViewById(R.id.station_next_tv);
+        tip_lay = findViewById(R.id.oil_station_tip_lay);
+        tip_title = findViewById(R.id.oil_station_tip_title);
+        tip_content = findViewById(R.id.oil_station_tip_content);
 
-        select_oil_type_rv = view.findViewById(R.id.station_select_oil_type_rv);
-        select_oil_rv = view.findViewById(R.id.station_select_oil_rv);
-        select_oil_gun_rv = view.findViewById(R.id.station_select_oil_gun_rv);
+        select_oil_type_rv = findViewById(R.id.station_select_oil_type_rv);
+        select_oil_rv = findViewById(R.id.station_select_oil_rv);
+        select_oil_gun_rv = findViewById(R.id.station_select_oil_gun_rv);
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
 //        manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
         select_oil_type_rv.setLayoutManager(manager);
@@ -149,23 +132,34 @@ public class OilStationFragment extends Fragment {
 //        manager1.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
         select_oil_gun_rv.setLayoutManager(manager1);
 
-
-
+        refreshLayout.autoRefresh();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (!mHasLoadedOnce){
-            refreshLayout.autoRefresh();
-            mHasLoadedOnce = true;
-        }
-        isCreated = true;
-    }
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//        // Inflate the layout for this fragment
+//        mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
+//        View root = inflater.inflate(R.layout.fragment_oil_station, container, false);
+//        return root;
+//    }
 
-    private boolean mHasLoadedOnce = false;// 页面已经加载过
-    private boolean isCreated = false;
+//    @Override
+//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//    }
 
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        if (!mHasLoadedOnce){
+//            refreshLayout.autoRefresh();
+//            mHasLoadedOnce = true;
+//        }
+//        isCreated = true;
+//    }
+//    private boolean mHasLoadedOnce = false;// 页面已经加载过
+//    private boolean isCreated = false;
 //    @Override
 //    public void setUserVisibleHint(boolean isVisibleToUser) {
 //        super.setUserVisibleHint(isVisibleToUser);
@@ -177,7 +171,7 @@ public class OilStationFragment extends Fragment {
 
     private void loadView(){
 
-        mainViewModel.getParameter(getContext(),13).observe(requireActivity(), new Observer<SystemParam>() {
+        mainViewModel.getParameter(OilStationActivity.this,13).observe(OilStationActivity.this, new Observer<SystemParam>() {
             @Override
             public void onChanged(SystemParam systemParam) {
                 if (null != systemParam) {
@@ -192,7 +186,7 @@ public class OilStationFragment extends Fragment {
             }
         });
 
-        mainViewModel.getOilStationDetail(getContext(), gasId).observe(requireActivity(), new Observer<OilStationBean>() {
+        mainViewModel.getOilStationDetail(OilStationActivity.this, gasId).observe(OilStationActivity.this, new Observer<OilStationBean>() {
 
             @SuppressLint("SetTextI18n")
             @Override
@@ -206,10 +200,10 @@ public class OilStationFragment extends Fragment {
                 ParentParamItemCallback parentParamItemCallback = new ParentParamItemCallback();
                 ChildParamItemCallback childParamItemCallback = new ChildParamItemCallback();
 
-                rootTypeAdapter = new ProductTypeAdapter(getContext(), new ArrayList<>(oilStationBean.oilsTypeList), 0, rootParamItemCallback);
+                rootTypeAdapter = new ProductTypeAdapter(OilStationActivity.this, new ArrayList<>(oilStationBean.oilsTypeList), 0, rootParamItemCallback);
                 select_oil_type_rv.setAdapter(rootTypeAdapter);
 
-                parentTypeAdapter = new ProductTypeAdapter(getContext(), new ArrayList<>(oilStationBean.oilsTypeList.get(0).oilsParamList), 1, parentParamItemCallback);
+                parentTypeAdapter = new ProductTypeAdapter(OilStationActivity.this, new ArrayList<>(oilStationBean.oilsTypeList.get(0).oilsParamList), 1, parentParamItemCallback);
                 select_oil_rv.setAdapter(parentTypeAdapter);
                 OilsParam defultOilParam = oilStationBean.oilsTypeList.get(0).oilsParamList.get(0);
                 oil_price.setText(String.valueOf(defultOilParam.priceYfq));
@@ -217,24 +211,24 @@ public class OilStationFragment extends Fragment {
                 oil_price_sub2.setText("比油站降" + DoubleUtils.sub(defultOilParam.priceGun, defultOilParam.priceYfq) + "元");
                 String[] gunArrs = defultOilParam.gunNos.split(",");
 //                gunNo = gunArrs[0];
-                childTypeAdapter = new ProductTypeAdapter(getContext(), new ArrayList<>(Arrays.asList(gunArrs)), 2, childParamItemCallback);
+                childTypeAdapter = new ProductTypeAdapter(OilStationActivity.this, new ArrayList<>(Arrays.asList(gunArrs)), 2, childParamItemCallback);
                 select_oil_gun_rv.setAdapter(childTypeAdapter);
 
                 next_ask_btn.setOnClickListener(new NoMoreClickListener() {
                     @Override
                     protected void OnMoreClick(View view) {
                         if (StringUtil.isEmpty(gunNo)) {
-                            TipDialog.show((AppCompatActivity) getContext(),"请选择枪号", TipDialog.TYPE.WARNING);
+                            TipDialog.show(OilStationActivity.this,"请选择枪号", TipDialog.TYPE.WARNING);
                             return;
                         }
-                        mainViewModel.getPayUrl(requireContext(), gasId, Integer.parseInt(gunNo)).observe(requireActivity(), new Observer<String>() {
+                        mainViewModel.getPayUrl(OilStationActivity.this, gasId, Integer.parseInt(gunNo)).observe(OilStationActivity.this, new Observer<String>() {
                             @Override
                             public void onChanged(String s) {
                                 if (StringUtil.isEmpty(s)){
-                                    Toast.makeText(requireContext(),"未获取到支付信息",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(OilStationActivity.this,"未获取到支付信息",Toast.LENGTH_LONG).show();
                                     return;
                                 }
-                                Intent intent = new Intent(requireContext(), WebViewActivity.class);
+                                Intent intent = new Intent(OilStationActivity.this, WebViewActivity.class);
                                 intent.putExtra("url", s);
                                 intent.putExtra("title", "订单");
 //                                intent.putExtra("from", "首页");
@@ -315,7 +309,7 @@ public class OilStationFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 111) {
-            mainViewModel.sendOilPayInfo(getContext());
+            mainViewModel.sendOilPayInfo(OilStationActivity.this);
         }
     }
 }

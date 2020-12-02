@@ -80,6 +80,7 @@
     <color name="bg_blue_def">#D6D6E1</color>
 
     <color name="red">#ef5350</color>
+    <color name="redf">#FF5722</color>
 
     <color name="alpha_complete">#0000</color>
     <color name="alpha_9">#9000</color>

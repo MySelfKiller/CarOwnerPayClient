@@ -32,7 +32,7 @@ import com.kayu.utils.callback.Callback;
 import com.kayu.utils.view.AdaptiveHeightViewPager;
 import com.kongzue.dialog.v3.TipDialog;
 import com.kongzue.dialog.v3.WaitDialog;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -151,7 +151,7 @@ public class HomeCarWashFragment extends Fragment {
         },flag));
     }
 
-    public void reqData(RefreshLayout refreshLayout, int pageIndex, final boolean isRefresh, final boolean isLoadmore,double latitude,double longitude,String cityName) {
+    public void reqData(RefreshLayout refreshLayout, int pageIndex, final boolean isRefresh, final boolean isLoadmore, double latitude, double longitude, String cityName) {
         if (null == refreshLayout) {
             WaitDialog.show((AppCompatActivity) getContext(), "刷新数据！稍等");
         } else {

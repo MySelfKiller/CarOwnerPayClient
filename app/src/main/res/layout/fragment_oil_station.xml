@@ -9,7 +9,7 @@
     android:focusableInTouchMode="true"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".ui.OilStationFragment">
+    tools:context=".activity.OilStationActivity">
     <include
         android:id="@+id/title_lay"
         layout="@layout/titlebar_white"
@@ -24,12 +24,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_lay"
         app:layout_constraintBottom_toTopOf="@id/oil_station_tip_lay">
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        <com.scwang.smart.refresh.layout.SmartRefreshLayout
             android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.scwang.smartrefresh.layout.header.ClassicsHeader
+            <com.scwang.smart.refresh.header.ClassicsHeader
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:srlAccentColor="@color/black"
@@ -237,7 +237,7 @@
                 </androidx.cardview.widget.CardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
     </androidx.core.widget.NestedScrollView>
 
