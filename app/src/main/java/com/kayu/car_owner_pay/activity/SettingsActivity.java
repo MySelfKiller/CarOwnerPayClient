@@ -1,4 +1,4 @@
-package com.kayu.car_owner_pay.ui;
+package com.kayu.car_owner_pay.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,18 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
-import com.kayu.car_owner_pay.activity.AppManager;
-import com.kayu.car_owner_pay.activity.MainViewModel;
-import com.kayu.car_owner_pay.activity.WebViewActivity;
 import com.kayu.car_owner_pay.activity.login.LoginActivity;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.model.UserBean;
@@ -38,16 +30,13 @@ import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.callback.ImageCallback;
 import com.kayu.utils.location.LocationManagerUtil;
-import com.kayu.utils.status_bar_set.StatusBarUtil;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.v3.CustomDialog;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.WaitDialog;
 
-import static android.content.Context.MODE_PRIVATE;
-
-public class SettingsFragment extends Fragment {
+public class SettingsActivity extends BaseActivity {
     private TextView app_version,app_new_version;
     private Button sign_out;
     private UserBean useData;
@@ -70,39 +59,26 @@ public class SettingsFragment extends Fragment {
     private TextView user_agreement;
     private TextView user_privacy;
 
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
-        mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_setting, container, false);
-//        final TextView textView = root.findViewById(R.id.text_notifications);
-//        notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
-        return root;
-    }
-
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        SharedPreferences sp = getContext().getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_setting);
+        mainViewModel = ViewModelProviders.of(SettingsActivity.this).get(MainViewModel.class);
+
+        SharedPreferences sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
         String jsonUser = sp.getString(Constants.userInfo,"");
         useData = GsonHelper.fromJson(jsonUser, UserBean.class);
 
         //标题栏
 //        LinearLayout title_lay = findViewById(R.id.title_lay);
 //        title_lay.setBackgroundColor(getResources().getColor(R.color.background_gray));
-        TextView title_name = view.findViewById(R.id.title_name_tv);
+        TextView title_name = findViewById(R.id.title_name_tv);
         title_name.setText("设置");
 
-        view.findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
+        findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                getActivity().onBackPressed();
+                onBackPressed();
             }
 
             @Override
@@ -113,12 +89,12 @@ public class SettingsFragment extends Fragment {
 //        TextView back_tv = view.findViewById(R.id.title_back_tv);
 //        back_tv.setText("我的");
 
-        String version = AppUtil.getVersionName(getContext());
+        String version = AppUtil.getVersionName(SettingsActivity.this);
 
-        user_name = view.findViewById(R.id.setting_user_name_tv);
+        user_name = findViewById(R.id.setting_user_name_tv);
 
-        app_version = view.findViewById(R.id.setting_app_version_tv);
-        app_new_version = view.findViewById(R.id.setting_app_new_version_tv);
+        app_version = findViewById(R.id.setting_app_version_tv);
+        app_new_version = findViewById(R.id.setting_app_new_version_tv);
         app_new_version.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
@@ -134,28 +110,28 @@ public class SettingsFragment extends Fragment {
         app_version.setText(version);
         initViewData();
         reqAppDown(null);
-        sign_out = view.findViewById(R.id.setting_sign_out_tv);
+        sign_out = findViewById(R.id.setting_sign_out_tv);
         sign_out.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                MessageDialog.show((AppCompatActivity) getActivity(),getResources().getString(R.string.app_name),"确定需要退出登录？","退出登录","取消")
+                MessageDialog.show(SettingsActivity.this,getResources().getString(R.string.app_name),"确定需要退出登录？","退出登录","取消")
                         .setOkButton(new OnDialogButtonClickListener() {
-                    @Override
-                    public boolean onClick(BaseDialog baseDialog, View v) {
-                        SharedPreferences sp = getActivity().getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sp.edit();
-                        editor.putBoolean(Constants.isLogin, false);
-                        editor.putString(Constants.userInfo, "");
-                        editor.apply();
-                        editor.commit();
-                        AppManager.getAppManager().finishAllActivity();
-                        LocationManagerUtil.getSelf().stopLocation();
+                            @Override
+                            public boolean onClick(BaseDialog baseDialog, View v) {
+//                                SharedPreferences sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putBoolean(Constants.isLogin, false);
+                                editor.putString(Constants.userInfo, "");
+                                editor.apply();
+                                editor.commit();
+                                AppManager.getAppManager().finishAllActivity();
+                                LocationManagerUtil.getSelf().stopLocation();
 //                        LocationManager.getSelf().destroyLocation();
-                        startActivity(new Intent(getActivity(), LoginActivity.class));
-                        getActivity().finish();
-                        return false;
-                    }
-                });
+                                startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
+                                finish();
+                                return false;
+                            }
+                        });
             }
 
             @Override
@@ -163,10 +139,10 @@ public class SettingsFragment extends Fragment {
 
             }
         });
-        user_agreement = view.findViewById(R.id.setting_user_agreement_tv);
-        user_privacy = view.findViewById(R.id.setting_user_privacy_tv);
+        user_agreement = findViewById(R.id.setting_user_agreement_tv);
+        user_privacy = findViewById(R.id.setting_user_privacy_tv);
 //        WaitDialog.show((AppCompatActivity) requireContext(),"请稍等");
-        mainViewModel.getParameter(getContext(),3).observe(requireActivity(), new Observer<SystemParam>() {
+        mainViewModel.getParameter(SettingsActivity.this,3).observe(SettingsActivity.this, new Observer<SystemParam>() {
             @Override
             public void onChanged(SystemParam systemParam) {
 //                WaitDialog.dismiss();
@@ -201,13 +177,34 @@ public class SettingsFragment extends Fragment {
 
             }
         });
+
     }
 
+//    public View onCreateView(@NonNull LayoutInflater inflater,
+//                             ViewGroup container, Bundle savedInstanceState) {
+//        mainViewModel = ViewModelProviders.of(SettingsFragment.this).get(MainViewModel.class);
+//        View root = inflater.inflate(R.layout.fragment_setting, container, false);
+//        final TextView textView = root.findViewById(R.id.text_notifications);
+//        notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+//            @Override
+//            public void onChanged(@Nullable String s) {
+//                textView.setText(s);
+//            }
+//        });
+//        return root;
+//    }
+
+//    @Override
+//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//
+//    }
+
     private void jumpWeb(String title, String url){
-        Intent intent = new Intent(getContext(), WebViewActivity.class);
+        Intent intent = new Intent(SettingsActivity.this, WebViewActivity.class);
         intent.putExtra("url",url);
         intent.putExtra("from",title);
-        requireActivity().startActivity(intent);
+        startActivity(intent);
     }
 
     Bitmap qrcodeBitmap = null;
@@ -218,7 +215,7 @@ public class SettingsFragment extends Fragment {
         }else {
             systemParam = mParamet;
             if (StringUtil.isEmpty(systemParam.url)){
-                MessageDialog.show((AppCompatActivity) getContext(),"提示","地址链接错误","重新获取","取消")
+                MessageDialog.show(SettingsActivity.this,"提示","地址链接错误","重新获取","取消")
                         .setCancelable(false)
                         .setOkButton(new OnDialogButtonClickListener() {
                             @Override
@@ -250,15 +247,15 @@ public class SettingsFragment extends Fragment {
                 @Override
                 protected void OnMoreClick(View view) {
                     if (null == qrcodeBitmap) {
-                        Toast.makeText(getContext(),"保存图片不存在",Toast.LENGTH_LONG).show();
+                        Toast.makeText(SettingsActivity.this,"保存图片不存在",Toast.LENGTH_LONG).show();
                         return;
                     }
                     String fileName = "qr_"+System.currentTimeMillis() + ".jpg";
-                    boolean isSaveSuccess = ImageUtil.saveImageToGallery(getActivity(), qrcodeBitmap,fileName);
+                    boolean isSaveSuccess = ImageUtil.saveImageToGallery(SettingsActivity.this, qrcodeBitmap,fileName);
                     if (isSaveSuccess) {
-                        Toast.makeText(getActivity(), "保存成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SettingsActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getActivity(), "保存失败", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SettingsActivity.this, "保存失败", Toast.LENGTH_LONG).show();
                     }
 
                 }
@@ -296,7 +293,7 @@ public class SettingsFragment extends Fragment {
         compay_tv1 = popview.findViewById(R.id.shared_compay_tv1);
     }
     private void creatPopWindow(View view) {
-        dialog = CustomDialog.build((AppCompatActivity) getContext(), view).setCancelable(true);
+        dialog = CustomDialog.build(SettingsActivity.this, view).setCancelable(true);
     }
 
     private void showWindo(){
@@ -308,9 +305,9 @@ public class SettingsFragment extends Fragment {
     @SuppressLint("HandlerLeak")
     private void reqAppDown(final ItemCallback itemCallback) {
         if (null != itemCallback){
-            WaitDialog.show((AppCompatActivity) getContext(),"请稍等");
+            WaitDialog.show(SettingsActivity.this,"请稍等");
         }
-        mainViewModel.getParameter(getContext(),1).observe(requireActivity(), new Observer<SystemParam>() {
+        mainViewModel.getParameter(SettingsActivity.this,1).observe(SettingsActivity.this, new Observer<SystemParam>() {
             @Override
             public void onChanged(SystemParam systemParam) {
                 if (null != itemCallback ){
@@ -355,9 +352,8 @@ public class SettingsFragment extends Fragment {
 //        ReqUtil.getInstance().requestPostJSON(callback);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-//        StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.startOrgColor_btn));
-    }
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//    }
 }

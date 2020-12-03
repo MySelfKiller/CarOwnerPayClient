@@ -9,7 +9,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context=".ui.CustomerFragment">
+    tools:context=".activity.CustomerActivity">
 
     <include layout="@layout/titlebar_white" />
 

@@ -19,8 +19,10 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.activity.CustomerActivity;
 import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.activity.OilOrderListActivity;
+import com.kayu.car_owner_pay.activity.SettingsActivity;
 import com.kayu.car_owner_pay.activity.WashOrderListActivity;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
 import com.kayu.car_owner_pay.model.SystemParam;
@@ -114,12 +116,13 @@ public class PersonalFragment extends Fragment {
         customer_services_lay.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                FragmentManager fg = requireActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fg.beginTransaction();
-                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                fragmentTransaction.add(R.id.main_root_lay,new CustomerFragment());
-                fragmentTransaction.addToBackStack("ddd");
-                fragmentTransaction.commit();
+//                FragmentManager fg = requireActivity().getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fg.beginTransaction();
+//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                fragmentTransaction.add(R.id.main_root_lay,new CustomerActivity());
+//                fragmentTransaction.addToBackStack("ddd");
+//                fragmentTransaction.commit();
+                startActivity(new Intent(getContext(), CustomerActivity.class));
             }
 
             @Override
@@ -156,12 +159,13 @@ public class PersonalFragment extends Fragment {
         setting_lay.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                FragmentManager fg = requireActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fg.beginTransaction();
-                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                fragmentTransaction.add(R.id.main_root_lay,new SettingsFragment());
-                fragmentTransaction.addToBackStack("ddd");
-                fragmentTransaction.commit();
+//                FragmentManager fg = requireActivity().getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fg.beginTransaction();
+//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                fragmentTransaction.add(R.id.main_root_lay,new SettingsFragment());
+//                fragmentTransaction.addToBackStack("ddd");
+//                fragmentTransaction.commit();
+                startActivity(new Intent(getContext(), SettingsActivity.class));
             }
 
             @Override
