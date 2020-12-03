@@ -65,7 +65,6 @@ public class BaseActivity extends AppCompatActivity implements EasyPermissions.P
         //设置状态栏透明
 //        StatusBarUtil.setTranslucentStatus(this);
         StatusBarUtil.setStatusBarColor(this, getResources().getColor(R.color.white));
-//        StatusBarUtil.
 
 //        StatusBarUtil.setTranslucent(this, 0);
 //        StatusBarUtil.setColor(this, getResources().getColor(R.color.white));

@@ -55,7 +55,7 @@ public class PersonalFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
-        StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
+//        StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
         View root = inflater.inflate(R.layout.fragment_personal, container, false);
         return root;
     }

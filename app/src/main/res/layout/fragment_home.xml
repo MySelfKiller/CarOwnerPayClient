@@ -37,7 +37,7 @@
                     <ImageView
                         android:id="@+id/home_title_iv"
                         android:layout_width="@dimen/dp_0"
-                        android:layout_height="@dimen/dp_120"
+                        android:layout_height="@dimen/dp_150"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>
@@ -46,6 +46,7 @@
                         android:layout_width="@dimen/dp_0"
                         android:layout_height="wrap_content"
                         app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginTop="@dimen/dp_30"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent">
 

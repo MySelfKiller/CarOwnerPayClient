@@ -50,7 +50,6 @@ import com.kayu.utils.callback.Callback;
 import com.kayu.utils.location.CoordinateTransformUtil;
 import com.kayu.utils.location.LocationCallback;
 import com.kayu.utils.location.LocationManagerUtil;
-import com.kayu.utils.status_bar_set.StatusBarUtil;
 import com.kayu.utils.view.AdaptiveHeightViewPager;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
@@ -399,7 +398,7 @@ public class HomeFragment extends Fragment {
                     mRows = categoryBeans.size() % 4 == 0 ? categoryBeans.size() / 4 : categoryBeans.size() / 4 + 1;
                     mColumns = 4;
                 }
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dipToPx(getContext(), 86) * mRows);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.dp_90) * mRows);
                 layoutParams.topMargin = ScreenUtils.dipToPx(getContext(), 10);
                 category_rv.setLayoutParams(layoutParams);
 
@@ -556,7 +555,7 @@ public class HomeFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         LogUtil.e("HomeFragment----","----setUserVisibleHint---");
         if (!isVisibleToUser && isCreated){
-            StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
+//            StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
         }
     }
 
@@ -600,7 +599,7 @@ public class HomeFragment extends Fragment {
     public void onPause() {
         super.onPause();
         LogUtil.e("HomeFragment----","----onPause---");
-        StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
+//        StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
     }
 
     @Override
