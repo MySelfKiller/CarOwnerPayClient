@@ -257,6 +257,7 @@ public class CarWashListActivity extends BaseActivity {
                 }
                 param_recycle_view.setVisibility(View.GONE);
                 pageIndex = 1;
+                isRefresh = true;
                 AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
                 double[] bddfsdfs = CoordinateTransformUtil.gcj02tobd09(location.getLongitude(), location.getLatitude());
                 reqData(null, pageIndex,bddfsdfs[1],bddfsdfs[0],location.getCity());

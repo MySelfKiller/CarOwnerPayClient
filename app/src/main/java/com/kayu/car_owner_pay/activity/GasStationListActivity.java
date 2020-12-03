@@ -290,6 +290,7 @@ public class GasStationListActivity extends BaseActivity {
                 }
                 param_recycle_view.setVisibility(View.GONE);
 
+                isRefresh = true;
                 pageIndex = 1;
                 AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
                 reqData(null, pageIndex,location.getLatitude(),location.getLongitude());
