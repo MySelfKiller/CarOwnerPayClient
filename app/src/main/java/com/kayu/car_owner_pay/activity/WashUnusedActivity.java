@@ -67,7 +67,7 @@ public class WashUnusedActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_wash_unused);
+        setContentView(R.layout.activity_wash_unused);
 
         orderId = getIntent().getLongExtra("orderId",0);
         orderState = getIntent().getIntExtra("orderState",-1);

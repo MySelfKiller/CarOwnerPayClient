@@ -139,7 +139,7 @@ public class WashOrderActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_wash_order);
+        setContentView(R.layout.activity_wash_order);
         selectedListDTO = getIntent().getParcelableExtra("selectedListDTO");
         serviceType = getIntent().getStringExtra("serviceType");
         shopCode = getIntent().getStringExtra("shopCode");

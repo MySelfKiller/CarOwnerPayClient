@@ -62,7 +62,7 @@ public class SettingsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_setting);
+        setContentView(R.layout.activity_setting);
         mainViewModel = ViewModelProviders.of(SettingsActivity.this).get(MainViewModel.class);
 
         SharedPreferences sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);

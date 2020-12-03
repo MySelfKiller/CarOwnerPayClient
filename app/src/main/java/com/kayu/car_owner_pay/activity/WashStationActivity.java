@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -74,7 +72,7 @@ public class WashStationActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_wash_station);
+        setContentView(R.layout.activity_wash_station);
         shopCode = getIntent().getStringExtra("shopCode");
         mainViewModel = ViewModelProviders.of(WashStationActivity.this).get(MainViewModel.class);
 

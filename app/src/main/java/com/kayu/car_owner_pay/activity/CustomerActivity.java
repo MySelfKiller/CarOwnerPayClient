@@ -32,7 +32,7 @@ public class CustomerActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_customer);
+        setContentView(R.layout.activity_customer);
         mainViewModel = ViewModelProviders.of(CustomerActivity.this).get(MainViewModel.class);
         //标题栏
 //        LinearLayout title_lay = findViewById(R.id.title_lay);

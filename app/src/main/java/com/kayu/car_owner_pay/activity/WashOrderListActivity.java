@@ -1,14 +1,9 @@
 package com.kayu.car_owner_pay.activity;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -18,12 +13,8 @@ import com.flyco.tablayout.TabEntity;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.kayu.car_owner_pay.R;
-import com.kayu.car_owner_pay.activity.BaseActivity;
-import com.kayu.car_owner_pay.activity.MyPagerAdapter;
 import com.kayu.car_owner_pay.ui.WashOrderAllFragment;
-import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
-import com.kayu.utils.status_bar_set.StatusBarUtil;
 
 import java.util.ArrayList;
 
@@ -41,7 +32,7 @@ public class WashOrderListActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_wash_order_list);
+        setContentView(R.layout.activity_wash_order_list);
 
         //标题栏
         findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {

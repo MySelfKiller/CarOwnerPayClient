@@ -41,7 +41,7 @@ public class WashRefundFragment extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_wash_refund);
+        setContentView(R.layout.activity_wash_refund);
         orderId = getIntent().getLongExtra("orderId",0);
         mainViewModel = new ViewModelProvider(WashRefundFragment.this).get(MainViewModel.class);
         //标题栏

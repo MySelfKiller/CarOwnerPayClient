@@ -30,6 +30,8 @@ import com.gcssloop.widget.PagerGridLayoutManager;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.BannerImageLoader;
+import com.kayu.car_owner_pay.activity.CarWashListActivity;
+import com.kayu.car_owner_pay.activity.GasStationListActivity;
 import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.activity.MessageActivity;
 import com.kayu.car_owner_pay.activity.MyPagerAdapter;
@@ -424,8 +426,10 @@ public class HomeFragment extends Fragment {
                         String target = categoryBean.href;
                         if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
                             // FIXME: 2020/12/1 添加加油跳转本地页面
+                            startActivity(new Intent(getContext(), GasStationListActivity.class));
                         }else if (StringUtil.equals(categoryBean.type, "KY_WASH")){
                             // FIXME: 2020/12/1 添加洗车跳转本地页面
+                            startActivity(new Intent(getContext(), CarWashListActivity.class));
                         }else {
                             if (!StringUtil.isEmpty(target)) {
                                 Intent intent = new Intent(getContext(), WebViewActivity.class);
@@ -517,7 +521,7 @@ public class HomeFragment extends Fragment {
                 }
                 if (mFragments.get(x) instanceof HomeCarWashFragment) {
                     HomeCarWashFragment homeCarWashFragment = (HomeCarWashFragment) mFragments.get(x);
-                    double bddfsdfs[] = CoordinateTransformUtil.gcj02tobd09(longitude, latitude);
+                    double[] bddfsdfs = CoordinateTransformUtil.gcj02tobd09(longitude, latitude);
                     homeCarWashFragment.reqData(refreshLayout, pageIndex, isRefresh, isLoadmore, bddfsdfs[1], bddfsdfs[0], cityName);
                 }
             }
@@ -528,7 +532,7 @@ public class HomeFragment extends Fragment {
                 homeGasStationFragment.reqData(refreshLayout, pageIndex, isRefresh, isLoadmore, latitude, longitude);
             } else if (fragIndex == 1) {
                 HomeCarWashFragment homeCarWashFragment = (HomeCarWashFragment) mFragments.get(fragIndex);
-                double bddfsdfs[] = CoordinateTransformUtil.gcj02tobd09(longitude, latitude);
+                double[] bddfsdfs = CoordinateTransformUtil.gcj02tobd09(longitude, latitude);
                 homeCarWashFragment.reqData(refreshLayout, pageIndex, isRefresh, isLoadmore, bddfsdfs[1], bddfsdfs[0], cityName);
             }
         }
