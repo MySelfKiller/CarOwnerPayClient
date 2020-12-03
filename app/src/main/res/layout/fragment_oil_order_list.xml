@@ -9,7 +9,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context=".ui.OilOrderListFragment">
+    tools:context=".activity.OilOrderListActivity">
 
     <include layout="@layout/titlebar_white"/>
 

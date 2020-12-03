@@ -1,4 +1,4 @@
-package com.kayu.car_owner_pay.ui;
+package com.kayu.car_owner_pay.activity;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +18,9 @@ import com.flyco.tablayout.TabEntity;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.activity.BaseActivity;
 import com.kayu.car_owner_pay.activity.MyPagerAdapter;
+import com.kayu.car_owner_pay.ui.WashOrderAllFragment;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
@@ -26,36 +28,26 @@ import com.kayu.utils.status_bar_set.StatusBarUtil;
 import java.util.ArrayList;
 
 
-public class WashOrderListFragment extends Fragment {
+public class WashOrderListActivity extends BaseActivity {
     private ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
     private ArrayList<Fragment> mFragments = new ArrayList<>();
     private ViewPager mViewPager;
     private CommonTabLayout slidingTabLayout;
 
-    public WashOrderListFragment() {
-    }
+//    public WashOrderListFragment() {
+//    }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
+        setContentView(R.layout.fragment_wash_order_list);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
-        return inflater.inflate(R.layout.fragment_wash_order_list, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         //标题栏
-        view.findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
+        findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                requireActivity().onBackPressed();
+                onBackPressed();
             }
 
             @Override
@@ -63,32 +55,65 @@ public class WashOrderListFragment extends Fragment {
 
             }
         });
-        TextView back_tv = view.findViewById(R.id.title_back_tv);
-        TextView title_name = view.findViewById(R.id.title_name_tv);
+        TextView back_tv = findViewById(R.id.title_back_tv);
+        TextView title_name = findViewById(R.id.title_name_tv);
         title_name.setText("洗车订单");
 //        title_name.setVisibility(View.GONE);
         back_tv.setText("我的");
 
-        slidingTabLayout = view.findViewById(R.id.wash_order_list_ctl);
-        mViewPager = view.findViewById(R.id.wash_order_list_vp);
-        if (getUserVisibleHint() && !mHasLoadedOnce){
-            initView();
-            mHasLoadedOnce = true;
-        }
-        isCreated = true;
+        slidingTabLayout = findViewById(R.id.wash_order_list_ctl);
+        mViewPager = findViewById(R.id.wash_order_list_vp);
+
+        initView();
     }
 
-    private boolean isCreated = false;
-    private boolean mHasLoadedOnce = false;// 页面已经加载过
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        LogUtil.e("hm","CustomerListBankFragment---------setUserVisibleHint===="+isVisibleToUser);
-        if (isVisibleToUser&& !mHasLoadedOnce && isCreated){
-            initView();
-            mHasLoadedOnce = true;
-        }
-    }
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//        return inflater.inflate(R.layout.fragment_wash_order_list, container, false);
+//    }
+
+//    @Override
+//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//        //标题栏
+//        view.findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
+//            @Override
+//            protected void OnMoreClick(View view) {
+//                onBackPressed();
+//            }
+//
+//            @Override
+//            protected void OnMoreErrorClick() {
+//
+//            }
+//        });
+//        TextView back_tv = view.findViewById(R.id.title_back_tv);
+//        TextView title_name = view.findViewById(R.id.title_name_tv);
+//        title_name.setText("洗车订单");
+////        title_name.setVisibility(View.GONE);
+//        back_tv.setText("我的");
+//
+//        slidingTabLayout = view.findViewById(R.id.wash_order_list_ctl);
+//        mViewPager = view.findViewById(R.id.wash_order_list_vp);
+//        if (getUserVisibleHint() && !mHasLoadedOnce){
+//            initView();
+//            mHasLoadedOnce = true;
+//        }
+//        isCreated = true;
+//    }
+
+//    private boolean isCreated = false;
+//    private boolean mHasLoadedOnce = false;// 页面已经加载过
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        LogUtil.e("hm","CustomerListBankFragment---------setUserVisibleHint===="+isVisibleToUser);
+//        if (isVisibleToUser&& !mHasLoadedOnce && isCreated){
+//            initView();
+//            mHasLoadedOnce = true;
+//        }
+//    }
 
     private void initView(){
         mTabEntities.add(new TabEntity("全部",R.mipmap.ic_bg_close,R.mipmap.ic_bg_close));
@@ -129,16 +154,10 @@ public class WashOrderListFragment extends Fragment {
         mFragments.add(new WashOrderAllFragment(-1 ));
         mFragments.add(new WashOrderAllFragment(1) );
         mFragments.add(new WashOrderAllFragment(5) );
-        PagerAdapter adapter = new MyPagerAdapter(getChildFragmentManager(),mFragments);
+        PagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager(),mFragments);
         mViewPager.setAdapter(adapter);
 
         mViewPager.setCurrentItem(0);
         slidingTabLayout.setCurrentTab(0);
-    }
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
-        LogUtil.e("StationFragment----", "----onDetach---");
     }
 }

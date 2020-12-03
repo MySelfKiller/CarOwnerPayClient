@@ -20,7 +20,6 @@ import com.amap.api.location.AMapLocation;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.model.WashStationDetailBean;
-import com.kayu.car_owner_pay.ui.WashOrderListFragment;
 import com.kayu.utils.GetJuLiUtils;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.location.LocationManagerUtil;
@@ -149,13 +148,13 @@ public class WashStationActivity extends BaseActivity {
         station_order_list.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                FragmentManager fg = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fg.beginTransaction();
-                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                fragmentTransaction.add(R.id.main_root_lay, new WashOrderListFragment());
-                fragmentTransaction.addToBackStack("ddd");
-                fragmentTransaction.commit();
-                // FIXME: 2020/12/3 修改为Activity
+//                FragmentManager fg = getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fg.beginTransaction();
+//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                fragmentTransaction.add(R.id.main_root_lay, new WashOrderListActivity());
+//                fragmentTransaction.addToBackStack("ddd");
+//                fragmentTransaction.commit();
+                startActivity(new Intent(WashStationActivity.this,WashOrderListActivity.class));
             }
 
             @Override

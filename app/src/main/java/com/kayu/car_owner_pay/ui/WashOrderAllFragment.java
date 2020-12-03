@@ -97,10 +97,10 @@ public class WashOrderAllFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.custom_list_recycler);
         Context context = view.getContext();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        if (getUserVisibleHint() && !mHasLoadedOnce){
-            refreshLayout.autoRefresh();
-//            mHasLoadedOnce = true;
-        }
+//        if (getUserVisibleHint() && !mHasLoadedOnce){
+//            refreshLayout.autoRefresh();
+////            mHasLoadedOnce = true;
+//        }
         isCreated = true;
     }
 
@@ -109,6 +109,7 @@ public class WashOrderAllFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        LogUtil.e("hm","WashOrderAllFragment---------setUserVisibleHint===="+isVisibleToUser);
         if (isVisibleToUser && !mHasLoadedOnce && isCreated) {
             refreshLayout.autoRefresh();
 //            mHasLoadedOnce = true;
@@ -118,6 +119,34 @@ public class WashOrderAllFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         isCreated = false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LogUtil.e("hm","WashOrderAllFragment---------onPause===="+getUserVisibleHint()+orderStatus);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LogUtil.e("hm","WashOrderAllFragment---------onResume===="+getUserVisibleHint()+orderStatus);
+        if (getUserVisibleHint() && !mHasLoadedOnce && isCreated) {
+            refreshLayout.autoRefresh();
+//            mHasLoadedOnce = true;
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        LogUtil.e("hm","WashOrderAllFragment---------onStart===="+getUserVisibleHint()+orderStatus);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        LogUtil.e("hm","WashOrderAllFragment---------onStop===="+getUserVisibleHint()+orderStatus);
     }
 
     @SuppressLint("HandlerLeak")

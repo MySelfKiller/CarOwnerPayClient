@@ -20,6 +20,8 @@ import androidx.lifecycle.ViewModelProviders;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.MainViewModel;
+import com.kayu.car_owner_pay.activity.OilOrderListActivity;
+import com.kayu.car_owner_pay.activity.WashOrderListActivity;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.model.UserBean;
@@ -35,8 +37,6 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Random;
 
 public class PersonalFragment extends Fragment {
     private SmartRefreshLayout refreshLayout;
@@ -175,12 +175,13 @@ public class PersonalFragment extends Fragment {
         oil_order_lay.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                FragmentManager fg = requireActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fg.beginTransaction();
-                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                fragmentTransaction.add(R.id.main_root_lay,new OilOrderListFragment() );
-                fragmentTransaction.addToBackStack("ddd");
-                fragmentTransaction.commit();
+//                FragmentManager fg = requireActivity().getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fg.beginTransaction();
+//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                fragmentTransaction.add(R.id.main_root_lay,new OilOrderListActivity() );
+//                fragmentTransaction.addToBackStack("ddd");
+//                fragmentTransaction.commit();
+                startActivity(new Intent(getContext(),OilOrderListActivity.class));
             }
 
             @Override
@@ -192,12 +193,13 @@ public class PersonalFragment extends Fragment {
         wash_order_lay.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                FragmentManager fg = requireActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fg.beginTransaction();
-                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                fragmentTransaction.add(R.id.main_root_lay,new WashOrderListFragment() );
-                fragmentTransaction.addToBackStack("ddd");
-                fragmentTransaction.commit();
+//                FragmentManager fg = requireActivity().getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fg.beginTransaction();
+//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                fragmentTransaction.add(R.id.main_root_lay,new WashOrderListActivity() );
+//                fragmentTransaction.addToBackStack("ddd");
+//                fragmentTransaction.commit();
+                startActivity(new Intent(getContext(),WashOrderListActivity.class));
             }
 
             @Override
