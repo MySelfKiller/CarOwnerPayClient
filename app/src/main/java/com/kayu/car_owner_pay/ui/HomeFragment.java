@@ -292,6 +292,7 @@ public class HomeFragment extends Fragment {
 
     private void initView() {
         mainViewModel.getParamSelect(requireContext());
+        mainViewModel.getParamWash(requireContext());
         mainViewModel.getNotifyNum(getContext()).observe(requireActivity(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {

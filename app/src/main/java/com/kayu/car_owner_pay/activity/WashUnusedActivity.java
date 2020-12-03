@@ -1,30 +1,20 @@
-package com.kayu.car_owner_pay.ui;
+package com.kayu.car_owner_pay.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.amap.api.location.AMapLocation;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
-import com.kayu.car_owner_pay.activity.BannerImageLoader;
-import com.kayu.car_owner_pay.activity.MainViewModel;
-import com.kayu.car_owner_pay.activity.WashStationActivity;
 import com.kayu.car_owner_pay.model.WashOrderDetailBean;
 import com.kayu.utils.GetJuLiUtils;
 import com.kayu.utils.NoMoreClickListener;
@@ -33,7 +23,7 @@ import com.kayu.utils.location.LocationManagerUtil;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 
-public class WashUnusedFragment extends Fragment {
+public class WashUnusedActivity extends BaseActivity {
     private Banner station_banner;
     private TextView station_open_time;
     private TextView station_name;
@@ -68,32 +58,27 @@ public class WashUnusedFragment extends Fragment {
     private ConstraintLayout unused_refund_lay;
     private ConstraintLayout qr_code_lay;
 
-    public WashUnusedFragment(Long orderId, Integer orderState) {
-        this.orderId = orderId;
-        this.orderState = orderState;
-    }
+//    public WashUnusedActivity(Long orderId, Integer orderState) {
+//        this.orderId = orderId;
+//        this.orderState = orderState;
+//    }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
+        setContentView(R.layout.fragment_wash_unused);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
-        return inflater.inflate(R.layout.fragment_wash_unused, container, false);
-    }
+        orderId = getIntent().getLongExtra("orderId",0);
+        orderState = getIntent().getIntExtra("orderState",-1);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        mainViewModel = ViewModelProviders.of(WashUnusedActivity.this).get(MainViewModel.class);
+
         //标题栏
-        view.findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
+        findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                requireActivity().onBackPressed();
+                onBackPressed();
             }
 
             @Override
@@ -101,52 +86,52 @@ public class WashUnusedFragment extends Fragment {
 
             }
         });
-        TextView back_tv = view.findViewById(R.id.title_back_tv);
-        TextView title_name = view.findViewById(R.id.title_name_tv);
+        TextView back_tv = findViewById(R.id.title_back_tv);
+        TextView title_name = findViewById(R.id.title_name_tv);
         title_name.setText("全国洗车特惠");
 //        title_name.setVisibility(View.GONE);
         back_tv.setText("洗车订单");
 
-        state_lay = view.findViewById(R.id.wash_unused_state_Lay);
-        state_img = view.findViewById(R.id.wash_unused_state_img);
-        state_tv = view.findViewById(R.id.wash_unused_state_tv);
+        state_lay = findViewById(R.id.wash_unused_state_Lay);
+        state_img = findViewById(R.id.wash_unused_state_img);
+        state_tv = findViewById(R.id.wash_unused_state_tv);
 
 
-        station_banner = view.findViewById(R.id.wash_unused_banner);
-        station_name = view.findViewById(R.id.wash_unused_name);
-        station_open_time = view.findViewById(R.id.wash_unused_time);
-        station_address = view.findViewById(R.id.wash_unused_location);
-        station_distance = view.findViewById(R.id.wash_unused_distance);
-        navi_lay = view.findViewById(R.id.wash_unused_navi_lay);
-        phone_lay = view.findViewById(R.id.wash_unused_phone_lay);
+        station_banner = findViewById(R.id.wash_unused_banner);
+        station_name = findViewById(R.id.wash_unused_name);
+        station_open_time = findViewById(R.id.wash_unused_time);
+        station_address = findViewById(R.id.wash_unused_location);
+        station_distance = findViewById(R.id.wash_unused_distance);
+        navi_lay = findViewById(R.id.wash_unused_navi_lay);
+        phone_lay = findViewById(R.id.wash_unused_phone_lay);
 
-        qr_code_lay = view.findViewById(R.id.wash_unused_qr_code_lay);
-        qr_img = view.findViewById(R.id.wash_unused_qr_img);
-        qr_state_img = view.findViewById(R.id.wash_unused_qr_state_img);
-        qr_string = view.findViewById(R.id.wash_unused_qr_code);
-        valid_time = view.findViewById(R.id.wash_unused_valid_time);
-        explain_tv = view.findViewById(R.id.wash_unused_explain_tv);
-        explain_img = view.findViewById(R.id.wash_unused_explain_img);
-        tag_order_nom = view.findViewById(R.id.id_tag_order_nom);
-        tag_pay_time = view.findViewById(R.id.id_tag_order_pay_time);
-        tag_expire_time = view.findViewById(R.id.id_tag_order_expire_time);
-        order_number = view.findViewById(R.id.wash_unused_order_number);
-        order_state = view.findViewById(R.id.wash_unused_order_state);
-        pay_time = view.findViewById(R.id.wash_unused_pay_time);
-        expire_time = view.findViewById(R.id.wash_unused_expire_time);
-        store_name = view.findViewById(R.id.wash_unused_store_name);
-        services_type = view.findViewById(R.id.wash_unused_services_type);
-        services_model = view.findViewById(R.id.wash_unused_model);
-        full_price = view.findViewById(R.id.wash_unused_full_price);
-        rebate_price = view.findViewById(R.id.wash_unused_rebate);
-        sale_price = view.findViewById(R.id.wash_unused_sale_price);
+        qr_code_lay = findViewById(R.id.wash_unused_qr_code_lay);
+        qr_img = findViewById(R.id.wash_unused_qr_img);
+        qr_state_img = findViewById(R.id.wash_unused_qr_state_img);
+        qr_string = findViewById(R.id.wash_unused_qr_code);
+        valid_time = findViewById(R.id.wash_unused_valid_time);
+        explain_tv = findViewById(R.id.wash_unused_explain_tv);
+        explain_img = findViewById(R.id.wash_unused_explain_img);
+        tag_order_nom = findViewById(R.id.id_tag_order_nom);
+        tag_pay_time = findViewById(R.id.id_tag_order_pay_time);
+        tag_expire_time = findViewById(R.id.id_tag_order_expire_time);
+        order_number = findViewById(R.id.wash_unused_order_number);
+        order_state = findViewById(R.id.wash_unused_order_state);
+        pay_time = findViewById(R.id.wash_unused_pay_time);
+        expire_time = findViewById(R.id.wash_unused_expire_time);
+        store_name = findViewById(R.id.wash_unused_store_name);
+        services_type = findViewById(R.id.wash_unused_services_type);
+        services_model = findViewById(R.id.wash_unused_model);
+        full_price = findViewById(R.id.wash_unused_full_price);
+        rebate_price = findViewById(R.id.wash_unused_rebate);
+        sale_price = findViewById(R.id.wash_unused_sale_price);
 
         //退款按钮
-        unused_refund_lay = view.findViewById(R.id.wash_unused_refund_lay);
-        unused_refund = view.findViewById(R.id.wash_unused_refund);
-        unused_navi_btn = view.findViewById(R.id.wash_unused_navi_btn);
+        unused_refund_lay = findViewById(R.id.wash_unused_refund_lay);
+        unused_refund = findViewById(R.id.wash_unused_refund);
+        unused_navi_btn = findViewById(R.id.wash_unused_navi_btn);
 
-        mainViewModel.getWashOrderDetail(getContext(), orderId).observe(requireActivity(), new Observer<WashOrderDetailBean>() {
+        mainViewModel.getWashOrderDetail(WashUnusedActivity.this, orderId).observe(WashUnusedActivity.this, new Observer<WashOrderDetailBean>() {
             @Override
             public void onChanged(WashOrderDetailBean orderDetailBean) {
                 if (null != orderDetailBean) {
@@ -155,6 +140,19 @@ public class WashUnusedFragment extends Fragment {
             }
         });
     }
+
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//        mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
+//        return inflater.inflate(R.layout.fragment_wash_unused, container, false);
+//    }
+
+//    @Override
+//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//
+//    }
 
 
     private void initViewData(WashOrderDetailBean washStation) {
@@ -190,7 +188,7 @@ public class WashUnusedFragment extends Fragment {
         navi_lay.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                KWApplication.getInstance().toNavi(getContext(), washStation.latitude, washStation.longitude, washStation.address,"BD09");
+                KWApplication.getInstance().toNavi(WashUnusedActivity.this, washStation.latitude, washStation.longitude, washStation.address,"BD09");
             }
 
             @Override
@@ -201,7 +199,7 @@ public class WashUnusedFragment extends Fragment {
         phone_lay.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                KWApplication.getInstance().callPhone(getActivity(), washStation.telephone);
+                KWApplication.getInstance().callPhone(WashUnusedActivity.this, washStation.telephone);
             }
 
             @Override
@@ -216,7 +214,7 @@ public class WashUnusedFragment extends Fragment {
         int qr_color= Color.LTGRAY;
         switch (washStation.state) {//0:待支付 1:已支付待使用 2:已取消 3:已使用 4:退款中 5:已退款 6:支付失败、7:退款失败
             case 0:
-                if (isAdded())
+//                if (isAdded())
                     state_img.setImageResource(R.mipmap.ic_unpaid_time);
                 orderStateStr = "待支付";
                 state_lay.setVisibility(View.VISIBLE);
@@ -248,7 +246,7 @@ public class WashUnusedFragment extends Fragment {
             case 3:
                 orderStateStr = "已使用";
                 qr_color = Color.LTGRAY;
-                if (isAdded())
+//                if (isAdded())
                     state_img.setImageResource(R.mipmap.ic_selected);
                 state_lay.setVisibility(View.VISIBLE);
                 qr_state_img.setVisibility(View.GONE);
@@ -344,12 +342,16 @@ public class WashUnusedFragment extends Fragment {
         unused_refund.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                FragmentManager fg = requireActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fg.beginTransaction();
-                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                fragmentTransaction.add(R.id.main_root_lay, new WashRefundFragment(orderId));
-                fragmentTransaction.addToBackStack("ddd");
-                fragmentTransaction.commit();
+//                FragmentManager fg = getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fg.beginTransaction();
+//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                fragmentTransaction.add(R.id.main_root_lay, new WashRefundFragment(orderId));
+//                fragmentTransaction.addToBackStack("ddd");
+//                fragmentTransaction.commit();
+                Intent intent = new Intent(WashUnusedActivity.this, WashRefundFragment.class);
+                intent.putExtra("orderId", orderId);
+                startActivity(intent);
+                finish();
             }
 
             @Override
@@ -362,19 +364,19 @@ public class WashUnusedFragment extends Fragment {
             protected void OnMoreClick(View view) {
 
                 if (washStation.state == 1) {
-                    KWApplication.getInstance().toNavi(getContext(), washStation.latitude, washStation.longitude, washStation.address,"BD09");
+                    KWApplication.getInstance().toNavi(WashUnusedActivity.this, washStation.latitude, washStation.longitude, washStation.address,"BD09");
                 } else if (washStation.state == 3
                         || washStation.state == 4
                         || washStation.state == 5
                         || washStation.state == 7) {
-                    requireActivity().onBackPressed();
+                    onBackPressed();
 //                    FragmentManager fg = requireActivity().getSupportFragmentManager();
 //                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
 //                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 //                    fragmentTransaction.add(R.id.main_root_lay, new WashStationActivity(washStation.shopCode));
 //                    fragmentTransaction.addToBackStack("ddd");
 //                    fragmentTransaction.commit();
-                    Intent intent = new Intent(getContext(), WashStationActivity.class);
+                    Intent intent = new Intent(WashUnusedActivity.this, WashStationActivity.class);
                     intent.putExtra("shopCode",washStation.shopCode);
                     startActivity(intent);
 

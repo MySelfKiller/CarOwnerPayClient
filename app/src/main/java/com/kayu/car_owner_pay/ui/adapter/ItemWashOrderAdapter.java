@@ -12,18 +12,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.model.ItemWashOrderBean;
 import com.kayu.car_owner_pay.activity.WashStationActivity;
-import com.kayu.car_owner_pay.model.WashStationBean;
-import com.kayu.car_owner_pay.ui.WashUnusedFragment;
+import com.kayu.car_owner_pay.activity.WashUnusedActivity;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.NoMoreClickListener;
 
@@ -198,21 +194,25 @@ public class ItemWashOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                 @Override
                 protected void OnMoreClick(View view) {
                     // 2020/10/21 是否还需要细分订单状态再跳转不同页面
-                    Fragment jumpFragment;
+//                    Fragment jumpFragment;
 //                    if (oilOrderData.state == 1) {
 //                    } else {
 //                    }
 //                    if (oilOrderData.state == 0 || oilOrderData.state == 2 || oilOrderData.state == 6) {
 //                        jumpFragment = new WashStationFragment(oilOrderData.shopCode);
 //                    } else {
-                        jumpFragment = new WashUnusedFragment(oilOrderData.id, oilOrderData.state);
+//                        jumpFragment = new WashUnusedActivity(oilOrderData.id, oilOrderData.state);
 //                    }
-                    FragmentManager fg = context.getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
-                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    fragmentTransaction.add(R.id.main_root_lay,jumpFragment );
-                    fragmentTransaction.addToBackStack("ddd");
-                    fragmentTransaction.commit();
+//                    FragmentManager fg = context.getSupportFragmentManager();
+//                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
+//                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                    fragmentTransaction.add(R.id.main_root_lay,jumpFragment );
+//                    fragmentTransaction.addToBackStack("ddd");
+//                    fragmentTransaction.commit();
+                    Intent intent = new Intent(context, WashUnusedActivity.class);
+                    intent.putExtra("orderId", oilOrderData.id);
+                    intent.putExtra("orderState",oilOrderData.state);
+                    context.startActivity(intent);
                 }
 
                 @Override

@@ -91,6 +91,63 @@ public class HomeCarWashFragment extends Fragment {
         station_rv.setLayoutManager(new LinearLayoutManager(getContext()));
         param_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        mainViewModel.getParamWash(requireContext()).observe(requireActivity(), new Observer<ParamWashBean>() {
+            @Override
+            public void onChanged(ParamWashBean paramWashBean) {
+                if (null == paramWashBean)
+                    return;
+                for (WashParam item : paramWashBean.desList){
+                    if (item.isDefault == 1){
+                        param_distance.setText(item.name);
+                        selectDistanceParam = item;
+                    }
+                }
+                for (WashParam item : paramWashBean.typesList) {
+                    if (item.isDefault == 1){
+                        param_sort.setText(item.name);
+                        selectSortsParam = item;
+                    }
+                }
+
+                param_sort.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        param_distance.setSelected(false);
+                        if (param_sort.isSelected() ){
+                            param_sort.setSelected(false);
+                            param_recycle_view.setVisibility(View.GONE);
+                            return;
+                        }
+                        List<ParamParent> parents= new ArrayList<>();
+                        ParamParent paramParent = new ParamParent();
+                        paramParent.type = -1;
+                        paramParent.objList = new ArrayList<>(paramWashBean.typesList);
+                        parents.add(paramParent);
+                        showParamViewData(5,parents);
+                        param_sort.setSelected(true);
+                    }
+                });
+                param_distance.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        param_sort.setSelected(false);
+                        if (param_distance.isSelected() ){
+                            param_distance.setSelected(false);
+                            param_recycle_view.setVisibility(View.GONE);
+                            return;
+                        }
+                        List<ParamParent> parents= new ArrayList<>();
+                        ParamParent paramParent = new ParamParent();
+                        paramParent.type = -1;
+                        paramParent.objList = new ArrayList<>(paramWashBean.desList);
+                        parents.add(paramParent);
+                        showParamViewData(4,parents);
+                        param_distance.setSelected(true);
+                    }
+                });
+                viewPager.setObjectForPosition(view,fragment_id);
+            }
+        });
     }
 
     private void showParamViewData(int flag, List<ParamParent> data) {
@@ -152,137 +209,82 @@ public class HomeCarWashFragment extends Fragment {
     public void reqData(RefreshLayout refreshLayout, int pageIndex, final boolean isRefresh, final boolean isLoadmore, double latitude, double longitude, String cityName) {
         if (null == refreshLayout) {
             WaitDialog.show((AppCompatActivity) getContext(), "刷新数据！稍等");
-        } else {
-            callback.onSuccess();
+        }
+//        else {
+//            callback.onSuccess();
+//        }
+
+        if (null == selectSortsParam || null == selectDistanceParam) {
+            mainViewModel.getParamWash(requireContext());
+            TipDialog.show((AppCompatActivity) getContext(),"查询参数错误,请重试", TipDialog.TYPE.WARNING);
+            return;
         }
 
-        mainViewModel.getParamWash(requireContext()).observe(requireActivity(), new Observer<ParamWashBean>() {
+        mLatitude = latitude;
+        mLongitude = longitude;
+        mCityName = cityName;
+        if (isRefresh && null != stationAdapter)
+            stationAdapter.removeAllData();
+        HashMap<String,Object> dataMap = new HashMap<>();
+        /**
+         * "pageNum":1,
+         * "pageSize":100,
+         * "cityName":"唐山市",
+         * "cusLongitude":"112.5166368016669",
+         * "cusLatitude":"32.97054428578949",
+         * "serviceCode":"81",
+         * "priority":"dis"
+         */
+        dataMap.put("pageNum",pageIndex);
+        dataMap.put("pageSize",20);
+        dataMap.put("cusLatitude",String.valueOf(latitude));
+        dataMap.put("cusLongitude",String.valueOf(longitude));
+        dataMap.put("cityName",cityName);
+        dataMap.put("priority",selectDistanceParam.val);
+        dataMap.put("serviceCode",selectSortsParam.val);
+        mainViewModel.getWashStationList(requireContext(),dataMap).observe(requireActivity(), new Observer<List<WashStationBean>>() {
             @Override
-            public void onChanged(ParamWashBean paramWashBean) {
-                if (null == paramWashBean)
+            public void onChanged(List<WashStationBean> oilStationBeans) {
+                if (null == refreshLayout) {
+                    WaitDialog.dismiss();
+                }else {
+                    callback.onSuccess();
+                }
+                if (null == oilStationBeans)
                     return;
-                for (WashParam item : paramWashBean.desList){
-                    if (item.isDefault == 1){
-                        param_distance.setText(item.name);
-                        selectDistanceParam = item;
-                    }
-                }
-                for (WashParam item : paramWashBean.typesList) {
-                    if (item.isDefault == 1){
-                        param_sort.setText(item.name);
-                        selectSortsParam = item;
-                    }
-                }
-
-                param_sort.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        param_distance.setSelected(false);
-                        if (param_sort.isSelected() ){
-                            param_sort.setSelected(false);
-                            param_recycle_view.setVisibility(View.GONE);
-                            return;
+                if (isLoadmore) {
+                    if (null != stationAdapter) {
+                        if (null != oilStationBeans && oilStationBeans.size() > 0) {
+                            stationAdapter.addAllData(oilStationBeans, false);
                         }
-                        List<ParamParent> parents= new ArrayList<>();
-                        ParamParent paramParent = new ParamParent();
-                        paramParent.type = -1;
-                        paramParent.objList = new ArrayList<>(paramWashBean.typesList);
-                        parents.add(paramParent);
-                        showParamViewData(5,parents);
-                        param_sort.setSelected(true);
                     }
-                });
-                param_distance.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        param_sort.setSelected(false);
-                        if (param_distance.isSelected() ){
-                            param_distance.setSelected(false);
-                            param_recycle_view.setVisibility(View.GONE);
-                            return;
-                        }
-                        List<ParamParent> parents= new ArrayList<>();
-                        ParamParent paramParent = new ParamParent();
-                        paramParent.type = -1;
-                        paramParent.objList = new ArrayList<>(paramWashBean.desList);
-                        parents.add(paramParent);
-                        showParamViewData(4,parents);
-                        param_distance.setSelected(true);
-                    }
-                });
-                viewPager.setObjectForPosition(view,fragment_id);
-
-                if (null == selectSortsParam || null == selectDistanceParam) {
-                    mainViewModel.getParamWash(requireContext());
-                    TipDialog.show((AppCompatActivity) getContext(),"查询参数错误,请重试", TipDialog.TYPE.WARNING);
-                    return;
-                }
-
-                mLatitude = latitude;
-                mLongitude = longitude;
-                mCityName = cityName;
-                if (isRefresh && null != stationAdapter)
-                    stationAdapter.removeAllData();
-                HashMap<String,Object> dataMap = new HashMap<>();
-                /**
-                 * "pageNum":1,
-                 * "pageSize":100,
-                 * "cityName":"唐山市",
-                 * "cusLongitude":"112.5166368016669",
-                 * "cusLatitude":"32.97054428578949",
-                 * "serviceCode":"81",
-                 * "priority":"dis"
-                 */
-                dataMap.put("pageNum",pageIndex);
-                dataMap.put("pageSize",20);
-                dataMap.put("cusLatitude",String.valueOf(latitude));
-                dataMap.put("cusLongitude",String.valueOf(longitude));
-                dataMap.put("cityName",cityName);
-                dataMap.put("priority",selectDistanceParam.val);
-                dataMap.put("serviceCode",selectSortsParam.val);
-                mainViewModel.getWashStationList(requireContext(),dataMap).observe(requireActivity(), new Observer<List<WashStationBean>>() {
-                    @Override
-                    public void onChanged(List<WashStationBean> oilStationBeans) {
-                        if (null == refreshLayout) {
-                            WaitDialog.dismiss();
-                        }
-                        callback.onSuccess();
-                        if (null == oilStationBeans)
-                            return;
-                        if (isLoadmore) {
-                            if (null != stationAdapter) {
-                                if (null != oilStationBeans && oilStationBeans.size() > 0) {
-                                    stationAdapter.addAllData(oilStationBeans, false);
-                                }
-                            }
-                        } else {
-                            stationAdapter = new WashStationAdapter(getContext(),oilStationBeans, selectSortsParam.val,new ItemCallback() {
-                                @Override
-                                public void onItemCallback(int position, Object obj) {
+                } else {
+                    stationAdapter = new WashStationAdapter(getContext(),oilStationBeans, selectSortsParam.val,new ItemCallback() {
+                        @Override
+                        public void onItemCallback(int position, Object obj) {
 //                                    FragmentManager fg = requireActivity().getSupportFragmentManager();
 //                                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
 //                                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 //                                    fragmentTransaction.add(R.id.main_root_lay,new WashStationActivity(((WashStationBean)obj).shopCode));
 //                                    fragmentTransaction.addToBackStack("ddd");
 //                                    fragmentTransaction.commit();
-                                    Intent intent = new Intent(getContext(), WashStationActivity.class);
-                                    intent.putExtra("shopCode",((WashStationBean)obj).shopCode);
-                                    startActivity(intent);
-                                }
+                            Intent intent = new Intent(getContext(), WashStationActivity.class);
+                            intent.putExtra("shopCode",((WashStationBean)obj).shopCode);
+                            startActivity(intent);
+                        }
 
-                                @Override
-                                public void onDetailCallBack(int position, Object obj) {
-
-                                }
-                            });
-                            station_rv.setAdapter(stationAdapter);
+                        @Override
+                        public void onDetailCallBack(int position, Object obj) {
 
                         }
-                        viewPager.setObjectForPosition(view,fragment_id);
-                    }
-                });
+                    });
+                    station_rv.setAdapter(stationAdapter);
+
+                }
+                viewPager.setObjectForPosition(view,fragment_id);
             }
         });
+
     }
 
 }

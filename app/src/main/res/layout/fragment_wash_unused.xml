@@ -9,7 +9,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context=".ui.WashUnusedFragment">
+    tools:context=".activity.WashUnusedActivity">
 
     <include layout="@layout/titlebar_white" />
 

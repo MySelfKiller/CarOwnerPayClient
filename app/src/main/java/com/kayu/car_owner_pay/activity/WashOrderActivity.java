@@ -1,25 +1,18 @@
-package com.kayu.car_owner_pay.ui;
+package com.kayu.car_owner_pay.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -28,7 +21,6 @@ import com.amap.api.location.AMapLocation;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.PayOrderViewModel;
 import com.kayu.car_owner_pay.R;
-import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.model.WashStationDetailBean;
 import com.kayu.car_owner_pay.wxapi.AliPayBean;
@@ -46,7 +38,7 @@ import com.kongzue.dialog.v3.TipDialog;
 
 import java.util.Map;
 
-public class WashOrderFragment extends Fragment {
+public class WashOrderActivity extends BaseActivity {
     private WashStationDetailBean.ServicesDTO.ListDTO selectedListDTO;//已选择的洗车服务
     private TextView order_name;
     private ImageView order_img_bg;
@@ -95,18 +87,23 @@ public class WashOrderFragment extends Fragment {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
 //                        showAlert(PayDemoActivity.this, getString(R.string.pay_success) + payResult);
-                        TipDialog.show((AppCompatActivity) getActivity(), "支付成功", TipDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
+                        TipDialog.show(WashOrderActivity.this, "支付成功", TipDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
                             @Override
                             public void onDismiss() {
                                 if (null != mAliPayBean) {
-                                    requireActivity().onBackPressed();
-                                    requireActivity().onBackPressed();
-                                    FragmentManager fg = requireActivity().getSupportFragmentManager();
-                                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
-                                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                                    fragmentTransaction.add(R.id.main_root_lay, new WashUnusedFragment(mAliPayBean.orderId,8));
-                                    fragmentTransaction.addToBackStack("ddd");
-                                    fragmentTransaction.commit();
+//                                    onBackPressed();
+//                                    onBackPressed();
+//                                    FragmentManager fg = requireActivity().getSupportFragmentManager();
+//                                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
+//                                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                                    fragmentTransaction.add(R.id.main_root_lay, new WashUnusedActivity(mAliPayBean.orderId,8));
+//                                    fragmentTransaction.addToBackStack("ddd");
+//                                    fragmentTransaction.commit();
+                                    Intent intent = new Intent(WashOrderActivity.this, WashUnusedActivity.class);
+                                    intent.putExtra("orderId", mAliPayBean.orderId);
+                                    intent.putExtra("orderState",8);
+                                    startActivity(intent);
+                                    finish();
                                 }
                             }
                         });
@@ -114,9 +111,9 @@ public class WashOrderFragment extends Fragment {
                         LogUtil.e("支付宝取消支付返回结果",resultInfo);
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         if (null != mAliPayBean) {
-                            payOrderViewModel.cancelPay(getContext(),mAliPayBean.orderId);
+                            payOrderViewModel.cancelPay(WashOrderActivity.this,mAliPayBean.orderId);
                         }
-                        TipDialog.show((AppCompatActivity) getActivity(), "支付已取消", TipDialog.TYPE.WARNING).setOnDismissListener(new OnDismissListener() {
+                        TipDialog.show(WashOrderActivity.this, "支付已取消", TipDialog.TYPE.WARNING).setOnDismissListener(new OnDismissListener() {
                             @Override
                             public void onDismiss() {
 
@@ -134,32 +131,27 @@ public class WashOrderFragment extends Fragment {
     private String serviceType;
     private LinearLayout pay_way_lay;
 
-    public WashOrderFragment(WashStationDetailBean.ServicesDTO.ListDTO selectedListDTO,String serviceType ) {
-        this.selectedListDTO = selectedListDTO;
-        this.serviceType = serviceType;
-    }
+//    public WashOrderFragment(WashStationDetailBean.ServicesDTO.ListDTO selectedListDTO,String serviceType ) {
+//        this.selectedListDTO = selectedListDTO;
+//        this.serviceType = serviceType;
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
+        setContentView(R.layout.fragment_wash_order);
+        selectedListDTO = getIntent().getParcelableExtra("selectedListDTO");
+        serviceType = getIntent().getStringExtra("serviceType");
+        shopCode = getIntent().getStringExtra("shopCode");
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
-        payOrderViewModel = ViewModelProviders.of(this).get(PayOrderViewModel.class);
-        return inflater.inflate(R.layout.fragment_wash_order, container, false);
-    }
+        mainViewModel = ViewModelProviders.of(WashOrderActivity.this).get(MainViewModel.class);
+        payOrderViewModel = ViewModelProviders.of(WashOrderActivity.this).get(PayOrderViewModel.class);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         //标题栏
-        view.findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
+        findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                requireActivity().onBackPressed();
+                onBackPressed();
             }
 
             @Override
@@ -167,31 +159,31 @@ public class WashOrderFragment extends Fragment {
 
             }
         });
-        TextView back_tv = view.findViewById(R.id.title_back_tv);
-        TextView title_name = view.findViewById(R.id.title_name_tv);
+        TextView back_tv = findViewById(R.id.title_back_tv);
+        TextView title_name = findViewById(R.id.title_name_tv);
         title_name.setText("全国汽车特惠");
 //        title_name.setVisibility(View.GONE);
 //        back_tv.setText("我的");
 
-        order_img_bg = view.findViewById(R.id.wash_order_img_bg);
-        order_name = view.findViewById(R.id.wash_order_name);
-        order_price = view.findViewById(R.id.wash_order_price);
-        order_sub_price = view.findViewById(R.id.wash_order_sub_price);
-        order_distance = view.findViewById(R.id.wash_order_distance);
-        order_open_time = view.findViewById(R.id.wash_order_time);
-        services_type = view.findViewById(R.id.wash_order_services_type);
-        services_mode = view.findViewById(R.id.wash_order_mode);
-        order_full_price = view.findViewById(R.id.wash_order_full_price);
-        order_rebate_price = view.findViewById(R.id.wash_order_rebate_price);
-        order_sale_price = view.findViewById(R.id.wash_order_sale_price);
-        order_price_tg = view.findViewById(R.id.wash_order_price_tg);
-        order_sub_price_tg = view.findViewById(R.id.wash_order_sub_price_tg);
+        order_img_bg = findViewById(R.id.wash_order_img_bg);
+        order_name = findViewById(R.id.wash_order_name);
+        order_price = findViewById(R.id.wash_order_price);
+        order_sub_price = findViewById(R.id.wash_order_sub_price);
+        order_distance = findViewById(R.id.wash_order_distance);
+        order_open_time = findViewById(R.id.wash_order_time);
+        services_type = findViewById(R.id.wash_order_services_type);
+        services_mode = findViewById(R.id.wash_order_mode);
+        order_full_price = findViewById(R.id.wash_order_full_price);
+        order_rebate_price = findViewById(R.id.wash_order_rebate_price);
+        order_sale_price = findViewById(R.id.wash_order_sale_price);
+        order_price_tg = findViewById(R.id.wash_order_price_tg);
+        order_sub_price_tg = findViewById(R.id.wash_order_sub_price_tg);
 
-        pay_way_lay = view.findViewById(R.id.wash_order_pay_way_lay);
-        wechat_option = view.findViewById(R.id.wash_order_wechat_option);
-        wechat_checked = view.findViewById(R.id.wash_order_wechat_checked);
-        alipay_option = view.findViewById(R.id.wash_order_alipay_option);
-        alipay_checked = view.findViewById(R.id.wash_order_alipay_checked);
+        pay_way_lay = findViewById(R.id.wash_order_pay_way_lay);
+        wechat_option = findViewById(R.id.wash_order_wechat_option);
+        wechat_checked = findViewById(R.id.wash_order_wechat_checked);
+        alipay_option = findViewById(R.id.wash_order_alipay_option);
+        alipay_checked = findViewById(R.id.wash_order_alipay_checked);
 
         alipay_option.setOnClickListener(new NoMoreClickListener() {
             @Override
@@ -227,7 +219,7 @@ public class WashOrderFragment extends Fragment {
         });
 
 
-        order_pay_btn = view.findViewById(R.id.wash_order_pay_btn);
+        order_pay_btn = findViewById(R.id.wash_order_pay_btn);
 
         order_pay_btn.setOnClickListener(new NoMoreClickListener() {
             @Override
@@ -245,14 +237,14 @@ public class WashOrderFragment extends Fragment {
             }
         });
 
-        mainViewModel.getWashStoreDetail(getContext(), null).observe(requireActivity(), new Observer<WashStationDetailBean>() {
+        mainViewModel.getWashStoreDetail(WashOrderActivity.this, shopCode).observe(WashOrderActivity.this, new Observer<WashStationDetailBean>() {
             @Override
             public void onChanged(WashStationDetailBean washStationDetailBean) {
                 if (null != washStationDetailBean)
                     initViewData(washStationDetailBean);
             }
         });
-        mainViewModel.getParameter(getContext(),20).observe(requireActivity(), new Observer<SystemParam>() {
+        mainViewModel.getParameter(WashOrderActivity.this,20).observe(WashOrderActivity.this, new Observer<SystemParam>() {
             @Override
             public void onChanged(SystemParam systemParam) {
                 if (null == systemParam){
@@ -284,6 +276,20 @@ public class WashOrderFragment extends Fragment {
             }
         });
     }
+
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//        mainViewModel = ViewModelProviders.of(WashOrderFragment.this).get(MainViewModel.class);
+//        payOrderViewModel = ViewModelProviders.of(WashOrderFragment.this).get(PayOrderViewModel.class);
+//        return inflater.inflate(R.layout.fragment_wash_order, container, false);
+//    }
+
+//    @Override
+//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//
+//    }
 
     private void initViewData(WashStationDetailBean washStation) {
         shopCode = washStation.shopCode;
@@ -334,24 +340,29 @@ public class WashOrderFragment extends Fragment {
     }
 
     private void wechatPayOrder() {
-        wxShare = new WXShare(getContext());
+        wxShare = new WXShare(WashOrderActivity.this);
         wxShare.register();
         wxShare.setListener(new OnResponseListener() {
             @Override
             public void onSuccess() {
 //                LogUtil.e("hm", "支付成功");
-                TipDialog.show((AppCompatActivity) getActivity(), "支付成功", TipDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
+                TipDialog.show(WashOrderActivity.this, "支付成功", TipDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss() {
                         if (null != mWxPayBean) {
-                            requireActivity().onBackPressed();
-                            requireActivity().onBackPressed();
-                            FragmentManager fg = requireActivity().getSupportFragmentManager();
-                            FragmentTransaction fragmentTransaction = fg.beginTransaction();
-                            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                            fragmentTransaction.add(R.id.main_root_lay, new WashUnusedFragment(mWxPayBean.orderId,8));
-                            fragmentTransaction.addToBackStack("ddd");
-                            fragmentTransaction.commit();
+//                            onBackPressed();
+//                            onBackPressed();
+//                            FragmentManager fg = requireActivity().getSupportFragmentManager();
+//                            FragmentTransaction fragmentTransaction = fg.beginTransaction();
+//                            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                            fragmentTransaction.add(R.id.main_root_lay, new WashUnusedActivity(mWxPayBean.orderId,8));
+//                            fragmentTransaction.addToBackStack("ddd");
+//                            fragmentTransaction.commit();
+                            Intent intent = new Intent(WashOrderActivity.this, WashUnusedActivity.class);
+                            intent.putExtra("orderId", mWxPayBean.orderId);
+                            intent.putExtra("orderState",8);
+                            startActivity(intent);
+                            finish();
                         }
                     }
                 });
@@ -361,9 +372,9 @@ public class WashOrderFragment extends Fragment {
             public void onCancel() {
 //                LogUtil.e("hm", "支付已取消");
                 if (null != mWxPayBean) {
-                    payOrderViewModel.cancelPay(getContext(),mWxPayBean.orderId);
+                    payOrderViewModel.cancelPay(WashOrderActivity.this,mWxPayBean.orderId);
                 }
-                TipDialog.show((AppCompatActivity) getActivity(), "支付已取消", TipDialog.TYPE.WARNING).setOnDismissListener(new OnDismissListener() {
+                TipDialog.show(WashOrderActivity.this, "支付已取消", TipDialog.TYPE.WARNING).setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss() {
 
@@ -374,13 +385,13 @@ public class WashOrderFragment extends Fragment {
             @Override
             public void onFail(String message) {
                 LogUtil.e("hm", message);
-                TipDialog.show((AppCompatActivity) getActivity(), message, TipDialog.TYPE.ERROR).setOnDismissListener(new OnDismissListener() {
+                TipDialog.show(WashOrderActivity.this, message, TipDialog.TYPE.ERROR).setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss() {
                         if (null != mWxPayBean) {
-                            payOrderViewModel.cancelPay(getContext(),mWxPayBean.orderId);
+                            payOrderViewModel.cancelPay(WashOrderActivity.this,mWxPayBean.orderId);
                         }
-                        TipDialog.show((AppCompatActivity) getActivity(), "支付失败", TipDialog.TYPE.ERROR).setOnDismissListener(new OnDismissListener() {
+                        TipDialog.show(WashOrderActivity.this, "支付失败", TipDialog.TYPE.ERROR).setOnDismissListener(new OnDismissListener() {
                             @Override
                             public void onDismiss() {
 
@@ -392,7 +403,7 @@ public class WashOrderFragment extends Fragment {
 
             }
         });
-        payOrderViewModel.getWeChatPayInfo(getContext(),shopCode,selectedListDTO.serviceCode).observe(this, new Observer<WxPayBean>() {
+        payOrderViewModel.getWeChatPayInfo(WashOrderActivity.this,shopCode,selectedListDTO.serviceCode).observe(this, new Observer<WxPayBean>() {
             @Override
             public void onChanged(WxPayBean wxPayBean) {
                 mWxPayBean = wxPayBean;
@@ -402,14 +413,14 @@ public class WashOrderFragment extends Fragment {
     }
 
     private void aliapyPayOrder() {
-        payOrderViewModel.getAliPayInfo(getContext(),shopCode,selectedListDTO.serviceCode).observe(this, new Observer<AliPayBean>() {
+        payOrderViewModel.getAliPayInfo(WashOrderActivity.this,shopCode,selectedListDTO.serviceCode).observe(this, new Observer<AliPayBean>() {
             @Override
             public void onChanged(AliPayBean aliPayBean) {
                 mAliPayBean = aliPayBean;
                 final Runnable payRunnable = new Runnable() {
                     @Override
                     public void run() {
-                        PayTask alipay = new PayTask(getActivity());
+                        PayTask alipay = new PayTask(WashOrderActivity.this);
                         Map<String, String> result = alipay.payV2(aliPayBean.body, true);
                         Log.i("msp", result.toString());
 

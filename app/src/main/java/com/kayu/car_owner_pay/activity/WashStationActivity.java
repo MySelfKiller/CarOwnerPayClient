@@ -1,5 +1,6 @@
 package com.kayu.car_owner_pay.activity;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,7 +20,6 @@ import com.amap.api.location.AMapLocation;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.model.WashStationDetailBean;
-import com.kayu.car_owner_pay.ui.WashOrderFragment;
 import com.kayu.car_owner_pay.ui.WashOrderListFragment;
 import com.kayu.utils.GetJuLiUtils;
 import com.kayu.utils.NoMoreClickListener;
@@ -155,6 +155,7 @@ public class WashStationActivity extends BaseActivity {
                 fragmentTransaction.add(R.id.main_root_lay, new WashOrderListFragment());
                 fragmentTransaction.addToBackStack("ddd");
                 fragmentTransaction.commit();
+                // FIXME: 2020/12/3 修改为Activity
             }
 
             @Override
@@ -166,12 +167,17 @@ public class WashStationActivity extends BaseActivity {
         pay_btn.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                FragmentManager fg = WashStationActivity.this.getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fg.beginTransaction();
-                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                fragmentTransaction.add(R.id.main_root_lay, new WashOrderFragment(selectedListDTO,serviceType));
-                fragmentTransaction.addToBackStack("ddd");
-                fragmentTransaction.commit();
+//                FragmentManager fg = WashStationActivity.this.getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fg.beginTransaction();
+//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                fragmentTransaction.add(R.id.main_root_lay, new WashOrderFragment(selectedListDTO,serviceType));
+//                fragmentTransaction.addToBackStack("ddd");
+//                fragmentTransaction.commit();
+                Intent intent = new Intent(WashStationActivity.this, WashOrderActivity.class);
+                intent.putExtra("selectedListDTO", selectedListDTO);
+                intent.putExtra("serviceType",serviceType);
+                intent.putExtra("shopCode",shopCode);
+                startActivity(intent);
             }
 
             @Override

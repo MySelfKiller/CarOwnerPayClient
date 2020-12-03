@@ -1,5 +1,8 @@
 package com.kayu.car_owner_pay.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -129,7 +132,7 @@ public class WashStationDetailBean {
         @SerializedName("list")
         public List<ListDTO> list;
 
-        public static class ListDTO {
+        public static class ListDTO implements Parcelable {
             /**
              * serviceCode : 81
              * serviceName : 标准洗车-五座轿车
@@ -151,6 +154,51 @@ public class WashStationDetailBean {
             public String finalPrice;//最终价
             @SerializedName("carModel")
             public Integer carModel;//车型 1：小轿车 2:大车 3:全部车型
+
+            protected ListDTO(Parcel in) {
+                serviceCode = in.readString();
+                serviceName = in.readString();
+                serviceType = in.readString();
+                price = in.readString();
+                finalPrice = in.readString();
+                if (in.readByte() == 0) {
+                    carModel = null;
+                } else {
+                    carModel = in.readInt();
+                }
+            }
+
+            public static final Creator<ListDTO> CREATOR = new Creator<ListDTO>() {
+                @Override
+                public ListDTO createFromParcel(Parcel in) {
+                    return new ListDTO(in);
+                }
+
+                @Override
+                public ListDTO[] newArray(int size) {
+                    return new ListDTO[size];
+                }
+            };
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(serviceCode);
+                dest.writeString(serviceName);
+                dest.writeString(serviceType);
+                dest.writeString(price);
+                dest.writeString(finalPrice);
+                if (carModel == null) {
+                    dest.writeByte((byte) 0);
+                } else {
+                    dest.writeByte((byte) 1);
+                    dest.writeInt(carModel);
+                }
+            }
         }
     }
 }
