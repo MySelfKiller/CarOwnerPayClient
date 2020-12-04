@@ -43,8 +43,12 @@
     <color name="yellow">#FB8B26</color>
 
     <color name="deep_yellow">#d19a0a</color>
+    <color name="deep_yellow_start">#dbbc89</color>
+    <color name="deep_yellow_end">#b59568</color>
     <color name="deep_yellow1">#d6cab8</color>
     <color name="deep_yellow2">#C3985A</color>
+    <color name="deep_yellow3">#e9e1d5</color>
+    <color name="deep_yellow4">#856e53</color>
 
     <color name="red_text">#ff531e</color>
     <color name="red_text1">#ed5453</color>
@@ -59,7 +63,7 @@
     <color name="slight_white1">#F4F4F4</color>
     <color name="slight_white3">#F5F5F5</color>
     <color name="slight_white2">#f1f1f1</color>
-    <color name="black">#212121</color>
+    <color name="black">#000000</color>
     <color name="black1">#3a3a3a</color>
     <color name="divider">#E1E1E1</color>
     <color name="divider2">#eaeaea</color>
