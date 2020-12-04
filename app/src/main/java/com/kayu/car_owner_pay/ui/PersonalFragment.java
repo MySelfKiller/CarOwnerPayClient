@@ -33,7 +33,6 @@ import com.kayu.car_owner_pay.ui.income.BalanceFragment;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.location.LocationManagerUtil;
-import com.kayu.utils.status_bar_set.StatusBarUtil;
 import com.kayu.utils.view.RoundImageView;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
@@ -58,17 +57,10 @@ public class PersonalFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
-//        StatusBarUtil.setStatusBarColor(getActivity(), getResources().getColor(R.color.white));
         View root = inflater.inflate(R.layout.fragment_personal, container, false);
         return root;
     }
 
-//    @Override
-//    public void onAttach(@NonNull Context context) {
-//        super.onAttach(context);
-//        LogUtil.e("PersonalFragment----","----onAttach---");
-//    }
-//
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -121,12 +113,6 @@ public class PersonalFragment extends Fragment {
         customer_services_lay.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-//                FragmentManager fg = requireActivity().getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = fg.beginTransaction();
-//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                fragmentTransaction.add(R.id.main_root_lay,new CustomerActivity());
-//                fragmentTransaction.addToBackStack("ddd");
-//                fragmentTransaction.commit();
                 startActivity(new Intent(getContext(), CustomerActivity.class));
             }
 
@@ -164,12 +150,6 @@ public class PersonalFragment extends Fragment {
         setting_lay.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-//                FragmentManager fg = requireActivity().getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = fg.beginTransaction();
-//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                fragmentTransaction.add(R.id.main_root_lay,new SettingsFragment());
-//                fragmentTransaction.addToBackStack("ddd");
-//                fragmentTransaction.commit();
                 startActivity(new Intent(getContext(), SettingsActivity.class));
             }
 
@@ -184,12 +164,6 @@ public class PersonalFragment extends Fragment {
         oil_order_lay.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-//                FragmentManager fg = requireActivity().getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = fg.beginTransaction();
-//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                fragmentTransaction.add(R.id.main_root_lay,new OilOrderListActivity() );
-//                fragmentTransaction.addToBackStack("ddd");
-//                fragmentTransaction.commit();
                 startActivity(new Intent(getContext(),OilOrderListActivity.class));
             }
 
@@ -202,12 +176,6 @@ public class PersonalFragment extends Fragment {
         wash_order_lay.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-//                FragmentManager fg = requireActivity().getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = fg.beginTransaction();
-//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                fragmentTransaction.add(R.id.main_root_lay,new WashOrderListActivity() );
-//                fragmentTransaction.addToBackStack("ddd");
-//                fragmentTransaction.commit();
                 startActivity(new Intent(getContext(),WashOrderListActivity.class));
             }
 
