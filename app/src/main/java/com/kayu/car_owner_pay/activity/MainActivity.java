@@ -174,7 +174,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             @Override
             public void hasPermission(List<String> allPerms) {
                 mViewModel.sendOilPayInfo(MainActivity.this);
-                if (!isLocServiceEnable(MainActivity.this)){
+                if (!LocationManagerUtil.getSelf().isLocServiceEnable()){
                     MessageDialog.show(MainActivity.this, "定位服务未开启", "请打开定位服务", "开启定位").setCancelable(false)
                             .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
                                 @Override
@@ -482,16 +482,4 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     }
 
-    /**
-     * 手机是否开启位置服务，如果没有开启那么所有app将不能使用定位功能
-     */
-    public static boolean isLocServiceEnable(Context context) {
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        if (gps || network) {
-            return true;
-        }
-        return false;
-    }
 }

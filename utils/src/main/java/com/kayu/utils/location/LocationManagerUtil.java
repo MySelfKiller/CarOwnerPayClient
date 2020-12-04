@@ -1,6 +1,7 @@
 package com.kayu.utils.location;
 
 import android.content.Context;
+import android.location.LocationManager;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -17,7 +18,7 @@ public class LocationManagerUtil {
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = null;
     private static LocationManagerUtil manager = null;
-    private Context context;
+    private final Context context;
     private LocationManagerUtil(Context context){
         this.context = context;
         initLocation(context);
@@ -37,6 +38,19 @@ public class LocationManagerUtil {
 
         }
         return manager;
+    }
+
+    /**
+     * 手机是否开启位置服务，如果没有开启那么所有app将不能使用定位功能
+     */
+    public boolean isLocServiceEnable() {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        if (gps || network) {
+            return true;
+        }
+        return false;
     }
 
     public AMapLocation getLoccation() {
