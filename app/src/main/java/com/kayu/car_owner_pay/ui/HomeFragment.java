@@ -41,6 +41,7 @@ import com.kayu.car_owner_pay.model.CategoryBean;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.text_banner.TextBannerView;
 import com.kayu.car_owner_pay.ui.adapter.CategoryAdapter;
+import com.kayu.car_owner_pay.ui.adapter.CategoryRootAdapter;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
@@ -379,27 +380,23 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        mainViewModel.getCategoryList(getContext()).observe(getActivity(), new Observer<List<CategoryBean>>() {
+        mainViewModel.getCategoryList(getContext()).observe(getActivity(), new Observer<List<List<CategoryBean>>>() {
             @Override
-            public void onChanged(List<CategoryBean> categoryBeans) {
+            public void onChanged(List<List<CategoryBean>> categoryBeans) {
                 if (null == categoryBeans)
                     return;
 
-                int mColumns, mRows;
-                if (categoryBeans.size() <= 4) {
-//                    if (categoryBeans.size() == 4){
-//                        mColumns = 5;
-//                    }else {
-//                    }
-                    mColumns = 4;
-                    mRows = 1;
-
-                } else {
-                    mRows = categoryBeans.size() % 4 == 0 ? categoryBeans.size() / 4 : categoryBeans.size() / 4 + 1;
-                    mColumns = 4;
-                }
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.dp_90) * mRows);
-                layoutParams.topMargin = ScreenUtils.dipToPx(getContext(), 10);
+                int mColumns=1, mRows = categoryBeans.size();
+//                if (categoryBeans.size() <= 4) {
+//                    mColumns = 4;
+//                    mRows = 1;
+//
+//                } else {
+//                    mRows = categoryBeans.size() % 4 == 0 ? categoryBeans.size() / 4 : categoryBeans.size() / 4 + 1;
+//                    mColumns = 4;
+//                }
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.dp_82) * mRows);
+                layoutParams.topMargin = ScreenUtils.dipToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.dp_3));
                 category_rv.setLayoutParams(layoutParams);
 
                 PagerGridLayoutManager mLayoutManager = new PagerGridLayoutManager(mRows, mColumns, PagerGridLayoutManager
@@ -418,7 +415,7 @@ public class HomeFragment extends Fragment {
                     }
                 });    // 设置页面变化监听器
                 category_rv.setLayoutManager(mLayoutManager);
-                CategoryAdapter categoryAdapter = new CategoryAdapter(categoryBeans, new ItemCallback() {
+                CategoryRootAdapter categoryAdapter = new CategoryRootAdapter(categoryBeans, new ItemCallback() {
                     @Override
                     public void onItemCallback(int position, Object obj) {
                         CategoryBean categoryBean = (CategoryBean) obj;

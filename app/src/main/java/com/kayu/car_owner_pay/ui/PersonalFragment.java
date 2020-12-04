@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import com.kayu.car_owner_pay.activity.OilOrderListActivity;
 import com.kayu.car_owner_pay.activity.SettingsActivity;
 import com.kayu.car_owner_pay.activity.WashOrderListActivity;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
+import com.kayu.car_owner_pay.glide.GlideRoundTransform;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.model.UserBean;
 import com.kayu.car_owner_pay.ui.income.BalanceFragment;
@@ -51,6 +53,7 @@ public class PersonalFragment extends Fragment {
     private TextView explain_content;
     private ConstraintLayout oil_order_lay,wash_order_lay, all_order_lay;
     private LinearLayout more_lay;
+    private ImageView user_card_bg;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -76,6 +79,8 @@ public class PersonalFragment extends Fragment {
         user_name = view.findViewById(R.id.personal_user_name);
         //卡余额
         user_balance = view.findViewById(R.id.personal_user_balance);
+        user_card_bg = view.findViewById(R.id.personal_user_card_bg);
+        KWApplication.getInstance().loadImg(R.mipmap.ic_personal_bg,user_card_bg,new GlideRoundTransform(getContext()));
         card_num = view.findViewById(R.id.personal_card_num);
         //账户提示语
 //        explain_content = view.findViewById(R.id.personal_explain_content);

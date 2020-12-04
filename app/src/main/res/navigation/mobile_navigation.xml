@@ -11,17 +11,6 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
-<!--    <fragment-->
-<!--        android:id="@+id/navigation_shop"-->
-<!--        android:name="com.kayu.car_owner_pay.ui.ShopFragment"-->
-<!--        android:label="@string/title_shop"-->
-<!--        tools:layout="@layout/fragment_shop" />-->
-<!--    <fragment-->
-<!--        android:id="@+id/navigation_consult"-->
-<!--        android:name="com.kayu.car_owner_pay.ui.ConsultFragment"-->
-<!--        android:label="@string/title_consult"-->
-<!--        tools:layout="@layout/fragment_consult" />-->
-
     <fragment
         android:id="@+id/navigation_personal"
         android:name="com.kayu.car_owner_pay.ui.PersonalFragment"

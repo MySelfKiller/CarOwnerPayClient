@@ -2,8 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/dp_5">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/item_cate_img"
@@ -20,8 +19,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_3"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textColor="@color/black"
-        android:textSize="@dimen/sp_12"
+        android:textSize="@dimen/sp_10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/item_cate_img" />
@@ -31,7 +32,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/grayText2"
-        android:textSize="@dimen/sp_10"
+        android:textSize="@dimen/sp_9"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/item_cate_text" />
@@ -40,14 +43,15 @@
         android:id="@+id/item_cate_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dp_8"
         android:background="@drawable/red_bg_shape1"
         android:paddingHorizontal="@dimen/dp_5"
         android:paddingVertical="@dimen/dp_1"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_8"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/dp_35"
+        app:layout_constraintStart_toStartOf="@id/item_cate_img"
+        app:layout_constraintEnd_toEndOf="@id/item_cate_img"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

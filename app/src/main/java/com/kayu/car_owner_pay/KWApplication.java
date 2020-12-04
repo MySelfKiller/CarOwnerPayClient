@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.ViewTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -225,9 +226,13 @@ public class KWApplication extends Application {
 
         Glide.with(this).load(mUrl).into(view);
     }
+    //加载本地资源，可裁剪
+    public void loadImg(int ids, ImageView view, BitmapTransformation transformation){
+
+        Glide.with(this).load(ids).transform(transformation).into(view);
+    }
     //加载本地资源
     public void loadImg(int ids, ImageView view){
-        final String mUrl;
 
         Glide.with(this).load(ids).into(view);
     }

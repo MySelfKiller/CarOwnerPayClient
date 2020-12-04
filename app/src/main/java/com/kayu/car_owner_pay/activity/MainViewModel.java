@@ -55,7 +55,6 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class MainViewModel extends ViewModel {
 
-    private MutableLiveData<List<CategoryBean>> categoryListData;//课程类别数据
     private MutableLiveData<List<BannerBean>> bannerListData;//横幅数据
     private MutableLiveData<List<OilStationBean>> stationListData;//加油站列表数据
     private MutableLiveData<List<WashStationBean>> washStationListData;//洗车站列表数据
@@ -666,11 +665,13 @@ public class MainViewModel extends ViewModel {
         ReqUtil.getInstance().requestGetJSON(callback);
     }
 
+    private MutableLiveData<List<List<CategoryBean>>> categoryListData;//首页类别列表数据
+
     /**
      * 获取类型列表数据
      * @return
      */
-    public LiveData<List<CategoryBean>> getCategoryList(Context mContext) {
+    public LiveData<List<List<CategoryBean>>> getCategoryList(Context mContext) {
         if (null == categoryListData) {
             categoryListData = new MutableLiveData<>();
             loadCategorys(mContext);
@@ -688,9 +689,9 @@ public class MainViewModel extends ViewModel {
             @Override
             public void handleMessage(Message msg) {
                 ResponseInfo resInfo = (ResponseInfo) msg.obj;
-                List<CategoryBean> myTeamData = null;
+                List<List<CategoryBean>> myTeamData = null;
                 if (resInfo.status ==1 ){
-                    myTeamData = (List<CategoryBean>) resInfo.responseData;
+                    myTeamData = (List<List<CategoryBean>>) resInfo.responseData;
 
                 }else {
                     Toast.makeText(mContext,resInfo.msg,Toast.LENGTH_SHORT).show();
