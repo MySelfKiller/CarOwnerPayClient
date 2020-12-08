@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -45,6 +47,9 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         StatusBarUtil.setRootViewFitsSystemWindows(this, true);
         StatusBarUtil.setTranslucentStatus(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
         setContentView(R.layout.activity_splash);
         new Handler().postDelayed(runnable,1000*3);
     }
