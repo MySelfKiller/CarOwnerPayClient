@@ -54,6 +54,9 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jiguang.verifysdk.api.JVerificationInterface;
+import cn.jiguang.verifysdk.api.RequestCallback;
+
 
 public class KWApplication extends Application {
 
@@ -78,6 +81,7 @@ public class KWApplication extends Application {
 //        setFornts();
         initDialogSetting();
         LocationManagerUtil.init(this);
+        initJPushSetting();
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO );
 
 //        ZoomMediaLoader.getInstance().init(new TestImageLoader());
@@ -102,6 +106,22 @@ public class KWApplication extends Application {
 //                .loggingEnabled(true)// 打log
 //                .build();
 //    }
+
+    /**
+     * 初始化极光认证
+     */
+    private void initJPushSetting() {
+        // 打开调试模式
+        JVerificationInterface.setDebugMode(true);
+        JVerificationInterface.init(this, new RequestCallback<String>() {
+            @Override
+            public void onResult(int i, String s) {
+
+                LogUtil.e("JPush", "code:"+i+",msg:"+s);
+            }
+        });
+
+    }
 
     private void initDialogSetting(){
         DialogSettings.isUseBlur = true;                   //是否开启模糊效果，默认关闭

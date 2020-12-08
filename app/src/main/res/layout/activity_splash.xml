@@ -4,17 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/black"
     tools:context=".activity.SplashActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom|center">
+        android:gravity="center">
         <ImageView
-            android:layout_width="@dimen/dp_360"
-            android:layout_height="@dimen/dp_360"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_80"
             android:src="@mipmap/ic_login_shanpin"
-            android:scaleType="fitXY" />
+            android:scaleType="fitStart" />
     </LinearLayout>
 
     <!--<LinearLayout-->

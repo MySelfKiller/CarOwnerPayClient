@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
-import com.kayu.car_owner_pay.activity.login.LoginActivity;
+import com.kayu.car_owner_pay.activity.login.LoginAutoActivity;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.model.UserBean;
 import com.kayu.utils.AppUtil;
@@ -127,7 +127,7 @@ public class SettingsActivity extends BaseActivity {
                                 AppManager.getAppManager().finishAllActivity();
                                 LocationManagerUtil.getSelf().stopLocation();
 //                        LocationManager.getSelf().destroyLocation();
-                                startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
+                                startActivity(new Intent(SettingsActivity.this, LoginAutoActivity.class));
                                 finish();
                                 return false;
                             }

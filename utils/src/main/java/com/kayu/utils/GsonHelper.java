@@ -3,6 +3,7 @@ package com.kayu.utils;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
@@ -19,7 +20,7 @@ public class GsonHelper {
     private static Gson gson = null;
     static {
         if (gson == null) {
-            gson = new Gson();
+            gson = new GsonBuilder().disableHtmlEscaping().create();
         }
     }
 

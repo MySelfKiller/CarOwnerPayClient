@@ -112,7 +112,7 @@ public class BaseActivity extends AppCompatActivity implements EasyPermissions.P
      */
     public String[] needPermissions = {
             Manifest.permission.CALL_PHONE,
-//            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.READ_PHONE_STATE,
 //            Manifest.permission.READ_CALL_LOG,
 //            Manifest.permission.WRITE_CALL_LOG,
 //            Manifest.permission.ACCESS_COARSE_LOCATION,

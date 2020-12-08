@@ -7,7 +7,7 @@ import android.os.Handler;
 
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.activity.AppManager;
-import com.kayu.car_owner_pay.activity.login.LoginActivity;
+import com.kayu.car_owner_pay.activity.login.LoginAutoActivity;
 import com.kayu.car_owner_pay.http.cookie.PersistentCookieStore;
 import com.kayu.utils.Constants;
 import com.kayu.utils.LogUtil;
@@ -69,7 +69,7 @@ public class ResponseCallback implements Callback {
                     AppManager.getAppManager().finishAllActivity();
                     LocationManagerUtil.getSelf().stopLocation();
 //                    LocationManager.getSelf().destroyLocation();
-                    reqInfo.context.startActivity(new Intent(reqInfo.context, LoginActivity.class));
+                    reqInfo.context.startActivity(new Intent(reqInfo.context, LoginAutoActivity.class));
                 } else if (obj.status == Constants.response_code_1) {
                     handler.sendMessage(handler.obtainMessage(Constants.PARSE_DATA_SUCCESS, obj));
                 } else {

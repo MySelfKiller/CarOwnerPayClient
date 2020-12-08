@@ -20,9 +20,20 @@ android {
     defaultConfig {
         applicationId "com.kayu.car_owner_pay"
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0.0"
+
+        ndk {
+            //选择要添加的对应 cpu 类型的 .so 库。
+            abiFilters 'armeabi-v7a', 'arm64-v8a' ,'x86', 'x86_64'
+        }
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : applicationId,
+                JPUSH_APPKEY : "280b660469e3b8179cb985f2", //Portal上注册的包名对应的 appKey.
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+        ]
 
         renderscriptTargetApi 14
         renderscriptSupportModeEnabled true
@@ -125,6 +136,8 @@ dependencies {
 //    implementation 'com.github.GrenderG:Toasty:1.4.2'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
 
+    implementation 'cn.jiguang.sdk:jcore:2.5.5'  // 此处以JCore 2.1.2 版本为例。
+    implementation 'cn.jiguang.sdk:jverification:2.6.7'  // 此处以JCore 2.1.2 版本为例。
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.5.8'
 
     implementation  'com.scwang.smart:refresh-layout-kernel:2.0.1'      //核心必须依赖

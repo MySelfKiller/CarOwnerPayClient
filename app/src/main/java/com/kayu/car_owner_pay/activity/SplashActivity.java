@@ -11,7 +11,7 @@ import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.kayu.car_owner_pay.R;
-import com.kayu.car_owner_pay.activity.login.LoginActivity;
+import com.kayu.car_owner_pay.activity.login.LoginAutoActivity;
 import com.kayu.car_owner_pay.activity.login.SetPasswordActivity;
 import com.kayu.utils.Constants;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
@@ -66,7 +66,7 @@ public class SplashActivity extends AppCompatActivity {
                     intent.putExtra("isSetPwd",true);
                 }
             } else {
-                intent = new Intent(SplashActivity.this, LoginActivity.class);
+                intent = new Intent(SplashActivity.this, LoginAutoActivity.class);
             }
             Uri data = getIntent().getData();
             if (data != null) {
