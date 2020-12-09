@@ -8,8 +8,8 @@
     android:orientation="vertical"
     tools:context=".activity.login.LoginActivity">
     <ImageView
-        android:layout_width="@dimen/dp_0"
-        android:layout_height="@dimen/dp_0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:src="@mipmap/ic_login_bg1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,11 +19,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="@dimen/dp_0"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp_40"
         android:paddingHorizontal="@dimen/dp_30"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.8">
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/login_auto_btn"
             android:layout_width="match_parent"
@@ -45,7 +46,7 @@
             android:id="@+id/login_activation_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_30"
             android:layout_marginBottom="@dimen/dp_10"
             android:background="@drawable/login_yellow_solid_shape"
             android:gravity="center"

@@ -2,9 +2,12 @@ package com.kayu.car_owner_pay.activity.login;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +20,7 @@ import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +31,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.cmic.sso.sdk.widget.LoadingImageView;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.AppManager;
@@ -54,10 +59,12 @@ import com.kayu.utils.SMSCountDownTimer;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.permission.EasyPermissions;
+import com.kayu.utils.status_bar_set.StatusBarUtil;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.v3.MessageDialog;
+import com.kongzue.dialog.v3.TipDialog;
 import com.kongzue.dialog.v3.WaitDialog;
 
 import java.util.HashMap;
@@ -66,6 +73,8 @@ import java.util.regex.Pattern;
 
 import cn.jiguang.verifysdk.api.AuthPageEventListener;
 import cn.jiguang.verifysdk.api.JVerificationInterface;
+import cn.jiguang.verifysdk.api.JVerifyUIClickCallback;
+import cn.jiguang.verifysdk.api.JVerifyUIConfig;
 import cn.jiguang.verifysdk.api.LoginSettings;
 import cn.jiguang.verifysdk.api.VerifyListener;
 
@@ -87,10 +96,15 @@ public class LoginAutoActivity extends BaseActivity {
 //    private TextView user_privacy;
     private SharedPreferences sp;
     private boolean isFirstShow;
-
+    String[] titles;//协议标题
+    String[] urls;//协议连接
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarUtil.setStatusBarColor(this, getResources().getColor(R.color.black));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
         setContentView(R.layout.activity_login_new);
 
         sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
@@ -117,8 +131,8 @@ public class LoginAutoActivity extends BaseActivity {
             public void onChanged(SystemParam systemParam) {
                 WaitDialog.dismiss();
                 if (null != systemParam && systemParam.type ==3){
-                    String[] titles = systemParam.title.split("@@");
-                    String[] urls = systemParam.url.split("@@");
+                    titles = systemParam.title.split("@@");
+                    urls = systemParam.url.split("@@");
                     isFirstShow = sp.getBoolean(Constants.isShowDialog,true);
                     if (isFirstShow) {
                         String menss = "请您务必谨慎阅读、充分理解\""+titles[0]+"\"和\""+titles[1]+"\"各条款，包括但不限于：为了向你提供及时通讯，内容分享等服务，我们需要收集你的定位信息，操作日志信息" +
@@ -191,7 +205,7 @@ public class LoginAutoActivity extends BaseActivity {
 
     @SuppressLint("HandlerLeak")
     private void sendSubRequest(String loginToken) {
-        WaitDialog.show(LoginAutoActivity.this,"确认中...");
+        WaitDialog.show(LoginAutoActivity.this,"登录...");
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = LoginAutoActivity.this;
         reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_LOGIN;
@@ -249,6 +263,7 @@ public class LoginAutoActivity extends BaseActivity {
                         Toast.makeText(LoginAutoActivity.this, "[2016],msg = 当前网络环境不支持认证", Toast.LENGTH_SHORT).show();
                         return;
                     }
+                    WaitDialog.show(LoginAutoActivity.this,"稍等...");
                     LoginSettings loginSettings = new LoginSettings();
                     loginSettings.setAutoFinish(true);
                     loginSettings.setTimeout(15*1000);
@@ -259,15 +274,85 @@ public class LoginAutoActivity extends BaseActivity {
 
                         }
                     });
+                    Resources resources = LoginAutoActivity.this.getResources();
+                    JVerifyUIConfig uiConfig = new JVerifyUIConfig.Builder()
+//                            .setStatusBarTransparent(true)
+//                            .setStatusBarHidden(f)
+//                            .setStatusBarColorWithNav(true)
+                            .setVirtualButtonTransparent(true)
+                            .setPrivacyVirtualButtonTransparent(true)
+                            .setPrivacyVirtualButtonTransparent(true)
+                            .setStatusBarDarkMode(false)
+                            .setNavColor(resources.getColor(R.color.white))
+                            .setNavText("登录")
+                            .setNavTextSize(22)
+                            .setNavTextBold(true)
+                            .setPrivacyNavColor(resources.getColor(R.color.white))
+//                            .setPrivacyNavReturnBtn()
+
+
+                            .setNavTextColor(resources.getColor(R.color.black1))
+                            .setNavReturnImgPath("normal_btu_black")
+                            .setNavReturnBtnOffsetX(20)
+                            .setLogoImgPath("ic_login_bg")
+                            .setLogoWidth(90)
+                            .setLogoHeight(70)
+                            .setLogoHidden(false)
+                            .setNumberColor(resources.getColor(R.color.black1))
+                            .setLogBtnText("一键登录")
+                            .setLogBtnTextSize(16)
+                            .setLogBtnHeight(40)
+                            .setLogBtnTextColor(resources.getColor(R.color.select_text_color))
+                            .setLogBtnImgPath("ic_login_btn_bg")
+                            .setAppPrivacyOne(titles[0],urls[0])
+                            .setAppPrivacyTwo(titles[1],urls[1])
+
+                            .setAppPrivacyColor(0xFFBBBCC5,0xFF8998FF)
+                            .setPrivacyCheckboxHidden(true)
+                            .setPrivacyState(true)
+//                            .setUncheckedImgPath("umcsdk_uncheck_image")
+//                            .setCheckedImgPath("umcsdk_check_image")
+                            .setSloganTextColor(resources.getColor(R.color.grayText2))
+                            .setSloganTextSize(12)
+                            .setLogoOffsetY(100)
+//                            .setLogoImgPath("logo_cm")
+                            .setNumFieldOffsetY(190)
+                            .setSloganOffsetY(235)
+                            .setLogBtnOffsetY(260)
+                            .setNumberSize(22)
+                            .setPrivacyState(true)
+                            .setPrivacyOffsetX(30)
+                            .setPrivacyTextSize(10)
+                            .setNavTransparent(false).build();
+//                            .addCustomView(mBtn, true, new JVerifyUIClickCallback() {
+//                                @Override
+//                                public void onClicked(Context context, View view) {
+//                                    Toast.makeText(context,"动态注册的其他按钮",Toast.LENGTH_SHORT).show();
+//                                }
+//                            }).addCustomView(mBtn2, false, new JVerifyUIClickCallback() {
+//                                @Override
+//                                public void onClicked(Context context, View view) {
+//                                    Toast.makeText(context,"动态注册的其他按钮222",Toast.LENGTH_SHORT).show();
+//                                }
+//                            }).addNavControlView(navBtn, new JVerifyUIClickCallback() {
+//                                @Override
+//                                public void onClicked(Context context, View view) {
+//                                    Toast.makeText(context,"导航栏按钮点击",Toast.LENGTH_SHORT).show();
+//                                }
+//                            }).setPrivacyOffsetY(30).build();
+                    JVerificationInterface.setCustomUIWithConfig(uiConfig);
                     JVerificationInterface.loginAuth(LoginAutoActivity.this, loginSettings, new VerifyListener() {
                         @Override
                         public void onResult(int code, String content, String operator) {
+                            WaitDialog.dismiss();
                             if (code == 6000){
-                                System.out.println("token: "+content);
                                 LogUtil.e("JPush", "code=" + code + ", token=" + content+" ,operator="+operator);
                                 sendSubRequest(content);
-                            }else{
-                                LogUtil.e("JPush", "code=" + code + ", message=" + content);
+                            }else if (code == 6001){
+                                LogUtil.e("JPush", "code=" + code + ", content=" + content+" ,operator="+operator);
+                                TipDialog.show(LoginAutoActivity.this,"登录失败", TipDialog.TYPE.ERROR);
+                            }else {
+                                LogUtil.e("JPush", "code=" + code + ", content=" + content+" ,operator="+operator);
                             }
                         }
                     });
