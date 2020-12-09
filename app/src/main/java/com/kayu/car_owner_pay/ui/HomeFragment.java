@@ -434,7 +434,7 @@ public class HomeFragment extends Fragment {
                                 if (StringUtil.equals(categoryBean.type, "KY_H5")) {
                                     sb.append("&token=").append(KWApplication.getInstance().token);
                                 }
-                                intent.putExtra("url", target + sb.toString());
+                                intent.putExtra("url", sb.toString());
                                 intent.putExtra("from", "首页");
                                 startActivity(intent);
 
