@@ -185,10 +185,11 @@
                             android:id="@+id/station_oil_price_unit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_10"
+                            android:layout_marginTop="@dimen/dp_3"
                             android:text="￥"
                             android:textColor="@color/red_bg_def"
                             android:textSize="@dimen/sp_14"
+                            app:layout_constraintTop_toTopOf="@id/station_oil_price"
                             app:layout_constraintBottom_toBottomOf="@id/station_oil_price"
                             app:layout_constraintStart_toStartOf="@id/station_name" />
 
@@ -197,8 +198,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dp_10"
-                            android:layout_marginBottom="@dimen/dp_10"
                             android:textColor="@color/red_bg_def"
+                            android:text="47.00"
                             android:textSize="@dimen/sp_20"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -216,6 +217,7 @@
                             android:paddingVertical="@dimen/dp_1"
                             android:textColor="@color/red_bg_def"
                             android:textSize="@dimen/sp_10"
+                            app:layout_constraintTop_toTopOf="@id/station_oil_price"
                             app:layout_constraintBottom_toBottomOf="@id/station_oil_price"
                             app:layout_constraintStart_toEndOf="@id/station_oil_price" />
 
@@ -230,6 +232,7 @@
                             android:paddingVertical="@dimen/dp_1"
                             android:textColor="@color/red_bg_def"
                             android:textSize="@dimen/sp_10"
+                            app:layout_constraintTop_toTopOf="@id/station_oil_price"
                             app:layout_constraintBottom_toBottomOf="@id/station_oil_price"
                             app:layout_constraintStart_toEndOf="@id/station_oil_price_sub1" />
 

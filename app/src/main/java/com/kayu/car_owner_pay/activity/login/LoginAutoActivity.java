@@ -20,9 +20,12 @@ import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,11 +51,13 @@ import com.kayu.car_owner_pay.http.parser.LoginDataParse;
 import com.kayu.car_owner_pay.http.parser.NormalParse;
 import com.kayu.car_owner_pay.model.LoginInfo;
 import com.kayu.car_owner_pay.model.SystemParam;
+import com.kayu.car_owner_pay.wxapi.WXShare;
 import com.kayu.form_verify.Form;
 import com.kayu.form_verify.Validate;
 import com.kayu.form_verify.validator.PhoneValidator;
 import com.kayu.utils.Constants;
 import com.kayu.utils.GsonHelper;
+import com.kayu.utils.ItemCallback;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.SMSCountDownTimer;
@@ -79,10 +84,10 @@ import cn.jiguang.verifysdk.api.LoginSettings;
 import cn.jiguang.verifysdk.api.VerifyListener;
 
 public class LoginAutoActivity extends BaseActivity {
-//    private EditText phone_number;
+    //    private EditText phone_number;
 //    private EditText sms_code;
-    private AppCompatButton ask_btn,activation_btn;
-//    private SMSCountDownTimer timer;
+    private AppCompatButton ask_btn, activation_btn;
+    //    private SMSCountDownTimer timer;
 //    private TextView send_sms;
 //    private TextView password_target;
 //    private LinearLayout login_send_sms_lay;
@@ -93,11 +98,13 @@ public class LoginAutoActivity extends BaseActivity {
 //    private boolean isSMSLogin = true;
     private MainViewModel mViewModel;
     private TextView user_agreement;
-//    private TextView user_privacy;
+    //    private TextView user_privacy;
     private SharedPreferences sp;
     private boolean isFirstShow;
     String[] titles;//协议标题
     String[] urls;//协议连接
+    private WXShare wxShare;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,23 +132,23 @@ public class LoginAutoActivity extends BaseActivity {
         });
         user_agreement = findViewById(R.id.login_user_agreement_tv);
 //        user_privacy = findViewById(R.id.login_user_privacy_tv);
-        WaitDialog.show(this,"请稍等...");
-        mViewModel.getParameter(this,3).observe(this, new Observer<SystemParam>() {
+        WaitDialog.show(this, "请稍等...");
+        mViewModel.getParameter(this, 3).observe(this, new Observer<SystemParam>() {
             @Override
             public void onChanged(SystemParam systemParam) {
                 WaitDialog.dismiss();
-                if (null != systemParam && systemParam.type ==3){
+                if (null != systemParam && systemParam.type == 3) {
                     titles = systemParam.title.split("@@");
                     urls = systemParam.url.split("@@");
-                    isFirstShow = sp.getBoolean(Constants.isShowDialog,true);
+                    isFirstShow = sp.getBoolean(Constants.isShowDialog, true);
                     if (isFirstShow) {
-                        String menss = "请您务必谨慎阅读、充分理解\""+titles[0]+"\"和\""+titles[1]+"\"各条款，包括但不限于：为了向你提供及时通讯，内容分享等服务，我们需要收集你的定位信息，操作日志信息" +
+                        String menss = "请您务必谨慎阅读、充分理解\"" + titles[0] + "\"和\"" + titles[1] + "\"各条款，包括但不限于：为了向你提供及时通讯，内容分享等服务，我们需要收集你的定位信息，操作日志信息" +
                                 "等。你可以在\"设置\"中查看、变更、删除个人信息并管理你的授权。" +
-                                "<br>你可阅读<font color=\"#007aff\"><a href=\"" +urls[0]+"\" style=\"text-decoration:none;\">《"+titles[0]+"》</a></font>和<font color=\"#007aff\"><a href=\""+urls[1]+"\" style=\"text-decoration:none;\">《"+titles[1]+"》</a></font>了解详细信息" +
+                                "<br>你可阅读<font color=\"#007aff\"><a href=\"" + urls[0] + "\" style=\"text-decoration:none;\">《" + titles[0] + "》</a></font>和<font color=\"#007aff\"><a href=\"" + urls[1] + "\" style=\"text-decoration:none;\">《" + titles[1] + "》</a></font>了解详细信息" +
                                 "如您同意，请点击确定接收我们的服务";
                         MessageDialog.show(LoginAutoActivity.this,
-                                titles[0]+"和"+titles[1], Html.fromHtml(menss)
-                                ,"同意","暂不使用")
+                                titles[0] + "和" + titles[1], Html.fromHtml(menss)
+                                , "同意", "暂不使用")
                                 .setCancelable(false).setOkButton(new OnDialogButtonClickListener() {
                             @Override
                             public boolean onClick(BaseDialog baseDialog, View v) {
@@ -170,7 +177,7 @@ public class LoginAutoActivity extends BaseActivity {
                     user_agreement.setOnClickListener(new NoMoreClickListener() {
                         @Override
                         protected void OnMoreClick(View view) {
-                            jumpWeb(titles[0],urls[0]);
+                            jumpWeb(titles[0], urls[0]);
                         }
 
                         @Override
@@ -196,48 +203,48 @@ public class LoginAutoActivity extends BaseActivity {
 
     }
 
-    private void jumpWeb(String title, String url){
+    private void jumpWeb(String title, String url) {
         Intent intent = new Intent(LoginAutoActivity.this, WebViewActivity.class);
-        intent.putExtra("url",url);
-        intent.putExtra("from",title);
+        intent.putExtra("url", url);
+        intent.putExtra("from", title);
         startActivity(intent);
     }
 
     @SuppressLint("HandlerLeak")
     private void sendSubRequest(String loginToken) {
-        WaitDialog.show(LoginAutoActivity.this,"登录...");
+        WaitDialog.show(LoginAutoActivity.this, "登录...");
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = LoginAutoActivity.this;
-        reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_LOGIN;
+        reqInfo.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_LOGIN;
         reqInfo.parser = new LoginDataParse();
-        HashMap<String,Object> reqDateMap = new HashMap<>();
-        reqDateMap.put("loginToken",loginToken);
+        HashMap<String, Object> reqDateMap = new HashMap<>();
+        reqDateMap.put("loginToken", loginToken);
 //        reqDateMap.put("password",sms_code.getText().toString().trim());
         reqInfo.reqDataMap = reqDateMap;
-        reqInfo.handler = new Handler(){
+        reqInfo.handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 WaitDialog.dismiss();
-                ResponseInfo resInfo = (ResponseInfo)msg.obj;
-                if (resInfo.status ==1 ){
+                ResponseInfo resInfo = (ResponseInfo) msg.obj;
+                if (resInfo.status == 1) {
                     LoginInfo user = (LoginInfo) resInfo.responseData;
-                    if (null != user){
+                    if (null != user) {
                         SharedPreferences.Editor editor = sp.edit();
-                            editor.putBoolean(Constants.isLogin,true);
-                            editor.putString(Constants.token,user.token);
-                            editor.putBoolean(Constants.isSetPsd,true);
-                            editor.putString(Constants.login_info, GsonHelper.toJsonString(user));
-                            editor.apply();
-                            editor.commit();
-                            KWApplication.getInstance().token = user.token;
-                            AppManager.getAppManager().finishAllActivity();
-                            startActivity(new Intent(LoginAutoActivity.this, MainActivity.class));
-                            finish();
+                        editor.putBoolean(Constants.isLogin, true);
+                        editor.putString(Constants.token, user.token);
+                        editor.putBoolean(Constants.isSetPsd, true);
+                        editor.putString(Constants.login_info, GsonHelper.toJsonString(user));
+                        editor.apply();
+                        editor.commit();
+                        KWApplication.getInstance().token = user.token;
+                        AppManager.getAppManager().finishAllActivity();
+                        startActivity(new Intent(LoginAutoActivity.this, MainActivity.class));
+                        finish();
 //                        }
 
                     }
-                }else {
-                    Toast.makeText(LoginAutoActivity.this,resInfo.msg,Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(LoginAutoActivity.this, resInfo.msg, Toast.LENGTH_SHORT).show();
                 }
                 super.handleMessage(msg);
             }
@@ -260,13 +267,17 @@ public class LoginAutoActivity extends BaseActivity {
                 if (JVerificationInterface.isInitSuccess()) {
                     // 判断当前的手机网络环境是否可以使用认证。
                     if (!JVerificationInterface.checkVerifyEnable(LoginAutoActivity.this)) {
-                        Toast.makeText(LoginAutoActivity.this, "[2016],msg = 当前网络环境不支持认证", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(LoginAutoActivity.this, "[2016],msg = 当前网络环境不支持认证", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginAutoActivity.this, "当前网络环境不支持认证", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginAutoActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
                         return;
                     }
-                    WaitDialog.show(LoginAutoActivity.this,"稍等...");
+                    WaitDialog.show(LoginAutoActivity.this, "稍等...");
                     LoginSettings loginSettings = new LoginSettings();
                     loginSettings.setAutoFinish(true);
-                    loginSettings.setTimeout(15*1000);
+                    loginSettings.setTimeout(15 * 1000);
                     loginSettings.setAuthPageEventListener(new AuthPageEventListener() {
                         @Override
                         public void onEvent(int i, String s) {
@@ -275,6 +286,43 @@ public class LoginAutoActivity extends BaseActivity {
                         }
                     });
                     Resources resources = LoginAutoActivity.this.getResources();
+                    View view = getLayoutInflater().inflate(R.layout.login_part_lay,null,false);
+                    view.findViewById(R.id.login_part_phone).setOnClickListener(new NoMoreClickListener() {
+                        @Override
+                        protected void OnMoreClick(View view) {
+                            startActivity(new Intent(LoginAutoActivity.this, LoginActivity.class));
+                        }
+
+                        @Override
+                        protected void OnMoreErrorClick() {
+
+                        }
+                    });
+                    view.findViewById(R.id.login_part_wechat).setOnClickListener(new NoMoreClickListener() {
+                        @Override
+                        protected void OnMoreClick(View view) {
+                            wxShare = new WXShare(LoginAutoActivity.this);
+                            wxShare.register();
+                            wxShare.getAuth(new ItemCallback() {
+                                @Override
+                                public void onItemCallback(int position, Object obj) {
+                                    Toast.makeText(LoginAutoActivity.this,"微信token"+(String)obj,Toast.LENGTH_SHORT).show();
+                                    reqSignIn((String)obj);
+                                }
+
+                                @Override
+                                public void onDetailCallBack(int position, Object obj) {
+
+                                }
+                            });
+
+                        }
+
+                        @Override
+                        protected void OnMoreErrorClick() {
+
+                        }
+                    });
                     JVerifyUIConfig uiConfig = new JVerifyUIConfig.Builder()
 //                            .setStatusBarTransparent(true)
 //                            .setStatusBarHidden(f)
@@ -295,8 +343,8 @@ public class LoginAutoActivity extends BaseActivity {
                             .setNavReturnImgPath("normal_btu_black")
                             .setNavReturnBtnOffsetX(20)
                             .setLogoImgPath("ic_login_bg")
-                            .setLogoWidth(90)
-                            .setLogoHeight(70)
+                            .setLogoWidth(80)
+                            .setLogoHeight(60)
                             .setLogoHidden(false)
                             .setNumberColor(resources.getColor(R.color.black1))
                             .setLogBtnText("一键登录")
@@ -304,10 +352,10 @@ public class LoginAutoActivity extends BaseActivity {
                             .setLogBtnHeight(40)
                             .setLogBtnTextColor(resources.getColor(R.color.select_text_color))
                             .setLogBtnImgPath("ic_login_btn_bg")
-                            .setAppPrivacyOne(titles[0],urls[0])
-                            .setAppPrivacyTwo(titles[1],urls[1])
+                            .setAppPrivacyOne(titles[0], urls[0])
+                            .setAppPrivacyTwo(titles[1], urls[1])
 
-                            .setAppPrivacyColor(0xFFBBBCC5,0xFF8998FF)
+                            .setAppPrivacyColor(0xFFBBBCC5, 0xFF8998FF)
                             .setPrivacyCheckboxHidden(true)
                             .setPrivacyState(true)
 //                            .setUncheckedImgPath("umcsdk_uncheck_image")
@@ -323,7 +371,14 @@ public class LoginAutoActivity extends BaseActivity {
                             .setPrivacyState(true)
                             .setPrivacyOffsetX(30)
                             .setPrivacyTextSize(10)
+                            .addCustomView(view, false, new JVerifyUIClickCallback() {
+                                @Override
+                                public void onClicked(Context context, View view) {
+                                    Toast.makeText(context,"动态注册的其他按钮",Toast.LENGTH_SHORT).show();
+                                }
+                            })
                             .setNavTransparent(false).build();
+
 //                            .addCustomView(mBtn, true, new JVerifyUIClickCallback() {
 //                                @Override
 //                                public void onClicked(Context context, View view) {
@@ -345,14 +400,14 @@ public class LoginAutoActivity extends BaseActivity {
                         @Override
                         public void onResult(int code, String content, String operator) {
                             WaitDialog.dismiss();
-                            if (code == 6000){
-                                LogUtil.e("JPush", "code=" + code + ", token=" + content+" ,operator="+operator);
+                            if (code == 6000) {
+                                LogUtil.e("JPush", "code=" + code + ", token=" + content + " ,operator=" + operator);
                                 sendSubRequest(content);
-                            }else if (code == 6001){
-                                LogUtil.e("JPush", "code=" + code + ", content=" + content+" ,operator="+operator);
-                                TipDialog.show(LoginAutoActivity.this,"登录失败", TipDialog.TYPE.ERROR);
-                            }else {
-                                LogUtil.e("JPush", "code=" + code + ", content=" + content+" ,operator="+operator);
+                            } else if (code == 6001) {
+                                LogUtil.e("JPush", "code=" + code + ", content=" + content + " ,operator=" + operator);
+                                TipDialog.show(LoginAutoActivity.this, "登录失败", TipDialog.TYPE.ERROR);
+                            } else {
+                                LogUtil.e("JPush", "code=" + code + ", content=" + content + " ,operator=" + operator);
                             }
                         }
                     });
@@ -389,19 +444,91 @@ public class LoginAutoActivity extends BaseActivity {
         });
     }
 
+    @SuppressLint("HandlerLeak")
+    private void reqSignIn(String code) {
+        if (null== code || StringUtil.isEmpty(code)){
+            return;
+        }
+        WaitDialog.show(LoginAutoActivity.this,"确认中...");
+        final RequestInfo reqInfo = new RequestInfo();
+        reqInfo.context = LoginAutoActivity.this;
+        reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_LOGIN;
+        reqInfo.parser = new LoginDataParse();
+        HashMap<String,Object> reqDateMap = new HashMap<>();
+        reqDateMap.put("wxCode",code);
+
+//        reqDateMap.put("code",sms_code.getText().toString().trim());
+        reqInfo.reqDataMap = reqDateMap;
+        reqInfo.handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                WaitDialog.dismiss();
+                ResponseInfo resInfo = (ResponseInfo)msg.obj;
+                if (resInfo.status ==1 ){
+                    LoginInfo user = (LoginInfo) resInfo.responseData;
+                    if (null != user){
+
+                        SharedPreferences.Editor editor = sp.edit();
+//                        KWApplication.getInstance().sign = user.sign;
+//                        if (user.initPwd == 1){//是否需要设定密码 0:否 1:是
+//                            editor.putBoolean(Constants.isLogin,true);
+//                            editor.putString(Constants.sign,user.sign);
+//                            editor.putBoolean(Constants.isSetPsd,false);
+//                            editor.putString(Constants.userInfo, GsonHelper.toJsonString(user));
+//                            editor.apply();
+//                            editor.commit();
+//                            Intent intent = new Intent(LoginActivity.this, SetPasswordActivity.class);
+//                            intent.putExtra("title","设置密码");
+//                            intent.putExtra("back","");
+//                            intent.putExtra("isSetPwd",true);
+//                            startActivity(intent);
+//                        }else {
+                        editor.putBoolean(Constants.isLogin,true);
+                        editor.putString(Constants.token,user.token);
+                        editor.putBoolean(Constants.isSetPsd,true);
+                        editor.putString(Constants.login_info, GsonHelper.toJsonString(user));
+                        editor.apply();
+                        editor.commit();
+                        KWApplication.getInstance().token = user.token;
+                        AppManager.getAppManager().finishAllActivity();
+                        finish();
+                        startActivity(new Intent(LoginAutoActivity.this, MainActivity.class));
+//                        }
+
+                    }
+                }else {
+                    Toast.makeText(LoginAutoActivity.this,resInfo.msg,Toast.LENGTH_SHORT).show();
+                }
+                super.handleMessage(msg);
+            }
+        };
+
+        ResponseCallback callback = new ResponseCallback(reqInfo);
+        ReqUtil.getInstance().setReqInfo(reqInfo);
+        ReqUtil.getInstance().requestPostJSON(callback);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        wxShare.unregister();
+    }
+
 
     //记录用户首次点击返回键的时间
-    private long firstTime=0;
+    private long firstTime = 0;
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
 
-            long secondTime=System.currentTimeMillis();
-            if(secondTime-firstTime>2000){
-                Toast.makeText(LoginAutoActivity.this,"再按一次退出应用",Toast.LENGTH_SHORT).show();
-                firstTime=secondTime;
+            long secondTime = System.currentTimeMillis();
+            if (secondTime - firstTime > 2000) {
+                Toast.makeText(LoginAutoActivity.this, "再按一次退出应用", Toast.LENGTH_SHORT).show();
+                firstTime = secondTime;
                 return true;
-            }else{
+            } else {
                 System.exit(0);
             }
         }

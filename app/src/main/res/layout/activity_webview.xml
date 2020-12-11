@@ -20,22 +20,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
+            <WebView
+                android:id="@+id/wvWebView"
+                android:layerType="hardware"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <WebView
-                    android:id="@+id/wvWebView"
-                    android:layerType="hardware"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-            </LinearLayout>
+                android:layout_height="match_parent" />
 
             <ProgressBar
                 android:id="@+id/pbWebView"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="@dimen/dp_2"
                 android:layout_alignParentTop="true"
                 android:progressDrawable="@drawable/progress_horizontal" />
         </RelativeLayout>

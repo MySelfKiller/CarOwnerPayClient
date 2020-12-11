@@ -53,6 +53,7 @@ public class PersonalFragment extends Fragment {
     private ConstraintLayout oil_order_lay,wash_order_lay, all_order_lay;
     private LinearLayout more_lay;
     private ImageView user_card_bg;
+    private LinearLayout income_lay;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -77,6 +78,7 @@ public class PersonalFragment extends Fragment {
         //账户提示语
 //        explain_content = view.findViewById(R.id.personal_explain_content);
         web_info_tv = view.findViewById(R.id.personal_web_info);
+        income_lay = view.findViewById(R.id.personal_income_lay);
 
         refreshLayout.setEnableAutoLoadMore(false);
         refreshLayout.setEnableLoadMore(false);
@@ -228,6 +230,11 @@ public class PersonalFragment extends Fragment {
                 user_name.setText(userBean.phone);
                 user_balance.setText(String.valueOf(userBean.expAmt));
                 card_num.setText("卡号："+userBean.inviteNo);
+                if (userBean.type < 0) {
+                    income_lay.setVisibility(View.GONE);
+                } else {
+                    income_lay.setVisibility(View.VISIBLE);
+                }
                 web_info_tv.setOnClickListener(new NoMoreClickListener() {
                     @Override
                     protected void OnMoreClick(View view) {

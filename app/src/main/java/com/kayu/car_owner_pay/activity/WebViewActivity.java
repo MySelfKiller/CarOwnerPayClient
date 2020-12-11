@@ -29,6 +29,8 @@ import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -152,7 +154,6 @@ public class WebViewActivity extends AppCompatActivity {
         initData();
     }
 
-    @SuppressLint({"SetJavaScriptEnabled", "JavascriptInterface"})
     public void initData() {
         if (StringUtil.isEmpty(url)) {
             url = URL;
@@ -162,7 +163,6 @@ public class WebViewActivity extends AppCompatActivity {
         WebSettings webSettings = wvWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setBlockNetworkImage(false);
-
         //支持插件
 //        webSettings.setPluginsEnabled(true);
 
@@ -174,15 +174,14 @@ public class WebViewActivity extends AppCompatActivity {
         webSettings.setSupportZoom(true); //支持缩放，默认为true。是下面那个的前提。
         webSettings.setBuiltInZoomControls(true); //设置内置的缩放控件。若为false，则该WebView不可缩放
         webSettings.setDisplayZoomControls(false); //隐藏原生的缩放控件
+        webSettings.setDomStorageEnabled(true);
 
 //其他细节操作
-        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK); //关闭webview中缓存
         webSettings.setAllowFileAccess(true); //设置可以访问文件
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true); //支持通过JS打开新窗口
         webSettings.setLoadsImagesAutomatically(true); //支持自动加载图片
         webSettings.setDefaultTextEncodingName("utf-8");//设置编码格式
 
-        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 //        webSettings.setPluginState(WebSettings.PluginState.ON);
 
 
@@ -199,9 +198,10 @@ public class WebViewActivity extends AppCompatActivity {
         webSettings.setGeolocationEnabled(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setSupportMultipleWindows(true);
-
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 //开启DomStorage缓存
-        webSettings.setDomStorageEnabled(true);
         LogUtil.e("WebView","UserAgent: "+webSettings.getUserAgentString());
 
         // android 5.0及以上默认不支持Mixed Content
@@ -325,16 +325,26 @@ public class WebViewActivity extends AppCompatActivity {
                 return true;
             }
 
+
         });
 
         wvWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+                super.onReceivedHttpError(view, request, errorResponse);
+                LogUtil.e("webview","errorResponse="+errorResponse.toString());
+            }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
+                LogUtil.e("webview","description="+description+"  failingUrl="+failingUrl);
+            }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 LogUtil.e("WebView","shouldOverrideUrlLoading: "+url);
-                view.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
-                view.getSettings().setJavaScriptEnabled(true);
-                view.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+
 //                view.loadUrl(url);
                 if(url.startsWith("http:")|| url.startsWith("https:")){
                     if (url.equals("https://www.kakayuy.com/close")){
@@ -389,6 +399,7 @@ public class WebViewActivity extends AppCompatActivity {
 
             @Override
             public void onPageFinished(WebView view, String url) {
+                view.getSettings().setLoadsImagesAutomatically(true);
                 if (StringUtil.isEmpty(titleName)){
                     title_name.setText(StringUtil.getTrimedString(wvWebView.getTitle()));
                 }
@@ -404,6 +415,7 @@ public class WebViewActivity extends AppCompatActivity {
             }
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error){
+                LogUtil.e("webview","SslErrorHandler="+handler.toString()+"  SslError="+error.toString());
                 handler.proceed();
             }
         });

@@ -190,115 +190,113 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
+                        <LinearLayout
                             android:id="@+id/personal_income_lay"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingHorizontal="@dimen/dp_15"
-                            android:paddingVertical="@dimen/dp_10"
-                            android:layout_marginHorizontal="@dimen/dp_15"
-                            android:layout_marginTop="@dimen/dp_20"
-                            android:background="@drawable/dark_yellow_part_">
-<!--                            <LinearLayout-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:orientation="horizontal"-->
-<!--                                android:paddingHorizontal="@dimen/dp_15"-->
-<!--                                android:paddingVertical="@dimen/dp_15"-->
-<!--                                android:background="#d6cab8">-->
+                            android:visibility="visible"
+                            android:orientation="vertical">
+                            <androidx.constraintlayout.widget.ConstraintLayout
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingHorizontal="@dimen/dp_15"
+                                android:paddingVertical="@dimen/dp_10"
+                                android:layout_marginHorizontal="@dimen/dp_15"
+                                android:layout_marginTop="@dimen/dp_20"
+                                android:background="@drawable/dark_yellow_part_">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+
+                                    android:text="升级经销商，立享优惠"
+                                    android:textSize="@dimen/sp_16"
+                                    android:textColor="@color/black"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"/>
+                                <TextView
+                                    android:id="@+id/personal_web_info"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingVertical="@dimen/dp_6"
+                                    android:paddingHorizontal="@dimen/dp_18"
+                                    android:background="@drawable/black_bg_shape"
+                                    android:textColor="#fff1dd"
+                                    android:textSize="@dimen/sp_13"
+                                    android:text="立即升级"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingHorizontal="@dimen/dp_15"
+                                android:paddingVertical="@dimen/dp_10"
+                                android:layout_marginHorizontal="@dimen/dp_15"
+                                android:background="@drawable/white_part2_bg_shape">
+                                <View
+                                    android:id="@+id/id_tag_divider"
+                                    android:layout_width="@dimen/dp_1"
+                                    android:layout_height="@dimen/dp_0"
+                                    android:background="@color/divider2"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"/>
+                                <TextView
+                                    android:id="@+id/id_tag_income"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="我的收益（元）"
+                                    android:textSize="@dimen/sp_11"
+                                    android:layout_marginTop="@dimen/dp_6"
+                                    android:textColor="@color/grayText4"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintEnd_toEndOf="@id/id_tag_divider"
+                                    app:layout_constraintTop_toTopOf="parent"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0.00"
+                                    android:textSize="@dimen/sp_20"
+                                    android:layout_marginTop="@dimen/dp_6"
+                                    android:layout_marginBottom="@dimen/dp_6"
+                                    android:textColor="@color/black1"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintEnd_toEndOf="@id/id_tag_divider"
+                                    app:layout_constraintTop_toBottomOf="@id/id_tag_income"
+                                    app:layout_constraintBottom_toBottomOf="parent"/>
+                                <TextView
+                                    android:id="@+id/id_tag_detail"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="可提现（元）"
+                                    android:textSize="@dimen/sp_11"
+                                    android:layout_marginTop="@dimen/dp_6"
+                                    android:textColor="@color/grayText4"
+                                    app:layout_constraintStart_toStartOf="@id/id_tag_divider"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0.00"
+                                    android:textSize="@dimen/sp_20"
+                                    android:layout_marginTop="@dimen/dp_6"
+                                    android:layout_marginBottom="@dimen/dp_6"
+                                    android:textColor="@color/black1"
+                                    app:layout_constraintStart_toStartOf="@id/id_tag_divider"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@id/id_tag_detail"
+                                    app:layout_constraintBottom_toBottomOf="parent"/>
 
 
-<!--                            </LinearLayout>-->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </LinearLayout>
 
-                                android:text="升级经销商，立享优惠"
-                                android:textSize="@dimen/sp_16"
-                                android:textColor="@color/black"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-                            <TextView
-                                android:id="@+id/personal_web_info"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingVertical="@dimen/dp_6"
-                                android:paddingHorizontal="@dimen/dp_18"
-                                android:background="@drawable/black_bg_shape"
-                                android:textColor="#fff1dd"
-                                android:textSize="@dimen/sp_13"
-                                android:text="立即升级"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingHorizontal="@dimen/dp_15"
-                            android:paddingVertical="@dimen/dp_10"
-                            android:layout_marginHorizontal="@dimen/dp_15"
-                            android:background="@drawable/white_part2_bg_shape">
-                            <View
-                                android:id="@+id/id_tag_divider"
-                                android:layout_width="@dimen/dp_1"
-                                android:layout_height="@dimen/dp_0"
-                                android:background="@color/divider2"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-                            <TextView
-                                android:id="@+id/id_tag_income"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="我的收益（元）"
-                                android:textSize="@dimen/sp_11"
-                                android:layout_marginTop="@dimen/dp_6"
-                                android:textColor="@color/grayText4"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintEnd_toEndOf="@id/id_tag_divider"
-                                app:layout_constraintTop_toTopOf="parent"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0.00"
-                                android:textSize="@dimen/sp_20"
-                                android:layout_marginTop="@dimen/dp_6"
-                                android:layout_marginBottom="@dimen/dp_6"
-                                android:textColor="@color/black1"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintEnd_toEndOf="@id/id_tag_divider"
-                                app:layout_constraintTop_toBottomOf="@id/id_tag_income"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-                            <TextView
-                                android:id="@+id/id_tag_detail"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="可提现（元）"
-                                android:textSize="@dimen/sp_11"
-                                android:layout_marginTop="@dimen/dp_6"
-                                android:textColor="@color/grayText4"
-                                app:layout_constraintStart_toStartOf="@id/id_tag_divider"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0.00"
-                                android:textSize="@dimen/sp_20"
-                                android:layout_marginTop="@dimen/dp_6"
-                                android:layout_marginBottom="@dimen/dp_6"
-                                android:textColor="@color/black1"
-                                app:layout_constraintStart_toStartOf="@id/id_tag_divider"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/id_tag_detail"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/id_all_order_lay"
                             android:layout_width="match_parent"
@@ -409,7 +407,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/dp_15"
-                            android:paddingHorizontal="@dimen/dp_20"
+                            android:paddingHorizontal="@dimen/dp_10"
                             android:paddingVertical="@dimen/dp_15">
 
                             <TextView
@@ -445,14 +443,14 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/dp_1"
-                            android:layout_marginHorizontal="@dimen/dp_35"
+                            android:layout_marginHorizontal="@dimen/dp_20"
                             android:background="@color/divider" />
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/personal_setting_lay"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/dp_15"
-                            android:paddingHorizontal="@dimen/dp_20"
+                            android:paddingHorizontal="@dimen/dp_10"
                             android:paddingVertical="@dimen/dp_15">
 
                             <TextView
@@ -489,7 +487,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/dp_1"
-                            android:layout_marginHorizontal="@dimen/dp_35"
+                            android:layout_marginHorizontal="@dimen/dp_20"
                             android:background="@color/divider" />
 
                         <LinearLayout

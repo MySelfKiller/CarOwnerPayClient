@@ -8,9 +8,10 @@
     android:orientation="vertical"
     tools:context=".activity.login.LoginActivity">
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="0dp"
         android:src="@mipmap/ic_login_bg1"
+        android:layout_marginTop="@dimen/dp_60"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,12 +20,11 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="@dimen/dp_0"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_50"
         android:paddingHorizontal="@dimen/dp_30"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.8">
+        app:layout_constraintBottom_toBottomOf="parent">
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/login_auto_btn"
             android:layout_width="match_parent"

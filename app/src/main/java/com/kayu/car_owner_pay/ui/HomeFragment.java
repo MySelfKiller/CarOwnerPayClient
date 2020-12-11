@@ -369,18 +369,38 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void OnBannerClick(int position) {
                         String target = bannerBeans.get(position).href;
-                        if (!StringUtil.isEmpty(target.trim())) {
-                            Intent intent = new Intent(getContext(), WebViewActivity.class);
-                            intent.putExtra("url", target);
-                            intent.putExtra("from", "首页");
-                            getActivity().startActivity(intent);
+                        if (StringUtil.equals(bannerBeans.get(position).type, "KY_GAS")) {
+                            startActivity(new Intent(getContext(), GasStationListActivity.class));
+                        }else if (StringUtil.equals(bannerBeans.get(position).type, "KY_WASH")){
+                            startActivity(new Intent(getContext(), CarWashListActivity.class));
+                        }else {
+                            if (!StringUtil.isEmpty(target)) {
+                                Intent intent = new Intent(getContext(), WebViewActivity.class);
+                                StringBuilder sb = new StringBuilder();
+                                sb.append(target);
+                                if (StringUtil.equals(bannerBeans.get(position).type, "KY_H5")) {
+                                    sb.append("&token=").append(KWApplication.getInstance().token);
+                                }
+                                intent.putExtra("url", sb.toString());
+                                intent.putExtra("from", "首页");
+                                startActivity(intent);
+
+                            } else {
+                                MessageDialog.show((AppCompatActivity) requireContext(), "温馨提示", "功能未开启，敬请期待");
+                            }
                         }
+//                        if (!StringUtil.isEmpty(target.trim())) {
+//                            Intent intent = new Intent(getContext(), WebViewActivity.class);
+//                            intent.putExtra("url", target);
+//                            intent.putExtra("from", "首页");
+//                            getActivity().startActivity(intent);
+//                        }
                     }
                 });
             }
         });
 
-        mainViewModel.getCategoryList(getContext()).observe(getActivity(), new Observer<List<List<CategoryBean>>>() {
+        mainViewModel.getCategoryList(getContext()).observe(requireActivity(), new Observer<List<List<CategoryBean>>>() {
             @Override
             public void onChanged(List<List<CategoryBean>> categoryBeans) {
                 if (null == categoryBeans)
@@ -395,8 +415,8 @@ public class HomeFragment extends Fragment {
 //                    mRows = categoryBeans.size() % 4 == 0 ? categoryBeans.size() / 4 : categoryBeans.size() / 4 + 1;
 //                    mColumns = 4;
 //                }
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.dp_82) * mRows);
-                layoutParams.topMargin = ScreenUtils.dipToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.dp_3));
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.dp_84) * mRows);
+                layoutParams.topMargin = ScreenUtils.dipToPx(requireContext(), getResources().getDimensionPixelSize(R.dimen.dp_3));
                 category_rv.setLayoutParams(layoutParams);
 
                 PagerGridLayoutManager mLayoutManager = new PagerGridLayoutManager(mRows, mColumns, PagerGridLayoutManager
@@ -421,10 +441,8 @@ public class HomeFragment extends Fragment {
                         CategoryBean categoryBean = (CategoryBean) obj;
                         String target = categoryBean.href;
                         if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
-                            // FIXME: 2020/12/1 添加加油跳转本地页面
                             startActivity(new Intent(getContext(), GasStationListActivity.class));
                         }else if (StringUtil.equals(categoryBean.type, "KY_WASH")){
-                            // FIXME: 2020/12/1 添加洗车跳转本地页面
                             startActivity(new Intent(getContext(), CarWashListActivity.class));
                         }else {
                             if (!StringUtil.isEmpty(target)) {
@@ -439,7 +457,7 @@ public class HomeFragment extends Fragment {
                                 startActivity(intent);
 
                             } else {
-                                MessageDialog.show((AppCompatActivity) getContext(), "温馨提示", "功能未开启，敬请期待");
+                                MessageDialog.show((AppCompatActivity) requireContext(), "温馨提示", "功能未开启，敬请期待");
                             }
                         }
 

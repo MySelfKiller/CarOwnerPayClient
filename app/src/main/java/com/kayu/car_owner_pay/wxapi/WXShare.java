@@ -115,7 +115,7 @@ public class WXShare {
         } else {
             final SendAuth.Req req = new SendAuth.Req();
             req.scope = "snsapi_userinfo";
-            req.state = "com.kayu.courseapp";
+            req.state = "com.kayu.car_owner_pay";
             api.sendReq(req);
             this.callback = callback;
         }

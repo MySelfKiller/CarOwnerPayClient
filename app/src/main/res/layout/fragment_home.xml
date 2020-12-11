@@ -145,8 +145,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/home_category_rv"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/dp_15" />
+                    android:layout_height="wrap_content" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
