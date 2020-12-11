@@ -18,7 +18,9 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -31,6 +33,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -61,6 +64,7 @@ import com.kayu.utils.ItemCallback;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.SMSCountDownTimer;
+import com.kayu.utils.ScreenUtils;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.permission.EasyPermissions;
@@ -80,7 +84,7 @@ import cn.jiguang.verifysdk.api.AuthPageEventListener;
 import cn.jiguang.verifysdk.api.JVerificationInterface;
 import cn.jiguang.verifysdk.api.JVerifyUIClickCallback;
 import cn.jiguang.verifysdk.api.JVerifyUIConfig;
-import cn.jiguang.verifysdk.api.LoginSettings;
+
 import cn.jiguang.verifysdk.api.VerifyListener;
 
 public class LoginAutoActivity extends BaseActivity {
@@ -177,7 +181,7 @@ public class LoginAutoActivity extends BaseActivity {
                     user_agreement.setOnClickListener(new NoMoreClickListener() {
                         @Override
                         protected void OnMoreClick(View view) {
-                            jumpWeb(titles[0], urls[0]);
+                            jumpWeb("服务条款", urls[0]);
                         }
 
                         @Override
@@ -275,128 +279,109 @@ public class LoginAutoActivity extends BaseActivity {
                         return;
                     }
                     WaitDialog.show(LoginAutoActivity.this, "稍等...");
-                    LoginSettings loginSettings = new LoginSettings();
-                    loginSettings.setAutoFinish(true);
-                    loginSettings.setTimeout(15 * 1000);
-                    loginSettings.setAuthPageEventListener(new AuthPageEventListener() {
-                        @Override
-                        public void onEvent(int i, String s) {
-                            LogUtil.e("JPush", "onEvent---code=" + i + ", msg=" + s);
-
-                        }
-                    });
-                    Resources resources = LoginAutoActivity.this.getResources();
-                    View view = getLayoutInflater().inflate(R.layout.login_part_lay,null,false);
-                    view.findViewById(R.id.login_part_phone).setOnClickListener(new NoMoreClickListener() {
-                        @Override
-                        protected void OnMoreClick(View view) {
-                            startActivity(new Intent(LoginAutoActivity.this, LoginActivity.class));
-                        }
-
-                        @Override
-                        protected void OnMoreErrorClick() {
-
-                        }
-                    });
-                    view.findViewById(R.id.login_part_wechat).setOnClickListener(new NoMoreClickListener() {
-                        @Override
-                        protected void OnMoreClick(View view) {
-                            wxShare = new WXShare(LoginAutoActivity.this);
-                            wxShare.register();
-                            wxShare.getAuth(new ItemCallback() {
-                                @Override
-                                public void onItemCallback(int position, Object obj) {
-                                    Toast.makeText(LoginAutoActivity.this,"微信token"+(String)obj,Toast.LENGTH_SHORT).show();
-                                    reqSignIn((String)obj);
-                                }
-
-                                @Override
-                                public void onDetailCallBack(int position, Object obj) {
-
-                                }
-                            });
-
-                        }
-
-                        @Override
-                        protected void OnMoreErrorClick() {
-
-                        }
-                    });
-                    JVerifyUIConfig uiConfig = new JVerifyUIConfig.Builder()
-//                            .setStatusBarTransparent(true)
-//                            .setStatusBarHidden(f)
-//                            .setStatusBarColorWithNav(true)
-                            .setVirtualButtonTransparent(true)
-                            .setPrivacyVirtualButtonTransparent(true)
-                            .setPrivacyVirtualButtonTransparent(true)
-                            .setStatusBarDarkMode(false)
-                            .setNavColor(resources.getColor(R.color.white))
-                            .setNavText("登录")
-                            .setNavTextSize(22)
-                            .setNavTextBold(true)
-                            .setPrivacyNavColor(resources.getColor(R.color.white))
-//                            .setPrivacyNavReturnBtn()
-
-
-                            .setNavTextColor(resources.getColor(R.color.black1))
-                            .setNavReturnImgPath("normal_btu_black")
-                            .setNavReturnBtnOffsetX(20)
-                            .setLogoImgPath("ic_login_bg")
-                            .setLogoWidth(80)
-                            .setLogoHeight(60)
-                            .setLogoHidden(false)
-                            .setNumberColor(resources.getColor(R.color.black1))
-                            .setLogBtnText("一键登录")
-                            .setLogBtnTextSize(16)
-                            .setLogBtnHeight(40)
-                            .setLogBtnTextColor(resources.getColor(R.color.select_text_color))
-                            .setLogBtnImgPath("ic_login_btn_bg")
-                            .setAppPrivacyOne(titles[0], urls[0])
-                            .setAppPrivacyTwo(titles[1], urls[1])
-
-                            .setAppPrivacyColor(0xFFBBBCC5, 0xFF8998FF)
-                            .setPrivacyCheckboxHidden(true)
-                            .setPrivacyState(true)
-//                            .setUncheckedImgPath("umcsdk_uncheck_image")
-//                            .setCheckedImgPath("umcsdk_check_image")
-                            .setSloganTextColor(resources.getColor(R.color.grayText2))
-                            .setSloganTextSize(12)
-                            .setLogoOffsetY(100)
-//                            .setLogoImgPath("logo_cm")
-                            .setNumFieldOffsetY(190)
-                            .setSloganOffsetY(235)
-                            .setLogBtnOffsetY(260)
-                            .setNumberSize(22)
-                            .setPrivacyState(true)
-                            .setPrivacyOffsetX(30)
-                            .setPrivacyTextSize(10)
-                            .addCustomView(view, false, new JVerifyUIClickCallback() {
-                                @Override
-                                public void onClicked(Context context, View view) {
-                                    Toast.makeText(context,"动态注册的其他按钮",Toast.LENGTH_SHORT).show();
-                                }
-                            })
-                            .setNavTransparent(false).build();
-
-//                            .addCustomView(mBtn, true, new JVerifyUIClickCallback() {
+//                    LoginSettings loginSettings = new LoginSettings();
+//                    loginSettings.setAutoFinish(true);
+//                    loginSettings.setTimeout(15 * 1000);
+//                    loginSettings.setAuthPageEventListener(new AuthPageEventListener() {
+//                        @Override
+//                        public void onEvent(int i, String s) {
+//                            LogUtil.e("JPush", "onEvent---code=" + i + ", msg=" + s);
+//
+//                        }
+//                    });
+//                    Resources resources = LoginAutoActivity.this.getResources();
+//                    View view = getLayoutInflater().inflate(R.layout.login_part_lay,null,false);
+//                    view.findViewById(R.id.login_part_phone).setOnClickListener(new NoMoreClickListener() {
+//                        @Override
+//                        protected void OnMoreClick(View view) {
+//                            startActivity(new Intent(LoginAutoActivity.this, LoginActivity.class));
+//                        }
+//
+//                        @Override
+//                        protected void OnMoreErrorClick() {
+//
+//                        }
+//                    });
+//                    view.findViewById(R.id.login_part_wechat).setOnClickListener(new NoMoreClickListener() {
+//                        @Override
+//                        protected void OnMoreClick(View view) {
+//                            wxShare = new WXShare(LoginAutoActivity.this);
+//                            wxShare.register();
+//                            wxShare.getAuth(new ItemCallback() {
+//                                @Override
+//                                public void onItemCallback(int position, Object obj) {
+//                                    Toast.makeText(LoginAutoActivity.this,"微信token"+(String)obj,Toast.LENGTH_SHORT).show();
+//                                    reqSignIn((String)obj);
+//                                }
+//
+//                                @Override
+//                                public void onDetailCallBack(int position, Object obj) {
+//
+//                                }
+//                            });
+//
+//                        }
+//
+//                        @Override
+//                        protected void OnMoreErrorClick() {
+//
+//                        }
+//                    });
+//                    JVerifyUIConfig uiConfig = new JVerifyUIConfig.Builder()
+////                            .setStatusBarTransparent(true)
+////                            .setStatusBarHidden(f)
+////                            .setStatusBarColorWithNav(true)
+////                            .setVirtualButtonTransparent(true)
+////                            .setPrivacyVirtualButtonTransparent(true)
+////                            .setPrivacyVirtualButtonTransparent(true)
+//                            .setStatusBarDarkMode(false)
+//                            .setNavColor(resources.getColor(R.color.white))
+//                            .setNavText("登录")
+//                            .setNavTextSize(20)
+////                            .setNavTextBold(true)
+//                            .setPrivacyNavColor(resources.getColor(R.color.white))
+//                            .setNavTextColor(resources.getColor(R.color.black1))
+//                            .setNavReturnImgPath("normal_btu_black")
+//                            .setNavReturnBtnOffsetX(20)
+//                            .setLogoImgPath("ic_login_bg")
+//                            .setLogoWidth(80)
+//                            .setLogoHeight(60)
+//                            .setLogoHidden(false)
+//                            .setNumberColor(resources.getColor(R.color.black1))
+//                            .setLogBtnText("一键登录")
+//                            .setLogBtnTextSize(16)
+//                            .setLogBtnHeight(40)
+//                            .setLogBtnTextColor(resources.getColor(R.color.select_text_color))
+//                            .setLogBtnImgPath("ic_login_btn_bg")
+//                            .setAppPrivacyOne(titles[0], urls[0])
+//                            .setAppPrivacyTwo(titles[1], urls[1])
+//
+//                            .setAppPrivacyColor(0xFFBBBCC5, 0xFF8998FF)
+//                            .setPrivacyCheckboxHidden(true)
+//                            .setPrivacyState(true)
+//                            .setSloganTextColor(resources.getColor(R.color.grayText2))
+//                            .setSloganTextSize(12)
+//                            .setLogoOffsetY(100)
+////                            .setLogoImgPath("logo_cm")
+//                            .setNumFieldOffsetY(190)
+//                            .setSloganOffsetY(235)
+//                            .setLogBtnOffsetY(260)
+//                            .setNumberSize(22)
+//                            .setPrivacyState(true)
+//                            .setPrivacyTextCenterGravity(true)
+////                            .setPrivacyOffsetX(30)
+//                            .setPrivacyTextSize(12)
+//                            .addCustomView(view, false, new JVerifyUIClickCallback() {
 //                                @Override
 //                                public void onClicked(Context context, View view) {
-//                                    Toast.makeText(context,"动态注册的其他按钮",Toast.LENGTH_SHORT).show();
+////                                    Toast.makeText(context,"动态注册的其他按钮",Toast.LENGTH_SHORT).show();
 //                                }
-//                            }).addCustomView(mBtn2, false, new JVerifyUIClickCallback() {
-//                                @Override
-//                                public void onClicked(Context context, View view) {
-//                                    Toast.makeText(context,"动态注册的其他按钮222",Toast.LENGTH_SHORT).show();
-//                                }
-//                            }).addNavControlView(navBtn, new JVerifyUIClickCallback() {
-//                                @Override
-//                                public void onClicked(Context context, View view) {
-//                                    Toast.makeText(context,"导航栏按钮点击",Toast.LENGTH_SHORT).show();
-//                                }
-//                            }).setPrivacyOffsetY(30).build();
-                    JVerificationInterface.setCustomUIWithConfig(uiConfig);
-                    JVerificationInterface.loginAuth(LoginAutoActivity.this, loginSettings, new VerifyListener() {
+//                            })
+//                            .setNavTransparent(false).build();
+
+//                    JVerificationInterface.setCustomUIWithConfig(uiConfig);
+                    JVerificationInterface.setCustomUIWithConfig(getFullScreenPortraitConfig());
+                    JVerificationInterface.loginAuth(LoginAutoActivity.this, new VerifyListener() {
                         @Override
                         public void onResult(int code, String content, String operator) {
                             WaitDialog.dismiss();
@@ -511,8 +496,9 @@ public class LoginAutoActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        if (null != wxShare)
+            wxShare.unregister();
         super.onDestroy();
-        wxShare.unregister();
     }
 
 
@@ -533,6 +519,169 @@ public class LoginAutoActivity extends BaseActivity {
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+
+    private void toNativeVerifyActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    private int dp2Pix(Context context, float dp) {
+        try {
+            float density = context.getResources().getDisplayMetrics().density;
+            return (int) (dp * density + 0.5F);
+        } catch (Exception e) {
+            return (int) dp;
+        }
+    }
+
+    private int px2dip(Context context, int pxValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
+    }
+
+    private JVerifyUIConfig getFullScreenPortraitConfig(){
+        JVerifyUIConfig.Builder uiConfigBuilder = new JVerifyUIConfig.Builder();
+        uiConfigBuilder.setStatusBarDarkMode(false);
+        uiConfigBuilder.setNavColor(getResources().getColor(R.color.white));
+        uiConfigBuilder.setNavText("登录");
+        uiConfigBuilder.setNavTextSize(20);
+//        uiConfigBuilder.setPrivacyNavColor(getResources().getColor(R.color.white));
+        uiConfigBuilder.setNavTextColor(getResources().getColor(R.color.black1));
+        uiConfigBuilder.setNavReturnImgPath("normal_btu_black");
+        uiConfigBuilder.setNavReturnBtnOffsetX(20);
+        uiConfigBuilder.setLogoImgPath("ic_login_bg");
+        uiConfigBuilder.setLogoWidth(80);
+        uiConfigBuilder.setLogoHeight(60);
+        uiConfigBuilder.setLogoHidden(false);
+        uiConfigBuilder.setNumberColor(getResources().getColor(R.color.black1));
+        uiConfigBuilder.setLogBtnText("一键登录");
+        uiConfigBuilder.setLogBtnTextSize(16);
+        uiConfigBuilder.setLogBtnHeight(40);
+        uiConfigBuilder.setLogBtnTextColor(getResources().getColor(R.color.select_text_color));
+        uiConfigBuilder.setLogBtnImgPath("ic_login_btn_bg");
+//        uiConfigBuilder.setAppPrivacyOne(titles[0], urls[0]);
+//        uiConfigBuilder.setAppPrivacyTwo(titles[1], urls[1]);
+
+        uiConfigBuilder.setAppPrivacyColor(0xFFBBBCC5, 0xFF8998FF);
+        uiConfigBuilder.setPrivacyCheckboxHidden(true);
+        uiConfigBuilder.setPrivacyState(true);
+        uiConfigBuilder.setSloganTextColor(getResources().getColor(R.color.grayText2));
+        uiConfigBuilder.setSloganTextSize(12);
+        uiConfigBuilder.setLogoOffsetY(100);
+//                            .setLogoImgPath("logo_cm")
+        uiConfigBuilder.setNumFieldOffsetY(190);
+        uiConfigBuilder.setSloganOffsetY(235);
+        uiConfigBuilder.setLogBtnOffsetY(260);
+        uiConfigBuilder.setNumberSize(22);
+        uiConfigBuilder.setPrivacyState(true);
+//        uiConfigBuilder.setPrivacyTextCenterGravity(true);
+        uiConfigBuilder.setPrivacyTextCenterGravity(true);
+        uiConfigBuilder.setPrivacyTextSize(12);
+        uiConfigBuilder.setPrivacyText("登录即同意《","》《","》《","》并授权"+getResources().getString(R.string.app_name)+"获取本机号码");
+//        uiConfigBuilder.setPrivacyOffsetX(52-15);
+
+        // 手机登录按钮
+        RelativeLayout.LayoutParams layoutParamPhoneLogin = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParamPhoneLogin.setMargins(0, getResources().getDimensionPixelSize(R.dimen.dp_300),0,0);
+        layoutParamPhoneLogin.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE);
+        layoutParamPhoneLogin.addRule(RelativeLayout.CENTER_HORIZONTAL,RelativeLayout.TRUE);
+        TextView tvPhoneLogin = new TextView(this);
+        tvPhoneLogin.setText("手机号码登录");
+        tvPhoneLogin.setTextColor(getResources().getColor(R.color.grayText));
+//        tvPhoneLogin.setTextSize(getResources().getDimensionPixelSize(R.dimen.sp_14));
+        tvPhoneLogin.setLayoutParams(layoutParamPhoneLogin);
+        uiConfigBuilder.addCustomView(tvPhoneLogin, false, new JVerifyUIClickCallback() {
+            @Override
+            public void onClicked(Context context, View view) {
+                toNativeVerifyActivity();
+            }
+        });
+
+        // 微信登录
+
+        LinearLayout linearLayout = new LinearLayout(this);
+        RelativeLayout.LayoutParams layoutLoginGroupParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutLoginGroupParam.setMargins(0, getResources().getDimensionPixelSize(R.dimen.dp_472), 0, 0);
+        layoutLoginGroupParam.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+        layoutLoginGroupParam.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        layoutLoginGroupParam.setLayoutDirection(LinearLayout.VERTICAL);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setGravity(Gravity.CENTER);
+        linearLayout.setLayoutParams(layoutLoginGroupParam);
+        int padding = getResources().getDimensionPixelSize(R.dimen.dp_5);
+        linearLayout.setPadding(padding,padding,padding,padding);
+
+        ImageView btnWechat = new ImageView(this);
+        TextView textView = new TextView(this);
+        LinearLayout.LayoutParams texParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        texParam.setMargins(0,padding,0,0);
+        textView.setLayoutParams(texParam);
+        textView.setText("微信登录");
+//        textView.setTextSize(getResources().getDimensionPixelSize(R.dimen.sp_14));
+        textView.setTextColor(getResources().getColor(R.color.grayText));
+
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                JShareInterface.authorize(Wechat.Name, mAuthListener);
+                wxShare = new WXShare(LoginAutoActivity.this);
+                wxShare.register();
+                wxShare.getAuth(new ItemCallback() {
+                    @Override
+                    public void onItemCallback(int position, Object obj) {
+//                        Toast.makeText(LoginAutoActivity.this,"微信token"+(String)obj,Toast.LENGTH_SHORT).show();
+                        reqSignIn((String)obj);
+                    }
+
+                    @Override
+                    public void onDetailCallBack(int position, Object obj) {
+
+                    }
+                });
+            }
+        });
+
+        btnWechat.setImageResource(R.drawable.ic_contact_wx);
+
+        LinearLayout.LayoutParams btnParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        btnParam.setMargins(25,0,25,0);
+
+
+        linearLayout.addView(btnWechat,btnParam);
+        linearLayout.addView(textView);
+//        layoutLoginGroup.addView(btnXinlang,btnParam);
+        uiConfigBuilder.addCustomView(linearLayout, false, new JVerifyUIClickCallback() {
+            @Override
+            public void onClicked(Context context, View view) {
+                wxShare = new WXShare(LoginAutoActivity.this);
+                wxShare.register();
+                wxShare.getAuth(new ItemCallback() {
+                    @Override
+                    public void onItemCallback(int position, Object obj) {
+//                        Toast.makeText(LoginAutoActivity.this,"微信token"+(String)obj,Toast.LENGTH_SHORT).show();
+                        reqSignIn((String)obj);
+                    }
+
+                    @Override
+                    public void onDetailCallBack(int position, Object obj) {
+
+                    }
+                });
+            }
+        });
+
+//
+//        final View dialogViewTitle = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialog_login_title,null, false);
+//
+//        uiConfigBuilder.addNavControlView(dialogViewTitle, new JVerifyUIClickCallback() {
+//            @Override
+//            public void onClicked(Context context, View view) {
+//
+//            }
+//        });
+        return uiConfigBuilder.build();
     }
 
 }

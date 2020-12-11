@@ -24,10 +24,10 @@ android {
         versionCode 1
         versionName "1.0.0"
 
-        ndk {
-            //选择要添加的对应 cpu 类型的 .so 库。
-            abiFilters 'armeabi-v7a', 'arm64-v8a' ,'x86', 'x86_64'
-        }
+//        ndk {
+//            //选择要添加的对应 cpu 类型的 .so 库。
+//            abiFilters 'armeabi-v7a', 'arm64-v8a' ,'x86', 'x86_64'
+//        }
 
         manifestPlaceholders = [
                 JPUSH_PKGNAME : applicationId,
@@ -136,8 +136,9 @@ dependencies {
 //    implementation 'com.github.GrenderG:Toasty:1.4.2'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
 
-    implementation 'cn.jiguang.sdk:jcore:2.5.5'  // 此处以JCore 2.1.2 版本为例。
-    implementation 'cn.jiguang.sdk:jverification:2.6.7'  // 此处以JCore 2.1.2 版本为例。
+    implementation 'cn.jiguang.sdk:jcore:2.6.0'  // 此处以JCore 2.1.2 版本为例。
+//    implementation 'cn.jiguang.sdk:jverification:2.6.7'  // 此处以JCore 2.1.2 版本为例。
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.6'
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.5.8'
 
     implementation  'com.scwang.smart:refresh-layout-kernel:2.0.1'      //核心必须依赖

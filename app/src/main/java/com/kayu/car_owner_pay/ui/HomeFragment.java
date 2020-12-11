@@ -416,7 +416,7 @@ public class HomeFragment extends Fragment {
 //                    mColumns = 4;
 //                }
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.dp_84) * mRows);
-                layoutParams.topMargin = ScreenUtils.dipToPx(requireContext(), getResources().getDimensionPixelSize(R.dimen.dp_3));
+                layoutParams.topMargin = getResources().getDimensionPixelSize(R.dimen.dp_8);
                 category_rv.setLayoutParams(layoutParams);
 
                 PagerGridLayoutManager mLayoutManager = new PagerGridLayoutManager(mRows, mColumns, PagerGridLayoutManager

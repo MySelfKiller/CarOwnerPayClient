@@ -2,42 +2,47 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/login_part_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_150"
-            android:padding="@dimen/dp_6"
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/grayText2"
-            android:text="使用其他手机号登录"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_300">
         <LinearLayout
-            android:id="@+id/login_part_wechat"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dp_6"
-            android:layout_marginTop="@dimen/dp_150"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="@dimen/dp_45"
-                android:layout_height="@dimen/dp_45"
-                android:src="@mipmap/ic_contact_wx"/>
+            android:gravity="center"
+            android:orientation="vertical">
             <TextView
-                android:layout_marginTop="@dimen/dp_10"
+                android:id="@+id/login_part_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="@dimen/dp_6"
                 android:textSize="@dimen/sp_14"
-                android:textColor="@color/grayText"
-                android:text="微信登录"/>
-        </LinearLayout>
+                android:textColor="@color/grayText2"
+                android:text="使用其他手机号登录"/>
+            <LinearLayout
+                android:id="@+id/login_part_wechat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_6"
+                android:layout_marginTop="@dimen/dp_100"
+                android:orientation="vertical"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="@dimen/dp_45"
+                    android:layout_height="@dimen/dp_45"
+                    android:src="@mipmap/ic_contact_wx"/>
+                <TextView
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp_14"
+                    android:textColor="@color/grayText"
+                    android:text="微信登录"/>
+            </LinearLayout>
 
-    </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
 
 
 

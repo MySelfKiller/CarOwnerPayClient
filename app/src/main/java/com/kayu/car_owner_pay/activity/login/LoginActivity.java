@@ -487,22 +487,22 @@ public class LoginActivity extends BaseActivity {
         ReqUtil.getInstance().requestGetJSON(callback);
     }
 
-    //记录用户首次点击返回键的时间
-    private long firstTime=0;
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK){
-
-            long secondTime=System.currentTimeMillis();
-            if(secondTime-firstTime>2000){
-                Toast.makeText(LoginActivity.this,"再按一次退出应用",Toast.LENGTH_SHORT).show();
-                firstTime=secondTime;
-                return true;
-            }else{
-                System.exit(0);
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+//    //记录用户首次点击返回键的时间
+//    private long firstTime=0;
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK){
+//
+//            long secondTime=System.currentTimeMillis();
+//            if(secondTime-firstTime>2000){
+//                Toast.makeText(LoginActivity.this,"再按一次退出应用",Toast.LENGTH_SHORT).show();
+//                firstTime=secondTime;
+//                return true;
+//            }else{
+//                System.exit(0);
+//            }
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
 
 }
