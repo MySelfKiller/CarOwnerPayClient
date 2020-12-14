@@ -33,15 +33,17 @@ public class OrderDetailsActivity extends AppCompatActivity {
     private TextView card_num;
     private TextView activation_code;
     private AppCompatButton ask_btn;
-    private String phone;
-    private String code;
+    private String waybillNo;
+    private String cardNo;
+    private String cardCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_details);
-        phone = getIntent().getStringExtra("phone");
-        code = getIntent().getStringExtra("code");
+        waybillNo = getIntent().getStringExtra("waybillNo");
+        cardNo = getIntent().getStringExtra("cardNo");
+        cardCode = getIntent().getStringExtra("cardCode");
 
         //标题栏
 //        LinearLayout title_lay = findViewById(R.id.title_lay);
@@ -80,49 +82,16 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
             }
         });
-        getInfo();
+
+        if (StringUtil.isEmpty(waybillNo)) {
+            shipment_number.setText("未发货");
+        } else {
+            shipment_number.setText(waybillNo);
+
+        }
+        card_num.setText(cardNo);
+        activation_code.setText(cardCode);
     }
 
-    @SuppressLint("HandlerLeak")
-    private void getInfo() {
-        WaitDialog.show(OrderDetailsActivity.this,"查询中...");
-        final RequestInfo reqInfo = new RequestInfo();
-        reqInfo.context = OrderDetailsActivity.this;
-        reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_ORDER_DETAIL;
-        reqInfo.parser = new OrderDetailParse();
-        HashMap<String,Object> reqDateMap = new HashMap<>();
-        reqDateMap.put("phone",phone);
-        reqDateMap.put("code",code);
 
-//        reqDateMap.put("code",sms_code.getText().toString().trim());
-        reqInfo.reqDataMap = reqDateMap;
-        reqInfo.handler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                WaitDialog.dismiss();
-                ResponseInfo resInfo = (ResponseInfo)msg.obj;
-                if (resInfo.status ==1 ){
-                    OrderDetailBean orderDetailBean = (OrderDetailBean) resInfo.responseData;
-                    if (null != orderDetailBean){
-                        if (StringUtil.isEmpty(orderDetailBean.waybillNo)) {
-                            shipment_number.setText("未发货");
-                        } else {
-                            shipment_number.setText(orderDetailBean.waybillNo);
-
-                        }
-                        card_num.setText(orderDetailBean.cardNo);
-                        activation_code.setText(orderDetailBean.cardCode);
-                    }
-                }else {
-                    ToastUtils.show(resInfo.msg);
-                }
-                super.handleMessage(msg);
-            }
-        };
-
-        ResponseCallback callback = new ResponseCallback(reqInfo);
-        ReqUtil.getInstance().setReqInfo(reqInfo);
-        ReqUtil.getInstance().requestPostJSON(callback);
-
-    }
 }

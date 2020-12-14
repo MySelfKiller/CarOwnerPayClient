@@ -15,17 +15,20 @@ import android.widget.TextView;
 
 import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.data_parser.OrderDetailParse;
 import com.kayu.car_owner_pay.http.HttpConfig;
 import com.kayu.car_owner_pay.http.ReqUtil;
 import com.kayu.car_owner_pay.http.RequestInfo;
 import com.kayu.car_owner_pay.http.ResponseCallback;
 import com.kayu.car_owner_pay.http.ResponseInfo;
 import com.kayu.car_owner_pay.http.parser.NormalParse;
+import com.kayu.car_owner_pay.model.OrderDetailBean;
 import com.kayu.form_verify.Form;
 import com.kayu.form_verify.Validate;
 import com.kayu.form_verify.validator.PhoneValidator;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.SMSCountDownTimer;
+import com.kayu.utils.StringUtil;
 import com.kongzue.dialog.v3.WaitDialog;
 
 import java.util.HashMap;
@@ -107,10 +110,7 @@ public class OrderTrackingActivity extends AppCompatActivity {
                 boolean isOk = form.validate();
                 if (isOk){
 //                    sendSubRequest();
-                    Intent intent = new Intent(OrderTrackingActivity.this, OrderDetailsActivity.class);
-                    intent.putExtra("phone",phone_et.getText().toString().trim());
-                    intent.putExtra("code",ver_code_et.getText().toString().trim());
-                    startActivity(intent);
+                    getInfo(phone_et.getText().toString().trim(),ver_code_et.getText().toString().trim());
                 }
             }
 
@@ -150,5 +150,46 @@ public class OrderTrackingActivity extends AppCompatActivity {
         ReqUtil.getInstance().setReqInfo(reqInfo);
         ReqUtil.getInstance().requestGetJSON(callback);
     }
+
+    @SuppressLint("HandlerLeak")
+    private void getInfo(String phone, String code) {
+        WaitDialog.show(OrderTrackingActivity.this,"查询中...");
+        final RequestInfo reqInfo = new RequestInfo();
+        reqInfo.context = OrderTrackingActivity.this;
+        reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_ORDER_DETAIL;
+        reqInfo.parser = new OrderDetailParse();
+        HashMap<String,Object> reqDateMap = new HashMap<>();
+        reqDateMap.put("phone",phone);
+        reqDateMap.put("code",code);
+
+//        reqDateMap.put("code",sms_code.getText().toString().trim());
+        reqInfo.reqDataMap = reqDateMap;
+        reqInfo.handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                WaitDialog.dismiss();
+                ResponseInfo resInfo = (ResponseInfo)msg.obj;
+                if (resInfo.status ==1 ){
+                    OrderDetailBean orderDetailBean = (OrderDetailBean) resInfo.responseData;
+                    if (null != orderDetailBean){
+                        Intent intent = new Intent(OrderTrackingActivity.this, OrderDetailsActivity.class);
+                        intent.putExtra("waybillNo",orderDetailBean.waybillNo);
+                        intent.putExtra("cardNo",orderDetailBean.cardNo);
+                        intent.putExtra("cardCode",orderDetailBean.cardCode);
+                        startActivity(intent);
+                    }
+                }else {
+                    ToastUtils.show(resInfo.msg);
+                }
+                super.handleMessage(msg);
+            }
+        };
+
+        ResponseCallback callback = new ResponseCallback(reqInfo);
+        ReqUtil.getInstance().setReqInfo(reqInfo);
+        ReqUtil.getInstance().requestPostJSON(callback);
+
+    }
+
 
 }
