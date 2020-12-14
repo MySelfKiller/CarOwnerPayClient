@@ -52,7 +52,6 @@ public class LocalJavascriptInterface {
                 if (isSaveSuccess) {
                     TipDialog.show((AppCompatActivity) mContext, "保存成功", TipDialog.TYPE.SUCCESS);
                 } else {
-//                    Toast.makeText(mContext, "保存失败", Toast.LENGTH_LONG).show();
                     TipDialog.show((AppCompatActivity) mContext, "保存失败", TipDialog.TYPE.ERROR);
                 }
             }
@@ -70,9 +69,6 @@ public class LocalJavascriptInterface {
             TipDialog.show((AppCompatActivity) mContext, "分享数据错误！", TipDialog.TYPE.ERROR);
             return;
         }
-//        TipDialog.show((AppCompatActivity) mContext, jsonStr, TipDialog.TYPE.ERROR);
-//        Toast.makeText(mContext, jsonStr, Toast.LENGTH_LONG).show();
-//        jsonStr
         WXSharedBean sharedBean = GsonHelper.fromJson(jsonStr, WXSharedBean.class);
         if (null == sharedBean) {
             TipDialog.show((AppCompatActivity) mContext, "分享数据错误！", TipDialog.TYPE.ERROR);

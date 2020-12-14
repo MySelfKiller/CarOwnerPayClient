@@ -6,11 +6,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.model.SystemParam;
@@ -103,15 +103,15 @@ public class CustomerActivity extends BaseActivity {
                     @Override
                     protected void OnMoreClick(View view) {
                         if (null == qrcodeBitmap) {
-                            Toast.makeText(CustomerActivity.this,"保存图片不存在",Toast.LENGTH_LONG).show();
+                            ToastUtils.show("保存图片不存在");
                             return;
                         }
                         String fileName = "qr_"+System.currentTimeMillis() + ".jpg";
                         boolean isSaveSuccess = ImageUtil.saveImageToGallery(CustomerActivity.this, qrcodeBitmap,fileName);
                         if (isSaveSuccess) {
-                            Toast.makeText(CustomerActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+                            ToastUtils.show("保存成功");
                         } else {
-                            Toast.makeText(CustomerActivity.this, "保存失败", Toast.LENGTH_LONG).show();
+                            ToastUtils.show("保存失败");
                         }
 
                     }

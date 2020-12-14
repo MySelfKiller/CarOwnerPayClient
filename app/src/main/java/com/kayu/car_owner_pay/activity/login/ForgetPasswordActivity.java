@@ -8,10 +8,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.BaseActivity;
 import com.kayu.car_owner_pay.http.HttpConfig;
@@ -138,10 +138,10 @@ public class ForgetPasswordActivity extends BaseActivity {
                 WaitDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
-                    Toast.makeText(ForgetPasswordActivity.this,"密码已经重置成功！",Toast.LENGTH_SHORT).show();
+                    ToastUtils.show("密码已经重置成功！");
                     finish();
                 }else {
-                    Toast.makeText(ForgetPasswordActivity.this,resInfo.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 super.handleMessage(msg);
             }
@@ -168,9 +168,9 @@ public class ForgetPasswordActivity extends BaseActivity {
                 WaitDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
-                    Toast.makeText(ForgetPasswordActivity.this,"验证码发送成功",Toast.LENGTH_SHORT).show();
+                    ToastUtils.show("验证码发送成功");
                 }else {
-                    Toast.makeText(ForgetPasswordActivity.this,resInfo.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 super.handleMessage(msg);
             }

@@ -13,10 +13,9 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +29,7 @@ import com.bumptech.glide.request.target.ViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.http.HttpConfig;
 import com.kayu.car_owner_pay.model.MapInfoModel;
 import com.kayu.utils.Constants;
@@ -124,11 +124,13 @@ public class KWApplication extends Application {
     }
 
     private void initDialogSetting(){
+        ToastUtils.init(this);
+        ToastUtils.setGravity(Gravity.CENTER,0,0);
         DialogSettings.isUseBlur = true;                   //是否开启模糊效果，默认关闭
         DialogSettings.modalDialog = false;                 //是否开启模态窗口模式，一次显示多个对话框将以队列形式一个一个显示，默认关闭
         DialogSettings.style = DialogSettings.STYLE.STYLE_IOS;          //全局主题风格，提供三种可选风格，STYLE_MATERIAL, STYLE_KONGZUE, STYLE_IOS
-        DialogSettings.theme = DialogSettings.THEME.LIGHT;          //全局对话框明暗风格，提供两种可选主题，LIGHT, DARK
-        DialogSettings.tipTheme = (DialogSettings.THEME.LIGHT);       //全局提示框明暗风格，提供两种可选主题，LIGHT, DARK
+        DialogSettings.theme = DialogSettings.THEME.DARK;          //全局对话框明暗风格，提供两种可选主题，LIGHT, DARK
+        DialogSettings.tipTheme = (DialogSettings.THEME.DARK);       //全局提示框明暗风格，提供两种可选主题，LIGHT, DARK
 //        DialogSettings.titleTextInfo = (TextInfo);              //全局对话框标题文字样式
 //        DialogSettings.menuTitleInfo = (TextInfo);              //全局菜单标题文字样式
 //        DialogSettings.menuTextInfo = (TextInfo);               //全局菜单列表文字样式
@@ -445,7 +447,7 @@ public class KWApplication extends Application {
                 LogUtil.e("goError", e.getMessage());
             }
         } else {
-            Toast.makeText(activity, "您尚未安装百度地图", Toast.LENGTH_SHORT).show();
+            ToastUtils.show( "您尚未安装百度地图");
 
         }
     }
@@ -467,7 +469,7 @@ public class KWApplication extends Application {
                 LogUtil.e("goError", e.getMessage());
             }
         } else {
-            Toast.makeText(activity, "您尚未安装高德地图", Toast.LENGTH_SHORT).show();
+            ToastUtils.show("您尚未安装高德地图");
         }
     }
     /**
@@ -489,7 +491,7 @@ public class KWApplication extends Application {
                 e.printStackTrace();
             }
         } else {
-            Toast.makeText(activity, "您尚未安装谷歌地图", Toast.LENGTH_SHORT).show();
+            ToastUtils.show("您尚未安装谷歌地图");
         }
     }
 
@@ -509,7 +511,8 @@ public class KWApplication extends Application {
                     + "&policy=1&referer=myapp"));
             activity.startActivity(intent);
         } else {
-            Toast.makeText(activity, "您尚未安装谷歌地图", Toast.LENGTH_SHORT).show();
+            ToastUtils.show("您尚未安装腾讯地图");
+
         }
     }
 

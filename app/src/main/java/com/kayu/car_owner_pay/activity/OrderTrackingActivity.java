@@ -5,7 +5,6 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,23 +12,18 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.kayu.car_owner_pay.KWApplication;
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.http.HttpConfig;
 import com.kayu.car_owner_pay.http.ReqUtil;
 import com.kayu.car_owner_pay.http.RequestInfo;
 import com.kayu.car_owner_pay.http.ResponseCallback;
 import com.kayu.car_owner_pay.http.ResponseInfo;
-import com.kayu.car_owner_pay.http.parser.LoginDataParse;
 import com.kayu.car_owner_pay.http.parser.NormalParse;
-import com.kayu.car_owner_pay.model.LoginInfo;
 import com.kayu.form_verify.Form;
 import com.kayu.form_verify.Validate;
 import com.kayu.form_verify.validator.PhoneValidator;
-import com.kayu.utils.Constants;
-import com.kayu.utils.GsonHelper;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.SMSCountDownTimer;
 import com.kongzue.dialog.v3.WaitDialog;
@@ -143,10 +137,10 @@ public class OrderTrackingActivity extends AppCompatActivity {
                 WaitDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
-                    Toast.makeText(OrderTrackingActivity.this,"验证码发送成功",Toast.LENGTH_SHORT).show();
+                    ToastUtils.show("验证码发送成功");
                 }else {
                     timer.clear();
-                    Toast.makeText(OrderTrackingActivity.this,resInfo.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 super.handleMessage(msg);
             }

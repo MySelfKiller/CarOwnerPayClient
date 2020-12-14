@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.data_parser.OilOrderListDataParser;
 import com.kayu.car_owner_pay.http.HttpConfig;
@@ -154,7 +154,7 @@ public class OilOrderAllFragment extends Fragment {
                     orderData = (ArrayList<ItemOilOrderBean>) resInfo.responseData;
                     initViewData();
                 }else {
-                    Toast.makeText(getContext(),resInfo.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 if (isRefresh) {
                     refreshLayout.finishRefresh();
@@ -236,15 +236,15 @@ public class OilOrderAllFragment extends Fragment {
             @Override
             protected void OnMoreClick(View view) {
                 if (null == qrcodeBitmap) {
-                    Toast.makeText(getContext(), "保存图片不存在", Toast.LENGTH_LONG).show();
+                    ToastUtils.show("保存图片不存在");
                     return;
                 }
                 String fileName = "qr_" + System.currentTimeMillis() + ".jpg";
                 boolean isSaveSuccess = ImageUtil.saveImageToGallery(getActivity(), qrcodeBitmap, fileName);
                 if (isSaveSuccess) {
-                    Toast.makeText(getActivity(), "保存成功", Toast.LENGTH_SHORT).show();
+                    ToastUtils.show("保存成功");
                 } else {
-                    Toast.makeText(getActivity(), "保存失败", Toast.LENGTH_LONG).show();
+                    ToastUtils.show("保存失败");
                 }
             }
 

@@ -4,13 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.data_parser.AliPayDataParse;
 import com.kayu.car_owner_pay.data_parser.WxPayDataParse;
 import com.kayu.car_owner_pay.http.HttpConfig;
@@ -84,7 +84,7 @@ public class PayOrderViewModel extends ViewModel {
 
 
                 } else {
-                    Toast.makeText(context, resInfo.msg, Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 super.handleMessage(msg);
             }

@@ -13,8 +13,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.data_parser.MessageListParser;
 import com.kayu.car_owner_pay.http.HttpConfig;
@@ -133,7 +133,7 @@ public class MessageActivity extends BaseActivity {
                     messageDataList = (ArrayList<ItemMessageBean>) resInfo.responseData;
                     initViewData();
                 }else {
-                    Toast.makeText(MessageActivity.this,resInfo.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 if (isRefresh) {
                     refreshLayout.finishRefresh();

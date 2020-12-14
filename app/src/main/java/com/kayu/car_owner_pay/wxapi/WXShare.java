@@ -8,11 +8,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.R;
 import com.kayu.utils.Constants;
 import com.kayu.utils.FileUtil;
@@ -87,7 +86,7 @@ public class WXShare {
      */
     public void getWXPay(WxPayBean wxPayBean, ItemCallback callback) {
         if (!api.isWXAppInstalled()) {
-            Toast.makeText(context, "您的设备未安装微信客户端", Toast.LENGTH_SHORT).show();
+            ToastUtils.show("您的设备未安装微信客户端");
         } else {
             PayReq payRequest = new PayReq();
             payRequest.appId = Constants.WX_APP_ID;
@@ -111,7 +110,7 @@ public class WXShare {
         //发起登录请求
 
         if (!api.isWXAppInstalled()) {
-            Toast.makeText(context, "您的设备未安装微信客户端", Toast.LENGTH_SHORT).show();
+            ToastUtils.show("您的设备未安装微信客户端");
         } else {
             final SendAuth.Req req = new SendAuth.Req();
             req.scope = "snsapi_userinfo";
@@ -145,7 +144,7 @@ public class WXShare {
         File file = new File(filePath);
         if (!file.exists()) {
             String tip = "文件不存在";
-            Toast.makeText(context, tip + " path = " + filePath, Toast.LENGTH_LONG).show();
+            ToastUtils.show(tip + " path = " + filePath);
             return this;
         }
 

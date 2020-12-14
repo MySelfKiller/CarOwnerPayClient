@@ -1,17 +1,14 @@
 package com.kayu.car_owner_pay.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +20,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.http.HttpConfig;
@@ -151,7 +149,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         if(getSupportFragmentManager().getBackStackEntryCount() <= 0){//这里是取出我们返回栈存在Fragment的个数
             long secondTime = System.currentTimeMillis();
             if (secondTime - firstTime > 2000) {
-                Toast.makeText(MainActivity.this, "再按一次退出应用", Toast.LENGTH_SHORT).show();
+                ToastUtils.show("再按一次退出应用");
                 firstTime = secondTime;
                 return;
             } else {

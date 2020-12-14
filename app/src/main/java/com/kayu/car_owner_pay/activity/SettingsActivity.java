@@ -11,11 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.login.LoginAutoActivity;
@@ -247,15 +247,15 @@ public class SettingsActivity extends BaseActivity {
                 @Override
                 protected void OnMoreClick(View view) {
                     if (null == qrcodeBitmap) {
-                        Toast.makeText(SettingsActivity.this,"保存图片不存在",Toast.LENGTH_LONG).show();
+                        ToastUtils.show("保存图片不存在");
                         return;
                     }
                     String fileName = "qr_"+System.currentTimeMillis() + ".jpg";
                     boolean isSaveSuccess = ImageUtil.saveImageToGallery(SettingsActivity.this, qrcodeBitmap,fileName);
                     if (isSaveSuccess) {
-                        Toast.makeText(SettingsActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+                        ToastUtils.show("保存成功");
                     } else {
-                        Toast.makeText(SettingsActivity.this, "保存失败", Toast.LENGTH_LONG).show();
+                        ToastUtils.show("保存失败");
                     }
 
                 }
@@ -322,38 +322,5 @@ public class SettingsActivity extends BaseActivity {
 
             }
         });
-//        RequestInfo reques = new RequestInfo();
-//        reques.context = getContext();
-//        reques.reqUrl = HttpConfig.HOST+HttpConfig.INTERFACE_GET_PARAMETER;
-//        HashMap<String,Object> dataMap = new HashMap<>();
-//        dataMap.put("type",1);
-//        reques.reqDataMap = dataMap;
-//        reques.parser = new ParameterDataParser();
-//        reques.handler = new Handler(){
-//            @Override
-//            public void handleMessage(Message msg) {
-//                ResponseInfo resInfo = (ResponseInfo)msg.obj;
-//                if (null != itemCallback ){
-//                    WaitDialog.dismiss();
-//                }
-//                if (resInfo.status ==1){
-//                    mParamet = (SystemParam) resInfo.responseData;
-//                    if (null != itemCallback){
-//                        itemCallback.onItemCallback(0,mParamet);
-//                    }
-//                }else {
-//                    Toast.makeText(getContext(),resInfo.msg,Toast.LENGTH_SHORT).show();
-//                }
-//                super.handleMessage(msg);
-//            }
-//        };
-//        ResponseCallback callback = new ResponseCallback(reques);
-//        ReqUtil.getInstance().setReqInfo(reques);
-//        ReqUtil.getInstance().requestPostJSON(callback);
     }
-
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//    }
 }

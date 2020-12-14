@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +15,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.model.OilStationBean;
@@ -225,7 +225,7 @@ public class OilStationActivity extends BaseActivity {
                             @Override
                             public void onChanged(String s) {
                                 if (StringUtil.isEmpty(s)){
-                                    Toast.makeText(OilStationActivity.this,"未获取到支付信息",Toast.LENGTH_LONG).show();
+                                    ToastUtils.show("未获取到支付信息");
                                     return;
                                 }
                                 Intent intent = new Intent(OilStationActivity.this, WebViewActivity.class);

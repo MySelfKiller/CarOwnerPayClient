@@ -16,9 +16,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
-import com.kayu.car_owner_pay.activity.login.LoginActivity;
 import com.kayu.car_owner_pay.data_parser.ActvInfoParse;
 import com.kayu.car_owner_pay.http.HttpConfig;
 import com.kayu.car_owner_pay.http.ReqUtil;
@@ -181,10 +181,10 @@ public class ActivationActivity extends BaseActivity {
                 WaitDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
-                    Toast.makeText(ActivationActivity.this,"验证码发送成功",Toast.LENGTH_SHORT).show();
+                    ToastUtils.show("验证码发送成功");
                 }else {
                     timer.clear();
-                    Toast.makeText(ActivationActivity.this,resInfo.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 super.handleMessage(msg);
             }
@@ -264,15 +264,15 @@ public class ActivationActivity extends BaseActivity {
                 if (resInfo.status ==1 ){
                     ActivationCard actvInfo = (ActivationCard) resInfo.responseData;
                     if (null != actvInfo){
-                        card_num_et.setText(actvInfo.no);
-                        code_et.setText(actvInfo.code);
+                        String no = actvInfo.no;
+                        String hidNO = no.replaceAll("(\\d{3})\\d{4}(\\d{4})","$1****$2");
+                        String hidCode = actvInfo.code;
+                        card_num_et.setText(hidNO);
+                        code_et.setText(hidCode.replaceAll(actvInfo.code.substring(3),"***"));
 
-                    }else {
-                        Toast.makeText(ActivationActivity.this,"手机号码不存在",Toast.LENGTH_SHORT).show();
                     }
-                }else {
-                    Toast.makeText(ActivationActivity.this,resInfo.msg,Toast.LENGTH_SHORT).show();
                 }
+                ToastUtils.show(resInfo.msg);
                 super.handleMessage(msg);
             }
         };

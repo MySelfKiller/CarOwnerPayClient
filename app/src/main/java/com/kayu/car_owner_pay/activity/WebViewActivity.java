@@ -37,12 +37,12 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.R;
 import com.kayu.utils.AppUtil;
 import com.kayu.utils.Constants;
@@ -381,7 +381,7 @@ public class WebViewActivity extends AppCompatActivity {
 //                        }
                         // 防止没有安装的情况
                         e.printStackTrace();
-                        Toast.makeText(WebViewActivity.this, "未安装相应的客户端", Toast.LENGTH_LONG).show();
+                        ToastUtils.show("未安装相应的客户端");
                     }
 
                     return true;

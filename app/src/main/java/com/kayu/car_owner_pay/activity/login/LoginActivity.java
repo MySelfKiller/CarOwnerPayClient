@@ -13,20 +13,18 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
-import com.kayu.car_owner_pay.activity.ActivationActivity;
 import com.kayu.car_owner_pay.activity.AppManager;
 import com.kayu.car_owner_pay.activity.BaseActivity;
 import com.kayu.car_owner_pay.activity.MainActivity;
@@ -434,7 +432,7 @@ public class LoginActivity extends BaseActivity {
                         saveLogin(user);
                     }
                 }else {
-                    Toast.makeText(LoginActivity.this,resInfo.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 super.handleMessage(msg);
             }
@@ -476,10 +474,10 @@ public class LoginActivity extends BaseActivity {
                 WaitDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
-                    Toast.makeText(LoginActivity.this,"验证码发送成功",Toast.LENGTH_SHORT).show();
+                    ToastUtils.show("验证码发送成功");
                 }else {
                     timer.clear();
-                    Toast.makeText(LoginActivity.this,resInfo.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 super.handleMessage(msg);
             }
@@ -489,23 +487,4 @@ public class LoginActivity extends BaseActivity {
         ReqUtil.getInstance().setReqInfo(reqInfo);
         ReqUtil.getInstance().requestGetJSON(callback);
     }
-
-//    //记录用户首次点击返回键的时间
-//    private long firstTime=0;
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK){
-//
-//            long secondTime=System.currentTimeMillis();
-//            if(secondTime-firstTime>2000){
-//                Toast.makeText(LoginActivity.this,"再按一次退出应用",Toast.LENGTH_SHORT).show();
-//                firstTime=secondTime;
-//                return true;
-//            }else{
-//                System.exit(0);
-//            }
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
-
 }

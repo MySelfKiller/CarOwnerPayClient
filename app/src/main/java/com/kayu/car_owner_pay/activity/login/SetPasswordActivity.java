@@ -10,10 +10,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.BaseActivity;
 import com.kayu.car_owner_pay.http.HttpConfig;
@@ -129,24 +129,9 @@ public class SetPasswordActivity extends BaseActivity {
                 WaitDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
-//                    if (isSetPwd){
-//                        SharedPreferences sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
-//                        String jsonUser = sp.getString(Constants.userInfo,"");
-//                        UserBean mUser = GsonHelper.fromJson(jsonUser, UserBean.class);
-//                        mUser.initPwd =0;
-//                        SharedPreferences.Editor editor = sp.edit();
-//                        editor.putBoolean(Constants.isSetPsd,true);
-//                        editor.putString(Constants.userInfo, GsonHelper.toJsonString(mUser));
-//                        editor.apply();
-//                        editor.commit();
-//                        AppManager.getAppManager().finishAllActivity();
-//                        startActivity(new Intent(SetPasswordActivity.this, MainActivity.class));
-//                    }else {
-//                        Toast.makeText(SetPasswordActivity.this,"密码修改成功",Toast.LENGTH_SHORT).show();
-//                    }
                     finish();
                 }else {
-                    Toast.makeText(SetPasswordActivity.this,resInfo.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 super.handleMessage(msg);
             }
@@ -165,7 +150,7 @@ public class SetPasswordActivity extends BaseActivity {
             if (isSetPwd){
                 long secondTime=System.currentTimeMillis();
                 if(secondTime-firstTime>2000){
-                    Toast.makeText(SetPasswordActivity.this,"再按一次退出应用",Toast.LENGTH_SHORT).show();
+                    ToastUtils.show("再按一次退出应用");
                     firstTime=secondTime;
                     return true;
                 }else{

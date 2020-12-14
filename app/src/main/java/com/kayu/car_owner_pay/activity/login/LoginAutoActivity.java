@@ -12,7 +12,6 @@ import android.os.Message;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -20,14 +19,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.cardview.widget.CardView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.ActivationActivity;
@@ -252,7 +250,7 @@ public class LoginAutoActivity extends BaseActivity {
                         }
                     }
                 } else {
-                    Toast.makeText(LoginAutoActivity.this, resInfo.msg, Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 super.handleMessage(msg);
             }
@@ -289,8 +287,6 @@ public class LoginAutoActivity extends BaseActivity {
                 if (JVerificationInterface.isInitSuccess()) {
                     // 判断当前的手机网络环境是否可以使用认证。
                     if (!JVerificationInterface.checkVerifyEnable(LoginAutoActivity.this)) {
-//                        Toast.makeText(LoginAutoActivity.this, "[2016],msg = 当前网络环境不支持认证", Toast.LENGTH_SHORT).show();
-                        Toast.makeText(LoginAutoActivity.this, "当前网络环境不支持认证", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginAutoActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
@@ -423,7 +419,7 @@ public class LoginAutoActivity extends BaseActivity {
                     });
 
                 } else {
-                    Toast.makeText(LoginAutoActivity.this, "极光 SDK 尚未初始化成功～！", Toast.LENGTH_SHORT).show();
+                    ToastUtils.show("尚未初始化成功～！");
                 }
             }
 
@@ -492,7 +488,7 @@ public class LoginAutoActivity extends BaseActivity {
                         }
                     }
                 }else {
-                    Toast.makeText(LoginAutoActivity.this,resInfo.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 super.handleMessage(msg);
             }
@@ -521,7 +517,7 @@ public class LoginAutoActivity extends BaseActivity {
 
             long secondTime = System.currentTimeMillis();
             if (secondTime - firstTime > 2000) {
-                Toast.makeText(LoginAutoActivity.this, "再按一次退出应用", Toast.LENGTH_SHORT).show();
+                ToastUtils.show("再按一次退出应用");
                 firstTime = secondTime;
                 return true;
             } else {
@@ -621,13 +617,11 @@ public class LoginAutoActivity extends BaseActivity {
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                JShareInterface.authorize(Wechat.Name, mAuthListener);
                 wxShare = new WXShare(LoginAutoActivity.this);
                 wxShare.register();
                 wxShare.getAuth(new ItemCallback() {
                     @Override
                     public void onItemCallback(int position, Object obj) {
-//                        Toast.makeText(LoginAutoActivity.this,"微信token"+(String)obj,Toast.LENGTH_SHORT).show();
                         reqSignIn((String)obj);
                     }
 
@@ -647,7 +641,6 @@ public class LoginAutoActivity extends BaseActivity {
 
         linearLayout.addView(btnWechat,btnParam);
         linearLayout.addView(textView);
-//        layoutLoginGroup.addView(btnXinlang,btnParam);
         uiConfigBuilder.addCustomView(linearLayout, false, new JVerifyUIClickCallback() {
             @Override
             public void onClicked(Context context, View view) {
@@ -656,7 +649,6 @@ public class LoginAutoActivity extends BaseActivity {
                 wxShare.getAuth(new ItemCallback() {
                     @Override
                     public void onItemCallback(int position, Object obj) {
-//                        Toast.makeText(LoginAutoActivity.this,"微信token"+(String)obj,Toast.LENGTH_SHORT).show();
                         reqSignIn((String)obj);
                     }
 
@@ -668,15 +660,6 @@ public class LoginAutoActivity extends BaseActivity {
             }
         });
 
-//
-//        final View progress_lay = LayoutInflater.from(getApplicationContext()).inflate(R.layout.login_auto_prograss,null, false);
-//        auto_progress = progress_lay.findViewById(R.id.auto_progress);
-//        uiConfigBuilder.addCustomView(progress_lay,false, new JVerifyUIClickCallback() {
-//            @Override
-//            public void onClicked(Context context, View view) {
-//
-//            }
-//        });
         return uiConfigBuilder.build();
     }
 

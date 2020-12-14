@@ -5,13 +5,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.data_parser.BannerDataParse;
 import com.kayu.car_owner_pay.data_parser.CategoryDataParse;
 import com.kayu.car_owner_pay.data_parser.ParamOilDataParser;
@@ -98,7 +98,7 @@ public class MainViewModel extends ViewModel {
                         editor.commit();
                     }
                 }else {
-                    Toast.makeText(context,resInfo.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 userLiveData.setValue(userBean);
                 super.handleMessage(msg);
@@ -135,7 +135,7 @@ public class MainViewModel extends ViewModel {
                 if (response.status == 1) {
                     payUrl = (String) response.responseData;
                 } else {
-                    Toast.makeText(context,response.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(response.msg);
                 }
                 payUrlData.setValue(payUrl);
                 super.handleMessage(msg);
@@ -171,7 +171,7 @@ public class MainViewModel extends ViewModel {
                 if (response.status == 1) {
                     parameter = (String) response.responseData;
                 } else {
-                    Toast.makeText(context,response.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(response.msg);
                 }
                 reminderLiveData.setValue(parameter);
                 super.handleMessage(msg);
@@ -207,7 +207,7 @@ public class MainViewModel extends ViewModel {
                 if (response.status == 1) {
                     systemParam = (SystemParam) response.responseData;
                 } else {
-                    Toast.makeText(context,response.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(response.msg);
                 }
                 parameterLiveData.setValue(systemParam);
                 super.handleMessage(msg);
@@ -237,7 +237,7 @@ public class MainViewModel extends ViewModel {
                 if (response.status == 1) {
                     systemParam = (SystemParam) response.responseData;
                 } else {
-                    Toast.makeText(context,response.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(response.msg);
                 }
                 parameterLiveData.setValue(systemParam);
                 super.handleMessage(msg);
@@ -274,7 +274,7 @@ public class MainViewModel extends ViewModel {
                 if (response.status == 1) {
                     stationBean = (OilStationBean) response.responseData;
                 } else {
-                    Toast.makeText(context,response.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(response.msg);
                 }
                 oilStationData.setValue(stationBean);
                 super.handleMessage(msg);
@@ -312,7 +312,7 @@ public class MainViewModel extends ViewModel {
                 if (response.status == 1) {
                     stationBean = (RefundInfo) response.responseData;
                 } else {
-                    Toast.makeText(context,response.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(response.msg);
                 }
                 refundInfoData.setValue(stationBean);
                 super.handleMessage(msg);
@@ -373,7 +373,7 @@ public class MainViewModel extends ViewModel {
                 if (response.status == 1) {
                     stationBean = (WashOrderDetailBean) response.responseData;
                 } else {
-                    Toast.makeText(context,response.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(response.msg);
                 }
                 washOrderDetailData.setValue(stationBean);
                 super.handleMessage(msg);
@@ -411,7 +411,7 @@ public class MainViewModel extends ViewModel {
                 if (response.status == 1) {
                     stationBean = (WashStationDetailBean) response.responseData;
                 } else {
-                    Toast.makeText(context,response.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(response.msg);
                 }
                 washStoreData.setValue(stationBean);
                 super.handleMessage(msg);
@@ -443,7 +443,7 @@ public class MainViewModel extends ViewModel {
                 if (response.status == 1) {
                     stationBeans = (ParamOilBean) response.responseData;
                 } else {
-                    Toast.makeText(context,response.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(response.msg);
                 }
                 paramOilData.setValue(stationBeans);
                 super.handleMessage(msg);
@@ -475,7 +475,7 @@ public class MainViewModel extends ViewModel {
                 if (response.status == 1) {
                     stationBeans = (ParamWashBean) response.responseData;
                 } else {
-                    Toast.makeText(context,response.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(response.msg);
                 }
                 paramWashData.postValue(stationBeans);
                 super.handleMessage(msg);
@@ -509,7 +509,7 @@ public class MainViewModel extends ViewModel {
                 if (response.status == 1) {
                     stationBeans = (List<OilStationBean>) response.responseData;
                 } else {
-                    Toast.makeText(context,response.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(response.msg);
                 }
                 stationListData.postValue(stationBeans);
                 super.handleMessage(msg);
@@ -542,7 +542,7 @@ public class MainViewModel extends ViewModel {
                 if (response.status == 1) {
                     stationBeans = (List<WashStationBean>) response.responseData;
                 } else {
-                    Toast.makeText(context,response.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(response.msg);
                 }
                 washStationListData.postValue(stationBeans);
                 super.handleMessage(msg);
@@ -579,7 +579,7 @@ public class MainViewModel extends ViewModel {
                 if (resInfo.status ==1 ){
                     myTeamData = (List<BannerBean>) resInfo.responseData;
                 }else {
-                    Toast.makeText(mContext,resInfo.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 bannerListData.setValue(myTeamData);
                 super.handleMessage(msg);
@@ -617,7 +617,7 @@ public class MainViewModel extends ViewModel {
                 if (resInfo.status ==1 ){
                     data = (List<String>) resInfo.responseData;
                 }else {
-                    Toast.makeText(mContext,resInfo.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 notifyListLiveData.setValue(data);
                 super.handleMessage(msg);
@@ -654,7 +654,7 @@ public class MainViewModel extends ViewModel {
                 if (resInfo.status ==1 ){
                     data = (Integer) resInfo.responseData;
                 }else {
-                    Toast.makeText(mContext,resInfo.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 notifyNumLiveData.setValue(data);
                 super.handleMessage(msg);
@@ -694,7 +694,7 @@ public class MainViewModel extends ViewModel {
                     myTeamData = (List<List<CategoryBean>>) resInfo.responseData;
 
                 }else {
-                    Toast.makeText(mContext,resInfo.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 categoryListData.setValue(myTeamData);
                 super.handleMessage(msg);
