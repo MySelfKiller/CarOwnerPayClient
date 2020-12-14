@@ -5,26 +5,17 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
-import android.text.Editable;
 import android.text.Html;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.text.TextWatcher;
-import android.text.method.PasswordTransformationMethod;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,17 +24,18 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.cardview.widget.CardView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.cmic.sso.sdk.widget.LoadingImageView;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.activity.ActivationActivity;
 import com.kayu.car_owner_pay.activity.AppManager;
 import com.kayu.car_owner_pay.activity.BaseActivity;
 import com.kayu.car_owner_pay.activity.MainActivity;
 import com.kayu.car_owner_pay.activity.MainViewModel;
+import com.kayu.car_owner_pay.activity.OrderTrackingActivity;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
 import com.kayu.car_owner_pay.http.HttpConfig;
 import com.kayu.car_owner_pay.http.ReqUtil;
@@ -51,22 +43,15 @@ import com.kayu.car_owner_pay.http.RequestInfo;
 import com.kayu.car_owner_pay.http.ResponseCallback;
 import com.kayu.car_owner_pay.http.ResponseInfo;
 import com.kayu.car_owner_pay.http.parser.LoginDataParse;
-import com.kayu.car_owner_pay.http.parser.NormalParse;
 import com.kayu.car_owner_pay.model.LoginInfo;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.wxapi.WXShare;
-import com.kayu.form_verify.Form;
-import com.kayu.form_verify.Validate;
-import com.kayu.form_verify.validator.PhoneValidator;
 import com.kayu.utils.Constants;
 import com.kayu.utils.GsonHelper;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
-import com.kayu.utils.SMSCountDownTimer;
-import com.kayu.utils.ScreenUtils;
 import com.kayu.utils.StringUtil;
-import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.permission.EasyPermissions;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
@@ -78,7 +63,6 @@ import com.kongzue.dialog.v3.WaitDialog;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import cn.jiguang.verifysdk.api.AuthPageEventListener;
 import cn.jiguang.verifysdk.api.JVerificationInterface;
@@ -91,23 +75,14 @@ public class LoginAutoActivity extends BaseActivity {
     //    private EditText phone_number;
 //    private EditText sms_code;
     private AppCompatButton ask_btn, activation_btn;
-    //    private SMSCountDownTimer timer;
-//    private TextView send_sms;
-//    private TextView password_target;
-//    private LinearLayout login_send_sms_lay;
-//    private LinearLayout password_target_lay;
-//    private LinearLayout login_sms_target_lay;
-//    private TextView login_sms_target;
-//    private TextView login_forget_password;
-//    private boolean isSMSLogin = true;
     private MainViewModel mViewModel;
-    private TextView user_agreement;
-    //    private TextView user_privacy;
+    private TextView user_agreement,order_list_tv;
     private SharedPreferences sp;
     private boolean isFirstShow;
     String[] titles;//协议标题
     String[] urls;//协议连接
     private WXShare wxShare;
+    private LinearLayout auto_progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +97,35 @@ public class LoginAutoActivity extends BaseActivity {
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         ask_btn = findViewById(R.id.login_auto_btn);
         activation_btn = findViewById(R.id.login_activation_btn);
+        order_list_tv = findViewById(R.id.login_order_list_tv);
+        auto_progress = findViewById(R.id.login_auto_progress);
+        auto_progress.setClickable(false);
+        auto_progress.setFocusable(false);
+
+        order_list_tv.setOnClickListener(new NoMoreClickListener() {
+            @Override
+            protected void OnMoreClick(View view) {
+                Intent intent = new Intent(LoginAutoActivity.this, OrderTrackingActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            protected void OnMoreErrorClick() {
+
+            }
+        });
+        activation_btn.setOnClickListener(new NoMoreClickListener() {
+            @Override
+            protected void OnMoreClick(View view) {
+                Intent intent = new Intent(LoginAutoActivity.this, ActivationActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            protected void OnMoreErrorClick() {
+
+            }
+        });
 
         ask_btn.setOnClickListener(new NoMoreClickListener() {
             @Override
@@ -216,7 +220,7 @@ public class LoginAutoActivity extends BaseActivity {
 
     @SuppressLint("HandlerLeak")
     private void sendSubRequest(String loginToken) {
-        WaitDialog.show(LoginAutoActivity.this, "登录...");
+//        WaitDialog.show(LoginAutoActivity.this, "登录...");
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = LoginAutoActivity.this;
         reqInfo.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_LOGIN;
@@ -228,24 +232,24 @@ public class LoginAutoActivity extends BaseActivity {
         reqInfo.handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                WaitDialog.dismiss();
+//                WaitDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo) msg.obj;
                 if (resInfo.status == 1) {
                     LoginInfo user = (LoginInfo) resInfo.responseData;
                     if (null != user) {
-                        SharedPreferences.Editor editor = sp.edit();
-                        editor.putBoolean(Constants.isLogin, true);
-                        editor.putString(Constants.token, user.token);
-                        editor.putBoolean(Constants.isSetPsd, true);
-                        editor.putString(Constants.login_info, GsonHelper.toJsonString(user));
-                        editor.apply();
-                        editor.commit();
-                        KWApplication.getInstance().token = user.token;
-                        AppManager.getAppManager().finishAllActivity();
-                        startActivity(new Intent(LoginAutoActivity.this, MainActivity.class));
-                        finish();
-//                        }
+                        if (StringUtil.isEmpty(user.lastLoginTime)) {
+                            auto_progress.setVisibility(View.VISIBLE);
+                            auto_progress.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    auto_progress.setVisibility(View.GONE);
+                                    saveLogin(user);
+                                }
+                            },1000*2);
 
+                        }else {
+                            saveLogin(user);
+                        }
                     }
                 } else {
                     Toast.makeText(LoginAutoActivity.this, resInfo.msg, Toast.LENGTH_SHORT).show();
@@ -258,6 +262,20 @@ public class LoginAutoActivity extends BaseActivity {
         ReqUtil.getInstance().setReqInfo(reqInfo);
         ReqUtil.getInstance().requestPostJSON(callback);
 
+    }
+
+    private void saveLogin(LoginInfo user){
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(Constants.isLogin, true);
+        editor.putString(Constants.token, user.token);
+        editor.putBoolean(Constants.isSetPsd, true);
+        editor.putString(Constants.login_info, GsonHelper.toJsonString(user));
+        editor.apply();
+        editor.commit();
+        KWApplication.getInstance().token = user.token;
+        AppManager.getAppManager().finishAllActivity();
+        startActivity(new Intent(LoginAutoActivity.this, MainActivity.class));
+        finish();
     }
 
     public void permissionsCheck() {
@@ -381,11 +399,12 @@ public class LoginAutoActivity extends BaseActivity {
 
 //                    JVerificationInterface.setCustomUIWithConfig(uiConfig);
                     JVerificationInterface.setCustomUIWithConfig(getFullScreenPortraitConfig());
-                    JVerificationInterface.loginAuth(LoginAutoActivity.this, new VerifyListener() {
+                    JVerificationInterface.loginAuth(LoginAutoActivity.this,true, new VerifyListener() {
                         @Override
                         public void onResult(int code, String content, String operator) {
                             WaitDialog.dismiss();
                             if (code == 6000) {
+//                                JVerificationInterface.dismissLoginAuthActivity();
                                 LogUtil.e("JPush", "code=" + code + ", token=" + content + " ,operator=" + operator);
                                 sendSubRequest(content);
                             } else if (code == 6001) {
@@ -394,6 +413,12 @@ public class LoginAutoActivity extends BaseActivity {
                             } else {
                                 LogUtil.e("JPush", "code=" + code + ", content=" + content + " ,operator=" + operator);
                             }
+                        }
+                    },new AuthPageEventListener(){
+
+                        @Override
+                        public void onEvent(int i, String s) {
+                            LogUtil.e("JPush", "onEvent---code=" + i + ", msg=" + s);
                         }
                     });
 
@@ -452,34 +477,19 @@ public class LoginAutoActivity extends BaseActivity {
                 if (resInfo.status ==1 ){
                     LoginInfo user = (LoginInfo) resInfo.responseData;
                     if (null != user){
+                        if (StringUtil.isEmpty(user.lastLoginTime)) {
+                            auto_progress.setVisibility(View.VISIBLE);
+                            auto_progress.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    auto_progress.setVisibility(View.GONE);
+                                    saveLogin(user);
+                                }
+                            },1000*2);
 
-                        SharedPreferences.Editor editor = sp.edit();
-//                        KWApplication.getInstance().sign = user.sign;
-//                        if (user.initPwd == 1){//是否需要设定密码 0:否 1:是
-//                            editor.putBoolean(Constants.isLogin,true);
-//                            editor.putString(Constants.sign,user.sign);
-//                            editor.putBoolean(Constants.isSetPsd,false);
-//                            editor.putString(Constants.userInfo, GsonHelper.toJsonString(user));
-//                            editor.apply();
-//                            editor.commit();
-//                            Intent intent = new Intent(LoginActivity.this, SetPasswordActivity.class);
-//                            intent.putExtra("title","设置密码");
-//                            intent.putExtra("back","");
-//                            intent.putExtra("isSetPwd",true);
-//                            startActivity(intent);
-//                        }else {
-                        editor.putBoolean(Constants.isLogin,true);
-                        editor.putString(Constants.token,user.token);
-                        editor.putBoolean(Constants.isSetPsd,true);
-                        editor.putString(Constants.login_info, GsonHelper.toJsonString(user));
-                        editor.apply();
-                        editor.commit();
-                        KWApplication.getInstance().token = user.token;
-                        AppManager.getAppManager().finishAllActivity();
-                        finish();
-                        startActivity(new Intent(LoginAutoActivity.this, MainActivity.class));
-//                        }
-
+                        }else {
+                            saveLogin(user);
+                        }
                     }
                 }else {
                     Toast.makeText(LoginAutoActivity.this,resInfo.msg,Toast.LENGTH_SHORT).show();
@@ -525,20 +535,6 @@ public class LoginAutoActivity extends BaseActivity {
     private void toNativeVerifyActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-    }
-
-    private int dp2Pix(Context context, float dp) {
-        try {
-            float density = context.getResources().getDisplayMetrics().density;
-            return (int) (dp * density + 0.5F);
-        } catch (Exception e) {
-            return (int) dp;
-        }
-    }
-
-    private int px2dip(Context context, int pxValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (pxValue / scale + 0.5f);
     }
 
     private JVerifyUIConfig getFullScreenPortraitConfig(){
@@ -673,9 +669,9 @@ public class LoginAutoActivity extends BaseActivity {
         });
 
 //
-//        final View dialogViewTitle = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialog_login_title,null, false);
-//
-//        uiConfigBuilder.addNavControlView(dialogViewTitle, new JVerifyUIClickCallback() {
+//        final View progress_lay = LayoutInflater.from(getApplicationContext()).inflate(R.layout.login_auto_prograss,null, false);
+//        auto_progress = progress_lay.findViewById(R.id.auto_progress);
+//        uiConfigBuilder.addCustomView(progress_lay,false, new JVerifyUIClickCallback() {
 //            @Override
 //            public void onClicked(Context context, View view) {
 //

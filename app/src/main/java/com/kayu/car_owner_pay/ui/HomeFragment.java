@@ -160,6 +160,7 @@ public class HomeFragment extends Fragment {
                     return;
                 isRefresh = true;
                 pageIndex = 1;
+                initView();
                 initListView();
 
             }
@@ -226,7 +227,9 @@ public class HomeFragment extends Fragment {
         super.onStart();
 //        LogUtil.e("HomeFragment----","----onStart---");
         if (!isCreated) {
-            initView();
+            if (!mHasLoadedOnce) {
+                initView();
+            }
 //            LogUtil.e("HomeFragment----","----onStart------isCreated");
             LocationManagerUtil.getSelf().setLocationListener(new LocationCallback() {
                 @Override

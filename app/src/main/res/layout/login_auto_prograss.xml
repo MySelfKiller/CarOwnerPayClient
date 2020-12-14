@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:background="@color/dark_grey_tra_2">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/auto_progress"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/dp_8"
+        app:cardElevation="@dimen/dp_0">
+        <pl.droidsonroids.gif.GifImageView
+            android:layout_width="@dimen/dp_160"
+            android:layout_height="@dimen/dp_85"
+
+            android:src="@drawable/login_auto_progress"
+            android:scaleType="fitXY"/>
+
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

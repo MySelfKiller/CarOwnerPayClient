@@ -560,8 +560,8 @@ public class MainViewModel extends ViewModel {
     public LiveData<List<BannerBean>> getBannerList(Context mContext){
         if (null == bannerListData) {
             bannerListData = new MutableLiveData<List<BannerBean>>();
-            loadBanners(mContext);
         }
+        loadBanners(mContext);
         return bannerListData;
     }
 
@@ -598,8 +598,8 @@ public class MainViewModel extends ViewModel {
     public LiveData<List<String>> getNotifyList(Context mContext){
         if (null == notifyListLiveData) {
             notifyListLiveData = new MutableLiveData<List<String>>();
-            loadNotifyList(mContext);
         }
+        loadNotifyList(mContext);
         return notifyListLiveData;
     }
 
@@ -635,8 +635,8 @@ public class MainViewModel extends ViewModel {
     public LiveData<Integer> getNotifyNum(Context mContext){
         if (null == notifyNumLiveData) {
             notifyNumLiveData = new MutableLiveData<Integer>();
-            loadNotifyNum(mContext);
         }
+        loadNotifyNum(mContext);
         return notifyNumLiveData;
     }
 
@@ -674,8 +674,8 @@ public class MainViewModel extends ViewModel {
     public LiveData<List<List<CategoryBean>>> getCategoryList(Context mContext) {
         if (null == categoryListData) {
             categoryListData = new MutableLiveData<>();
-            loadCategorys(mContext);
         }
+        loadCategorys(mContext);
         return categoryListData;
     }
 

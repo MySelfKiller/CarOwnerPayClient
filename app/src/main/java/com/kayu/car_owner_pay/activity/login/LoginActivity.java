@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.activity.ActivationActivity;
 import com.kayu.car_owner_pay.activity.AppManager;
 import com.kayu.car_owner_pay.activity.BaseActivity;
 import com.kayu.car_owner_pay.activity.MainActivity;
@@ -74,6 +75,7 @@ public class LoginActivity extends BaseActivity {
     private TextView user_privacy;
     private SharedPreferences sp;
     private boolean isFirstShow;
+    private LinearLayout auto_progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +102,10 @@ public class LoginActivity extends BaseActivity {
         password_target_lay = findViewById(R.id.login_password_target_lay);
         password_target = findViewById(R.id.login_password_target);
         login_sms_target = findViewById(R.id.login_sms_target);
+        auto_progress = findViewById(R.id.login_auto_progress);
+        auto_progress.setClickable(false);
+        auto_progress.setFocusable(false);
+
         login_sms_target.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
@@ -414,35 +420,18 @@ public class LoginActivity extends BaseActivity {
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
                     LoginInfo user = (LoginInfo) resInfo.responseData;
-                    if (null != user){
+                    if (StringUtil.isEmpty(user.lastLoginTime)) {
+                        auto_progress.setVisibility(View.VISIBLE);
+                        auto_progress.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                auto_progress.setVisibility(View.GONE);
+                                saveLogin(user);
+                            }
+                        },1000*2);
 
-                        SharedPreferences.Editor editor = sp.edit();
-//                        KWApplication.getInstance().sign = user.sign;
-//                        if (user.initPwd == 1){//是否需要设定密码 0:否 1:是
-//                            editor.putBoolean(Constants.isLogin,true);
-//                            editor.putString(Constants.sign,user.sign);
-//                            editor.putBoolean(Constants.isSetPsd,false);
-//                            editor.putString(Constants.userInfo, GsonHelper.toJsonString(user));
-//                            editor.apply();
-//                            editor.commit();
-//                            Intent intent = new Intent(LoginActivity.this, SetPasswordActivity.class);
-//                            intent.putExtra("title","设置密码");
-//                            intent.putExtra("back","");
-//                            intent.putExtra("isSetPwd",true);
-//                            startActivity(intent);
-//                        }else {
-                            editor.putBoolean(Constants.isLogin,true);
-                            editor.putString(Constants.token,user.token);
-                            editor.putBoolean(Constants.isSetPsd,true);
-                            editor.putString(Constants.login_info, GsonHelper.toJsonString(user));
-                            editor.apply();
-                            editor.commit();
-                            KWApplication.getInstance().token = user.token;
-                            AppManager.getAppManager().finishAllActivity();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            finish();
-//                        }
-
+                    }else {
+                        saveLogin(user);
                     }
                 }else {
                     Toast.makeText(LoginActivity.this,resInfo.msg,Toast.LENGTH_SHORT).show();
@@ -455,6 +444,20 @@ public class LoginActivity extends BaseActivity {
         ReqUtil.getInstance().setReqInfo(reqInfo);
         ReqUtil.getInstance().requestPostJSON(callback);
 
+    }
+
+    private void saveLogin(LoginInfo user){
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(Constants.isLogin, true);
+        editor.putString(Constants.token, user.token);
+        editor.putBoolean(Constants.isSetPsd, true);
+        editor.putString(Constants.login_info, GsonHelper.toJsonString(user));
+        editor.apply();
+        editor.commit();
+        KWApplication.getInstance().token = user.token;
+        AppManager.getAppManager().finishAllActivity();
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        finish();
     }
 
     @SuppressLint("HandlerLeak")

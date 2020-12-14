@@ -16,15 +16,10 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 用于访问网络，网络定位需要上网 -->
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
-    <!-- Required -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- Required -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-    <uses-permission android:name="android.permission.GET_TASKS" />
-
-    <!-- Optional -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.GET_TASKS" /> <!-- Optional -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 用于开启 debug 版本的应用在6.0 系统上 层叠窗口权限 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -46,6 +41,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
+        <activity android:name=".activity.OrderDetailsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            tools:ignore="Instantiatable,LockedOrientationActivity"/>
+        <activity android:name=".activity.OrderTrackingActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            tools:ignore="Instantiatable,LockedOrientationActivity"/>
+
         <receiver
             android:name=".wxapi.AppRegister"
             android:permission="com.tencent.mm.plugin.permission.SEND">
@@ -69,7 +73,7 @@
 
         <service android:name="com.amap.api.location.APSService" />
 
-        <activity android:name=".activity.WebViewActivity"/>
+        <activity android:name=".activity.WebViewActivity" />
         <activity
             android:name=".activity.ActivationActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -169,31 +173,23 @@
             android:name=".activity.login.LoginAutoActivity"
             android:screenOrientation="unspecified"
             tools:ignore="Instantiatable,LockedOrientationActivity" />
-
         <activity
             android:name="com.cmic.sso.sdk.activity.OAuthActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="unspecified"
-            android:launchMode="singleTop">
-        </activity>
-        <!-- required -->
+            android:launchMode="singleTop"
+            android:screenOrientation="unspecified" /> <!-- required -->
         <activity
             android:name="com.cmic.sso.sdk.activity.LoginAuthActivity"
-            android:theme="@style/ActivityDialogStyleaa"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTop"
             android:screenOrientation="unspecified"
-            android:launchMode="singleTop">
-        </activity>
-        <!-- Required -->
-        <activity android:name="cn.jiguang.verifysdk.CtLoginActivity"
+            android:theme="@style/ActivityDialogStyleaa" /> <!-- Required -->
+        <activity
+            android:name="cn.jiguang.verifysdk.CtLoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/ActivityDialogStyleaa"
+            android:launchMode="singleTop"
             android:screenOrientation="unspecified"
-            android:launchMode="singleTop">
-        </activity>
-
-
-        <!-- Required -->
+            android:theme="@style/ActivityDialogStyleaa" /> <!-- Required -->
         <meta-data
             android:name="JPUSH_APPKEY"
             android:value="${JPUSH_APPKEY}" /> <!-- </>值来自开发者平台取得的AppKey -->

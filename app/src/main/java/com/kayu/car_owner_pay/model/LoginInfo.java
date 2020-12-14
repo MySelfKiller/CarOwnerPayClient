@@ -19,6 +19,6 @@ public class LoginInfo {
     public String phone;
     @SerializedName("token")
     public String token;
-    @SerializedName("loatLoginTime")
-    public String loatLoginTime;
+    @SerializedName("lastLoginTime")
+    public String lastLoginTime;
 }

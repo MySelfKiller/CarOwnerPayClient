@@ -8,7 +8,10 @@ import okhttp3.MediaType;
 public class HttpConfig {
     public static final String HOST = BuildConfig.BASE_URL;
     public static final String INTERFACE_LOGIN = "api/login"; //登录
-    public static final String INTERFACE_VERIFICATION_CODE = "api/getSmsCapt/"; //短信验证码
+    public static final String INTERFACE_VERIFICATION_CODE = "api/getSmsCapt/"; //登录验证码
+    public static final String INTERFACE_ORDER_CODE = "api/aodsms?phone="; //查询订单验证码
+    public static final String INTERFACE_ORDER_DETAIL = "api/v1/ua/detail"; //查询订单详情
+    public static final String INTERFACE_ACTVINFO = "api/v1/user/actvinfo"; //查询激活卡
     public static final String INTERFACE_SET_PASSWORD = ""; //设置密码
     public static final String INTERFACE_RESET_PASSWORD = ""; //重置密码
 
