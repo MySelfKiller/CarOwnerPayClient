@@ -48,7 +48,7 @@ public class PersonalFragment extends Fragment {
     private MainViewModel mainViewModel;
     private RoundImageView user_head_img;
     private TextView user_name;
-    private TextView user_balance,web_info_tv,card_num;
+    private TextView user_balance,web_info_tv,card_num,user_tip;
     private TextView explain_content;
     private ConstraintLayout oil_order_lay,wash_order_lay, all_order_lay;
     private LinearLayout more_lay;
@@ -76,7 +76,7 @@ public class PersonalFragment extends Fragment {
         KWApplication.getInstance().loadImg(R.mipmap.ic_personal_bg,user_card_bg,new GlideRoundTransform(getContext()));
         card_num = view.findViewById(R.id.personal_card_num);
         //账户提示语
-//        explain_content = view.findViewById(R.id.personal_explain_content);
+        user_tip = view.findViewById(R.id.personal_user_tip);
         web_info_tv = view.findViewById(R.id.personal_web_info);
         income_lay = view.findViewById(R.id.personal_income_lay);
 
@@ -226,6 +226,37 @@ public class PersonalFragment extends Fragment {
                 }
                 if (null == userBean)
                     return;
+
+                mainViewModel.getUserTips(requireContext()).observe(requireActivity(), new Observer<SystemParam>() {
+                    @Override
+                    public void onChanged(SystemParam systemParam) {
+                        if (null  == systemParam)
+                            return;
+                        try {
+                            JSONObject jsonObject = new JSONObject(systemParam.content);
+                            String tipStr="";
+                            String btnStr="";
+                            if (userBean.type == 1) {
+                                JSONObject json1 = jsonObject.optJSONObject("1");
+                                tipStr = json1.getString("tip");
+                                btnStr = json1.getString("btn");
+                            } else if (userBean.type == 2) {
+                                JSONObject json2 = jsonObject.optJSONObject("2");
+                                tipStr = json2.getString("tip");
+                                btnStr = json2.getString("btn");
+                            } else if (userBean.type == 3) {
+                                JSONObject json3 = jsonObject.optJSONObject("3");
+                                tipStr = json3.getString("tip");
+                                btnStr = json3.getString("btn");
+                            }
+                            user_tip.setText(tipStr);
+                            web_info_tv.setText(btnStr);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
                 KWApplication.getInstance().loadImg(userBean.headPic,user_head_img);
                 user_name.setText(userBean.phone);
                 user_balance.setText(String.valueOf(userBean.expAmt));
@@ -244,13 +275,10 @@ public class PersonalFragment extends Fragment {
                         } else {
                             jumpUrl.append("https://www.ky808.cn/carfriend/static/cyt/index.html#/upgrade?token=");
                         }
-                        int max=100,min=1;
                         long randomNum = System.currentTimeMillis();
-                        int ran3 = (int) (randomNum%(max-min)+min);
                         jumpUrl.append(KWApplication.getInstance().token).append("&").append(randomNum);
                         Intent intent = new Intent(getContext(), WebViewActivity.class);
                         intent.putExtra("url",jumpUrl.toString());
-                        intent.putExtra("from","新手教程");
                         requireActivity().startActivity(intent);
                     }
 

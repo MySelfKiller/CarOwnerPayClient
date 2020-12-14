@@ -65,7 +65,7 @@ public class WebViewActivity extends AppCompatActivity {
     public static final String URL = "https://www.baidu.com";
     private String url;
     private String from;
-    private String titleName;
+    private String titleName = "加载中...";
     private TextView title_name;
     Map<String, String> headMap =new HashMap<>();
 
@@ -109,7 +109,7 @@ public class WebViewActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
-        titleName = intent.getStringExtra("title");
+//        titleName = intent.getStringExtra("title");
         from = intent.getStringExtra("from");
 //        title = intent.getStringExtra("title");
         findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
@@ -126,11 +126,11 @@ public class WebViewActivity extends AppCompatActivity {
         TextView back_tv = findViewById(R.id.title_back_tv);
         title_name = findViewById(R.id.title_name_tv);
 
-        if (!StringUtil.isEmpty(titleName)){
-            title_name.setText(titleName);
-        }else {
-            title_name.setText("");
-        }
+//        if (!StringUtil.isEmpty(titleName)){
+//            title_name.setText(titleName);
+//        }else {
+//        }
+        title_name.setText(titleName);
         if (StringUtil.isEmpty(from)){
             from = "返回";
         }
@@ -278,9 +278,7 @@ public class WebViewActivity extends AppCompatActivity {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
-                if (StringUtil.isEmpty(titleName)){
-                    title_name.setText(title);
-                }
+                title_name.setText(titleName);
             }
 
             @Override
@@ -390,9 +388,7 @@ public class WebViewActivity extends AppCompatActivity {
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                if (StringUtil.isEmpty(titleName)){
-                    title_name.setText(StringUtil.getTrimedString(wvWebView.getUrl()));
-                }
+                title_name.setText(titleName);
                 pbWebView.setVisibility(View.VISIBLE);
                 super.onPageStarted(view, url, favicon);
             }
@@ -400,10 +396,8 @@ public class WebViewActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 view.getSettings().setLoadsImagesAutomatically(true);
-                if (StringUtil.isEmpty(titleName)){
-                    title_name.setText(StringUtil.getTrimedString(wvWebView.getTitle()));
-                }
                 pbWebView.setVisibility(View.GONE);
+                title_name.setText(StringUtil.getTrimedString(wvWebView.getTitle()));
 
                 CookieManager cookieManager = CookieManager.getInstance();
                 String CookieStr = cookieManager.getCookie(url);

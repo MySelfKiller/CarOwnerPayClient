@@ -182,7 +182,14 @@ public class MainViewModel extends ViewModel {
     }
 
     private MutableLiveData<SystemParam> parameterLiveData;
+    private MutableLiveData<SystemParam> userTipLiveData;
 
+    public LiveData<SystemParam> getUserTips(Context context) {
+//        if (null == parameterLiveData)
+        userTipLiveData = new MutableLiveData<>();
+        loadParameter(context, 30);
+        return userTipLiveData;
+    }
     public LiveData<SystemParam> getParameter(Context context, int type) {
 //        if (null == parameterLiveData)
         parameterLiveData = new MutableLiveData<>();
@@ -209,7 +216,11 @@ public class MainViewModel extends ViewModel {
                 } else {
                     ToastUtils.show(response.msg);
                 }
-                parameterLiveData.setValue(systemParam);
+                if (type == 30) {
+                    userTipLiveData.setValue(systemParam);
+                } else {
+                    parameterLiveData.setValue(systemParam);
+                }
                 super.handleMessage(msg);
             }
         };
