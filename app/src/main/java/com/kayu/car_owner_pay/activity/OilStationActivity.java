@@ -28,7 +28,7 @@ import com.kayu.utils.ItemCallback;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
-import com.kongzue.dialog.v3.TipDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
@@ -55,9 +55,9 @@ public class OilStationActivity extends BaseActivity {
     private ProductTypeAdapter parentTypeAdapter;
 
     private String gunNo = null;//默认选中的枪号
-    private ConstraintLayout tip_lay;
-    private TextView tip_content;
-    private TextView tip_title;
+//    private ConstraintLayout tip_lay;
+//    private TextView tip_content;
+//    private TextView tip_title;
     private RefreshLayout refreshLayout;
     boolean isLoadmore = false;
     boolean isRefresh = false;
@@ -115,9 +115,9 @@ public class OilStationActivity extends BaseActivity {
         oil_price_sub1 = findViewById(R.id.station_oil_price_sub1);
         oil_price_sub2 = findViewById(R.id.station_oil_price_sub2);
         next_ask_btn = findViewById(R.id.station_next_tv);
-        tip_lay = findViewById(R.id.oil_station_tip_lay);
-        tip_title = findViewById(R.id.oil_station_tip_title);
-        tip_content = findViewById(R.id.oil_station_tip_content);
+//        tip_lay = findViewById(R.id.oil_station_tip_lay);
+//        tip_title = findViewById(R.id.oil_station_tip_title);
+//        tip_content = findViewById(R.id.oil_station_tip_content);
 
         select_oil_type_rv = findViewById(R.id.station_select_oil_type_rv);
         select_oil_rv = findViewById(R.id.station_select_oil_rv);
@@ -171,20 +171,20 @@ public class OilStationActivity extends BaseActivity {
 
     private void loadView(){
 
-        mainViewModel.getParameter(OilStationActivity.this,13).observe(OilStationActivity.this, new Observer<SystemParam>() {
-            @Override
-            public void onChanged(SystemParam systemParam) {
-                if (null != systemParam) {
-                    if (StringUtil.isEmpty(systemParam.title) || StringUtil.isEmpty(systemParam.content)) {
-                        tip_lay.setVisibility(View.GONE);
-                        return;
-                    }
-                    tip_title.setText(systemParam.title);
-                    tip_content.setText(systemParam.content.replace("#","\n"));
-                    tip_lay.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+//        mainViewModel.getParameter(OilStationActivity.this,13).observe(OilStationActivity.this, new Observer<SystemParam>() {
+//            @Override
+//            public void onChanged(SystemParam systemParam) {
+//                if (null != systemParam) {
+//                    if (StringUtil.isEmpty(systemParam.title) || StringUtil.isEmpty(systemParam.content)) {
+//                        tip_lay.setVisibility(View.GONE);
+//                        return;
+//                    }
+//                    tip_title.setText(systemParam.title);
+//                    tip_content.setText(systemParam.content.replace("#","\n"));
+//                    tip_lay.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
 
         mainViewModel.getOilStationDetail(OilStationActivity.this, gasId).observe(OilStationActivity.this, new Observer<OilStationBean>() {
 
@@ -218,7 +218,7 @@ public class OilStationActivity extends BaseActivity {
                     @Override
                     protected void OnMoreClick(View view) {
                         if (StringUtil.isEmpty(gunNo)) {
-                            TipDialog.show(OilStationActivity.this,"请选择枪号", TipDialog.TYPE.WARNING);
+                            TipGifDialog.show(OilStationActivity.this,"请选择枪号", TipGifDialog.TYPE.WARNING);
                             return;
                         }
                         mainViewModel.getPayUrl(OilStationActivity.this, gasId, Integer.parseInt(gunNo)).observe(OilStationActivity.this, new Observer<String>() {

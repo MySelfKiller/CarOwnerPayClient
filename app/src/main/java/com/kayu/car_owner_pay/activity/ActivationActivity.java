@@ -19,6 +19,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.activity.login.LoginAutoActivity;
 import com.kayu.car_owner_pay.data_parser.ActvInfoParse;
 import com.kayu.car_owner_pay.http.HttpConfig;
 import com.kayu.car_owner_pay.http.ReqUtil;
@@ -36,7 +37,7 @@ import com.kayu.utils.Constants;
 import com.kayu.utils.GsonHelper;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.SMSCountDownTimer;
-import com.kongzue.dialog.v3.WaitDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -167,7 +168,7 @@ public class ActivationActivity extends BaseActivity {
 
     @SuppressLint("HandlerLeak")
     private void sendSmsRequest() {
-        WaitDialog.show(ActivationActivity.this,"发送验证码...");
+        TipGifDialog.show(ActivationActivity.this, "发送验证码...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = ActivationActivity.this;
         reqInfo.reqUrl = HttpConfig.HOST+HttpConfig.INTERFACE_VERIFICATION_CODE;
@@ -178,7 +179,7 @@ public class ActivationActivity extends BaseActivity {
         reqInfo.handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
                     ToastUtils.show("验证码发送成功");
@@ -198,7 +199,7 @@ public class ActivationActivity extends BaseActivity {
 
     @SuppressLint("HandlerLeak")
     private void sendSubRequest() {
-        WaitDialog.show(ActivationActivity.this,"确认中...");
+        TipGifDialog.show(ActivationActivity.this, "确认中...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = ActivationActivity.this;
         reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_LOGIN;
@@ -212,7 +213,7 @@ public class ActivationActivity extends BaseActivity {
         reqInfo.handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
                     LoginInfo user = (LoginInfo) resInfo.responseData;
@@ -247,7 +248,7 @@ public class ActivationActivity extends BaseActivity {
 
     @SuppressLint("HandlerLeak")
     private void getActivInfo() {
-        WaitDialog.show(ActivationActivity.this,"查询中...");
+        TipGifDialog.show(ActivationActivity.this, "查询中...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = ActivationActivity.this;
         reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_ACTVINFO;
@@ -259,7 +260,7 @@ public class ActivationActivity extends BaseActivity {
         reqInfo.handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
                     ActivationCard actvInfo = (ActivationCard) resInfo.responseData;

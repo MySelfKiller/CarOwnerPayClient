@@ -17,6 +17,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.activity.login.SetPasswordActivity;
 import com.kayu.car_owner_pay.http.HttpConfig;
 import com.kayu.car_owner_pay.http.ReqUtil;
 import com.kayu.car_owner_pay.http.RequestInfo;
@@ -30,8 +31,7 @@ import com.kayu.utils.NoMoreClickListener;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.v3.MessageDialog;
-import com.kongzue.dialog.v3.TipDialog;
-import com.kongzue.dialog.v3.WaitDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 
 import java.util.HashMap;
 
@@ -98,7 +98,7 @@ public class ExchangeFragment extends Fragment {
     }
     @SuppressLint("HandlerLeak")
     private void sendSubRequest() {
-        WaitDialog.show((AppCompatActivity) getContext(),"请稍等...");
+        TipGifDialog.show((AppCompatActivity) getContext(), "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = getContext();
         reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_GET_EXCHANGE;
@@ -111,7 +111,7 @@ public class ExchangeFragment extends Fragment {
 
             @Override
             public void handleMessage(Message msg) {
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
                     MessageDialog.show((AppCompatActivity) getContext(),"兑换成功","","继续兑换","返回首页")
@@ -132,7 +132,7 @@ public class ExchangeFragment extends Fragment {
                                 }
                             });
                 }else {
-                    TipDialog.show((AppCompatActivity)getContext(),resInfo.msg, TipDialog.TYPE.WARNING);
+                    TipGifDialog.show((AppCompatActivity)getContext(),resInfo.msg, TipGifDialog.TYPE.WARNING);
                 }
                 super.handleMessage(msg);
             }

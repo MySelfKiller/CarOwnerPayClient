@@ -27,7 +27,7 @@ import com.kayu.form_verify.validator.NotEmptyValidator;
 import com.kayu.form_verify.validator.PhoneValidator;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.SMSCountDownTimer;
-import com.kongzue.dialog.v3.WaitDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 
 import java.util.HashMap;
 
@@ -121,7 +121,7 @@ public class ForgetPasswordActivity extends BaseActivity {
 
     @SuppressLint("HandlerLeak")
     private void reqReSetPasswrod() {
-        WaitDialog.show(ForgetPasswordActivity.this,"稍等...");
+        TipGifDialog.show(ForgetPasswordActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = ForgetPasswordActivity.this;
         reqInfo.reqUrl = HttpConfig.HOST+ HttpConfig.INTERFACE_RESET_PASSWORD;
@@ -135,7 +135,7 @@ public class ForgetPasswordActivity extends BaseActivity {
         reqInfo.handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
                     ToastUtils.show("密码已经重置成功！");
@@ -154,7 +154,7 @@ public class ForgetPasswordActivity extends BaseActivity {
 
     @SuppressLint("HandlerLeak")
     private void sendSmsRequest() {
-        WaitDialog.show(ForgetPasswordActivity.this,"稍等...");
+        TipGifDialog.show(ForgetPasswordActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = ForgetPasswordActivity.this;
         reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_VERIFICATION_CODE;
@@ -165,7 +165,7 @@ public class ForgetPasswordActivity extends BaseActivity {
         reqInfo.handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
                     ToastUtils.show("验证码发送成功");

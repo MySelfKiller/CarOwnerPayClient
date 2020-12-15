@@ -56,8 +56,7 @@ import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.v3.MessageDialog;
-import com.kongzue.dialog.v3.TipDialog;
-import com.kongzue.dialog.v3.WaitDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 
 import java.util.HashMap;
 import java.util.List;
@@ -138,11 +137,11 @@ public class LoginAutoActivity extends BaseActivity {
         });
         user_agreement = findViewById(R.id.login_user_agreement_tv);
 //        user_privacy = findViewById(R.id.login_user_privacy_tv);
-        WaitDialog.show(this, "请稍等...");
+        TipGifDialog.show(this, "请稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         mViewModel.getParameter(this, 3).observe(this, new Observer<SystemParam>() {
             @Override
             public void onChanged(SystemParam systemParam) {
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 if (null != systemParam && systemParam.type == 3) {
                     titles = systemParam.title.split("@@");
                     urls = systemParam.url.split("@@");
@@ -218,7 +217,7 @@ public class LoginAutoActivity extends BaseActivity {
 
     @SuppressLint("HandlerLeak")
     private void sendSubRequest(String loginToken) {
-//        WaitDialog.show(LoginAutoActivity.this, "登录...");
+        TipGifDialog.show(this, "请稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = LoginAutoActivity.this;
         reqInfo.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_LOGIN;
@@ -230,7 +229,7 @@ public class LoginAutoActivity extends BaseActivity {
         reqInfo.handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-//                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo) msg.obj;
                 if (resInfo.status == 1) {
                     LoginInfo user = (LoginInfo) resInfo.responseData;
@@ -292,7 +291,7 @@ public class LoginAutoActivity extends BaseActivity {
                         finish();
                         return;
                     }
-                    WaitDialog.show(LoginAutoActivity.this, "稍等...");
+                    TipGifDialog.show(LoginAutoActivity.this, "请稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
 //                    LoginSettings loginSettings = new LoginSettings();
 //                    loginSettings.setAutoFinish(true);
 //                    loginSettings.setTimeout(15 * 1000);
@@ -398,14 +397,14 @@ public class LoginAutoActivity extends BaseActivity {
                     JVerificationInterface.loginAuth(LoginAutoActivity.this,true, new VerifyListener() {
                         @Override
                         public void onResult(int code, String content, String operator) {
-                            WaitDialog.dismiss();
+                            TipGifDialog.dismiss();
                             if (code == 6000) {
 //                                JVerificationInterface.dismissLoginAuthActivity();
                                 LogUtil.e("JPush", "code=" + code + ", token=" + content + " ,operator=" + operator);
                                 sendSubRequest(content);
                             } else if (code == 6001) {
                                 LogUtil.e("JPush", "code=" + code + ", content=" + content + " ,operator=" + operator);
-                                TipDialog.show(LoginAutoActivity.this, "登录失败", TipDialog.TYPE.ERROR);
+                                TipGifDialog.show(LoginAutoActivity.this, "一键登录验证失败", TipGifDialog.TYPE.ERROR);
                             } else {
                                 LogUtil.e("JPush", "code=" + code + ", content=" + content + " ,operator=" + operator);
                             }
@@ -455,7 +454,7 @@ public class LoginAutoActivity extends BaseActivity {
         if (null== code || StringUtil.isEmpty(code)){
             return;
         }
-        WaitDialog.show(LoginAutoActivity.this,"确认中...");
+        TipGifDialog.show(LoginAutoActivity.this, "请稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = LoginAutoActivity.this;
         reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_LOGIN;
@@ -468,7 +467,7 @@ public class LoginAutoActivity extends BaseActivity {
         reqInfo.handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
                     LoginInfo user = (LoginInfo) resInfo.responseData;

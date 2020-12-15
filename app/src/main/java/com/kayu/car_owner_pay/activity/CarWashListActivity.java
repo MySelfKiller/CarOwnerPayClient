@@ -26,12 +26,10 @@ import com.kayu.car_owner_pay.ui.adapter.ParamParentAdapter;
 import com.kayu.car_owner_pay.ui.adapter.WashStationAdapter;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.NoMoreClickListener;
-import com.kayu.utils.callback.Callback;
 import com.kayu.utils.location.CoordinateTransformUtil;
 import com.kayu.utils.location.LocationManagerUtil;
-import com.kayu.utils.view.AdaptiveHeightViewPager;
-import com.kongzue.dialog.v3.TipDialog;
-import com.kongzue.dialog.v3.WaitDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
@@ -135,11 +133,11 @@ public class CarWashListActivity extends BaseActivity {
         station_rv.setLayoutManager(new LinearLayoutManager(CarWashListActivity.this));
         param_recycle_view.setLayoutManager(new LinearLayoutManager(CarWashListActivity.this));
 
-        WaitDialog.show(CarWashListActivity.this,"稍等...");
+        TipGifDialog.show(CarWashListActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         mainViewModel.getParamWash(CarWashListActivity.this).observe(CarWashListActivity.this, new Observer<ParamWashBean>() {
             @Override
             public void onChanged(ParamWashBean paramWashBean) {
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 if (null == paramWashBean)
                     return;
                 for (WashParam item : paramWashBean.desList){
@@ -272,12 +270,12 @@ public class CarWashListActivity extends BaseActivity {
 
     public void reqData(RefreshLayout refreshLayout, int pageIndex, double latitude, double longitude, String cityName) {
         if (null == refreshLayout) {
-            WaitDialog.show(CarWashListActivity.this, "稍等...");
+            TipGifDialog.show(CarWashListActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         }
 
         if (null == selectSortsParam || null == selectDistanceParam) {
             mainViewModel.getParamWash(CarWashListActivity.this);
-            TipDialog.show(CarWashListActivity.this,"查询参数错误,请重试", TipDialog.TYPE.WARNING);
+            TipGifDialog.show(CarWashListActivity.this,"查询参数错误,请重试", TipGifDialog.TYPE.WARNING);
             return;
         }
 
@@ -299,7 +297,7 @@ public class CarWashListActivity extends BaseActivity {
             @Override
             public void onChanged(List<WashStationBean> oilStationBeans) {
                 if (null == refreshLayout) {
-                    WaitDialog.dismiss();
+                    TipGifDialog.dismiss();
                 }else {
                     if (isRefresh) {
                         refreshLayout.finishRefresh();

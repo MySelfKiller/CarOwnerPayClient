@@ -46,7 +46,7 @@ import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.MessageDialog;
-import com.kongzue.dialog.v3.TipDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -129,8 +129,8 @@ public class KWApplication extends Application {
         DialogSettings.isUseBlur = true;                   //是否开启模糊效果，默认关闭
         DialogSettings.modalDialog = false;                 //是否开启模态窗口模式，一次显示多个对话框将以队列形式一个一个显示，默认关闭
         DialogSettings.style = DialogSettings.STYLE.STYLE_IOS;          //全局主题风格，提供三种可选风格，STYLE_MATERIAL, STYLE_KONGZUE, STYLE_IOS
-        DialogSettings.theme = DialogSettings.THEME.DARK;          //全局对话框明暗风格，提供两种可选主题，LIGHT, DARK
-        DialogSettings.tipTheme = (DialogSettings.THEME.DARK);       //全局提示框明暗风格，提供两种可选主题，LIGHT, DARK
+        DialogSettings.theme = DialogSettings.THEME.LIGHT;          //全局对话框明暗风格，提供两种可选主题，LIGHT, DARK
+        DialogSettings.tipTheme = (DialogSettings.THEME.LIGHT);       //全局提示框明暗风格，提供两种可选主题，LIGHT, DARK
 //        DialogSettings.titleTextInfo = (TextInfo);              //全局对话框标题文字样式
 //        DialogSettings.menuTitleInfo = (TextInfo);              //全局菜单标题文字样式
 //        DialogSettings.menuTextInfo = (TextInfo);               //全局菜单列表文字样式
@@ -139,7 +139,7 @@ public class KWApplication extends Application {
 //        DialogSettings.buttonPositiveTextInfo = (TextInfo);     //全局焦点按钮文字样式（一般指确定按钮）
 //        DialogSettings.inputInfo = (InputInfo);                 //全局输入框文本样式
 //        DialogSettings.backgroundColor = (ColorInt);            //全局对话框背景颜色，值0时不生效
-//        DialogSettings.cancelable = (boolean);                  //全局对话框默认是否可以点击外围遮罩区域或返回键关闭，此开关不影响提示框（TipDialog）以及等待框（TipDialog）
+//        DialogSettings.cancelable = (boolean);                  //全局对话框默认是否可以点击外围遮罩区域或返回键关闭，此开关不影响提示框（TipGifDialog）以及等待框（TipDialog）
 //        DialogSettings.cancelableTipDialog = (boolean);         //全局提示框及等待框（WaitDialog、TipDialog）默认是否可以关闭
 //        DialogSettings.DEBUGMODE = (boolean);                   //是否允许打印日志
 //        DialogSettings.blurAlpha = (int);                       //开启模糊后的透明度（0~255）
@@ -400,7 +400,7 @@ public class KWApplication extends Application {
             mapList.add(model);
         }
         if (mapList.size() == 0) {
-            TipDialog.show((AppCompatActivity) context,"您尚未安装导航APP", TipDialog.TYPE.WARNING);
+            TipGifDialog.show((AppCompatActivity) context,"您尚未安装导航APP", TipGifDialog.TYPE.WARNING);
             return null;
 
         }

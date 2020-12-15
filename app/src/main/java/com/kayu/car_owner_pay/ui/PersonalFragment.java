@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -258,7 +259,21 @@ public class PersonalFragment extends Fragment {
                 });
 
                 KWApplication.getInstance().loadImg(userBean.headPic,user_head_img);
-                user_name.setText(userBean.phone);
+                StringBuilder sb = new StringBuilder();
+                sb.append(userBean.phone);
+
+                switch (userBean.type) {
+                    case 1:
+                        sb.append("（VIP）");
+                        break;
+                    case 2:
+                        sb.append("（团长）");
+                        break;
+                    case 3:
+                        sb.append("（运营商）");
+                        break;
+                }
+                user_name.setText(sb.toString());
                 user_balance.setText(String.valueOf(userBean.expAmt));
                 card_num.setText("卡号："+userBean.inviteNo);
                 if (userBean.type < 0) {

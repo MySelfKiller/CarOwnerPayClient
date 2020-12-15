@@ -34,7 +34,7 @@ import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.v3.CustomDialog;
 import com.kongzue.dialog.v3.MessageDialog;
-import com.kongzue.dialog.v3.WaitDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 
 public class SettingsActivity extends BaseActivity {
     private TextView app_version,app_new_version;
@@ -141,7 +141,6 @@ public class SettingsActivity extends BaseActivity {
         });
         user_agreement = findViewById(R.id.setting_user_agreement_tv);
         user_privacy = findViewById(R.id.setting_user_privacy_tv);
-//        WaitDialog.show((AppCompatActivity) requireContext(),"请稍等");
         mainViewModel.getParameter(SettingsActivity.this,3).observe(SettingsActivity.this, new Observer<SystemParam>() {
             @Override
             public void onChanged(SystemParam systemParam) {
@@ -305,13 +304,13 @@ public class SettingsActivity extends BaseActivity {
     @SuppressLint("HandlerLeak")
     private void reqAppDown(final ItemCallback itemCallback) {
         if (null != itemCallback){
-            WaitDialog.show(SettingsActivity.this,"请稍等");
+            TipGifDialog.show(SettingsActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         }
         mainViewModel.getParameter(SettingsActivity.this,1).observe(SettingsActivity.this, new Observer<SystemParam>() {
             @Override
             public void onChanged(SystemParam systemParam) {
                 if (null != itemCallback ){
-                    WaitDialog.dismiss();
+                    TipGifDialog.dismiss();
                 }
                 if (null != systemParam&& systemParam.type ==1){
                     mParamet = systemParam;

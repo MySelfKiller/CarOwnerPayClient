@@ -28,7 +28,7 @@ import com.kayu.form_verify.validate.ConfirmValidate;
 import com.kayu.form_verify.validator.NotEmptyValidator;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
-import com.kongzue.dialog.v3.WaitDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 
 import java.util.HashMap;
 
@@ -111,7 +111,7 @@ public class SetPasswordActivity extends BaseActivity {
 
     @SuppressLint("HandlerLeak")
     private void reqSetPasswrod() {
-        WaitDialog.show(SetPasswordActivity.this,"稍等...");
+        TipGifDialog.show(SetPasswordActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = SetPasswordActivity.this;
         reqInfo.reqUrl = HttpConfig.HOST+HttpConfig.INTERFACE_SET_PASSWORD;
@@ -126,7 +126,7 @@ public class SetPasswordActivity extends BaseActivity {
         reqInfo.handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
                     finish();

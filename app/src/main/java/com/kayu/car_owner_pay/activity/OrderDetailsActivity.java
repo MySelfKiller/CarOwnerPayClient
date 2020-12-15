@@ -3,29 +3,15 @@ package com.kayu.car_owner_pay.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
 
-import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.login.LoginAutoActivity;
-import com.kayu.car_owner_pay.data_parser.OrderDetailParse;
-import com.kayu.car_owner_pay.http.HttpConfig;
-import com.kayu.car_owner_pay.http.ReqUtil;
-import com.kayu.car_owner_pay.http.RequestInfo;
-import com.kayu.car_owner_pay.http.ResponseCallback;
-import com.kayu.car_owner_pay.http.ResponseInfo;
-import com.kayu.car_owner_pay.model.OrderDetailBean;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
-import com.kongzue.dialog.v3.WaitDialog;
-
-import java.util.HashMap;
 
 public class OrderDetailsActivity extends AppCompatActivity {
 

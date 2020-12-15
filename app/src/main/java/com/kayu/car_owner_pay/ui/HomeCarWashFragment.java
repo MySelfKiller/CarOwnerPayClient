@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.activity.WashStationActivity;
+import com.kayu.car_owner_pay.activity.login.SetPasswordActivity;
 import com.kayu.car_owner_pay.model.ParamParent;
 import com.kayu.car_owner_pay.model.ParamWashBean;
 import com.kayu.car_owner_pay.model.WashParam;
@@ -28,8 +29,7 @@ import com.kayu.car_owner_pay.ui.adapter.WashStationAdapter;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.callback.Callback;
 import com.kayu.utils.view.AdaptiveHeightViewPager;
-import com.kongzue.dialog.v3.TipDialog;
-import com.kongzue.dialog.v3.WaitDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 
 import java.util.ArrayList;
@@ -208,7 +208,7 @@ public class HomeCarWashFragment extends Fragment {
 
     public void reqData(RefreshLayout refreshLayout, int pageIndex, final boolean isRefresh, final boolean isLoadmore, double latitude, double longitude, String cityName) {
         if (null == refreshLayout) {
-            WaitDialog.show((AppCompatActivity) getContext(), "刷新数据！稍等");
+            TipGifDialog.show((AppCompatActivity) getContext(), "刷新数据,稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         }
 //        else {
 //            callback.onSuccess();
@@ -216,7 +216,7 @@ public class HomeCarWashFragment extends Fragment {
 
         if (null == selectSortsParam || null == selectDistanceParam) {
             mainViewModel.getParamWash(requireContext());
-            TipDialog.show((AppCompatActivity) getContext(),"查询参数错误,请重试", TipDialog.TYPE.WARNING);
+            TipGifDialog.show((AppCompatActivity) getContext(),"查询参数错误,请重试", TipGifDialog.TYPE.WARNING);
             return;
         }
 
@@ -246,7 +246,7 @@ public class HomeCarWashFragment extends Fragment {
             @Override
             public void onChanged(List<WashStationBean> oilStationBeans) {
                 if (null == refreshLayout) {
-                    WaitDialog.dismiss();
+                    TipGifDialog.dismiss();
                 }else {
                     callback.onSuccess();
                 }

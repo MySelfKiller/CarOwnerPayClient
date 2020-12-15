@@ -45,7 +45,7 @@ import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.v3.MessageDialog;
-import com.kongzue.dialog.v3.TipDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 import com.maning.updatelibrary.InstallUtils;
 
 import java.io.File;
@@ -409,13 +409,13 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             public void onFail(Exception e) {
                 progressDialog.doDismiss();
                 LogUtil.e("hm","下载失败"+e.toString());
-                TipDialog.show(MainActivity.this,"下载失败", TipDialog.TYPE.ERROR);
+                TipGifDialog.show(MainActivity.this,"下载失败", TipGifDialog.TYPE.ERROR);
             }
 
             @Override
             public void cancle() {
                 progressDialog.doDismiss();
-                TipDialog.show(MainActivity.this,"下载已取消", TipDialog.TYPE.ERROR);
+                TipGifDialog.show(MainActivity.this,"下载已取消", TipGifDialog.TYPE.ERROR);
             }
         };
     }
@@ -432,7 +432,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
             @Override
             public void onFail(Exception e) {
-                TipDialog.show(MainActivity.this,"安装失败", TipDialog.TYPE.ERROR);            }
+                TipGifDialog.show(MainActivity.this,"安装失败", TipGifDialog.TYPE.ERROR);            }
         });
     }
 

@@ -139,7 +139,7 @@ dependencies {
 
     implementation 'cn.jiguang.sdk:jcore:2.6.0'  // 此处以JCore 2.1.2 版本为例。
 //    implementation 'cn.jiguang.sdk:jverification:2.6.7'  // 此处以JCore 2.1.2 版本为例。
-    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.6'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.5.8'
 
     implementation  'com.scwang.smart:refresh-layout-kernel:2.0.1'      //核心必须依赖

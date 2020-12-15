@@ -50,7 +50,7 @@ import com.kayu.utils.StringUtil;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.v3.MessageDialog;
-import com.kongzue.dialog.v3.WaitDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -316,11 +316,11 @@ public class LoginActivity extends BaseActivity {
         });
         user_agreement = findViewById(R.id.login_user_agreement_tv);
         user_privacy = findViewById(R.id.login_user_privacy_tv);
-        WaitDialog.show(this,"请稍等...");
+        TipGifDialog.show(LoginActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         mViewModel.getParameter(this,3).observe(this, new Observer<SystemParam>() {
             @Override
             public void onChanged(SystemParam systemParam) {
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 if (null != systemParam && systemParam.type ==3){
                     String[] titles = systemParam.title.split("@@");
                     String[] urls = systemParam.url.split("@@");
@@ -396,7 +396,7 @@ public class LoginActivity extends BaseActivity {
 
     @SuppressLint("HandlerLeak")
     private void sendSubRequest() {
-        WaitDialog.show(LoginActivity.this,"确认中...");
+        TipGifDialog.show(LoginActivity.this, "确认中...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = LoginActivity.this;
         reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_LOGIN;
@@ -414,7 +414,7 @@ public class LoginActivity extends BaseActivity {
         reqInfo.handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
                     LoginInfo user = (LoginInfo) resInfo.responseData;
@@ -460,7 +460,7 @@ public class LoginActivity extends BaseActivity {
 
     @SuppressLint("HandlerLeak")
     private void sendSmsRequest() {
-        WaitDialog.show(LoginActivity.this,"发送验证码...");
+        TipGifDialog.show(LoginActivity.this, "发送验证码...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = LoginActivity.this;
         reqInfo.reqUrl = HttpConfig.HOST+HttpConfig.INTERFACE_VERIFICATION_CODE;
@@ -471,7 +471,7 @@ public class LoginActivity extends BaseActivity {
         reqInfo.handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
                     ToastUtils.show("验证码发送成功");

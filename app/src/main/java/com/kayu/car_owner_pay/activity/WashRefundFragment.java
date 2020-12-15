@@ -23,8 +23,7 @@ import com.kayu.utils.StringUtil;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.v3.MessageDialog;
-import com.kongzue.dialog.v3.TipDialog;
-import com.kongzue.dialog.v3.WaitDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 
 public class WashRefundFragment extends BaseActivity {
     private Long orderId;
@@ -135,7 +134,7 @@ public class WashRefundFragment extends BaseActivity {
             @Override
             protected void OnMoreClick(View view) {
                 if (null == selectedMode || StringUtil.isEmpty(selectedReason)) {
-                    TipDialog.show(WashRefundFragment.this,"请选择退款原因", TipDialog.TYPE.WARNING);
+                    TipGifDialog.show(WashRefundFragment.this,"请选择退款原因", TipGifDialog.TYPE.WARNING);
                     return;
                 }
 
@@ -143,17 +142,17 @@ public class WashRefundFragment extends BaseActivity {
                         .setOkButton(new OnDialogButtonClickListener() {
                     @Override
                     public boolean onClick(BaseDialog baseDialog, View v) {
-                        WaitDialog.show(WashRefundFragment.this,"请稍等...");
+                        TipGifDialog.show(WashRefundFragment.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
                         mainViewModel.sendRefund(WashRefundFragment.this,orderId,selectedMode.way,selectedReason, new ItemCallback() {
                             @Override
                             public void onItemCallback(int position, Object obj) {
                                 ResponseInfo resInfo = (ResponseInfo)obj;
                                 if (resInfo.status == 1) {
-                                    TipDialog.show(WashRefundFragment.this,"申请成功，返回上一页", TipDialog.TYPE.SUCCESS);
+                                    TipGifDialog.show(WashRefundFragment.this,"申请成功，返回上一页", TipGifDialog.TYPE.SUCCESS);
                                     finish();
 
                                 }else {
-                                    TipDialog.show(WashRefundFragment.this,resInfo.msg, TipDialog.TYPE.ERROR);
+                                    TipGifDialog.show(WashRefundFragment.this,resInfo.msg, TipGifDialog.TYPE.ERROR);
                                 }
                             }
 

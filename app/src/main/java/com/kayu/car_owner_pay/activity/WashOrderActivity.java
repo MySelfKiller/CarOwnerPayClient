@@ -34,7 +34,7 @@ import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.location.LocationManagerUtil;
 import com.kongzue.dialog.interfaces.OnDismissListener;
-import com.kongzue.dialog.v3.TipDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 
 import java.util.Map;
 
@@ -87,7 +87,7 @@ public class WashOrderActivity extends BaseActivity {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
 //                        showAlert(PayDemoActivity.this, getString(R.string.pay_success) + payResult);
-                        TipDialog.show(WashOrderActivity.this, "支付成功", TipDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
+                        TipGifDialog.show(WashOrderActivity.this, "支付成功", TipGifDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
                             @Override
                             public void onDismiss() {
                                 if (null != mAliPayBean) {
@@ -113,7 +113,7 @@ public class WashOrderActivity extends BaseActivity {
                         if (null != mAliPayBean) {
                             payOrderViewModel.cancelPay(WashOrderActivity.this,mAliPayBean.orderId);
                         }
-                        TipDialog.show(WashOrderActivity.this, "支付已取消", TipDialog.TYPE.WARNING).setOnDismissListener(new OnDismissListener() {
+                        TipGifDialog.show(WashOrderActivity.this, "支付已取消", TipGifDialog.TYPE.WARNING).setOnDismissListener(new OnDismissListener() {
                             @Override
                             public void onDismiss() {
 
@@ -346,7 +346,7 @@ public class WashOrderActivity extends BaseActivity {
             @Override
             public void onSuccess() {
 //                LogUtil.e("hm", "支付成功");
-                TipDialog.show(WashOrderActivity.this, "支付成功", TipDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
+                TipGifDialog.show(WashOrderActivity.this, "支付成功", TipGifDialog.TYPE.SUCCESS).setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss() {
                         if (null != mWxPayBean) {
@@ -374,7 +374,7 @@ public class WashOrderActivity extends BaseActivity {
                 if (null != mWxPayBean) {
                     payOrderViewModel.cancelPay(WashOrderActivity.this,mWxPayBean.orderId);
                 }
-                TipDialog.show(WashOrderActivity.this, "支付已取消", TipDialog.TYPE.WARNING).setOnDismissListener(new OnDismissListener() {
+                TipGifDialog.show(WashOrderActivity.this, "支付已取消", TipGifDialog.TYPE.WARNING).setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss() {
 
@@ -385,13 +385,13 @@ public class WashOrderActivity extends BaseActivity {
             @Override
             public void onFail(String message) {
                 LogUtil.e("hm", message);
-                TipDialog.show(WashOrderActivity.this, message, TipDialog.TYPE.ERROR).setOnDismissListener(new OnDismissListener() {
+                TipGifDialog.show(WashOrderActivity.this, message, TipGifDialog.TYPE.ERROR).setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss() {
                         if (null != mWxPayBean) {
                             payOrderViewModel.cancelPay(WashOrderActivity.this,mWxPayBean.orderId);
                         }
-                        TipDialog.show(WashOrderActivity.this, "支付失败", TipDialog.TYPE.ERROR).setOnDismissListener(new OnDismissListener() {
+                        TipGifDialog.show(WashOrderActivity.this, "支付失败", TipGifDialog.TYPE.ERROR).setOnDismissListener(new OnDismissListener() {
                             @Override
                             public void onDismiss() {
 

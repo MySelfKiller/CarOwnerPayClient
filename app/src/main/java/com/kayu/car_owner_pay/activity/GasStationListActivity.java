@@ -25,8 +25,8 @@ import com.kayu.car_owner_pay.ui.adapter.ParamParentAdapter;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.location.LocationManagerUtil;
-import com.kongzue.dialog.v3.TipDialog;
-import com.kongzue.dialog.v3.WaitDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
@@ -120,11 +120,11 @@ public class GasStationListActivity extends BaseActivity {
         });
         station_rv.setLayoutManager(new LinearLayoutManager(GasStationListActivity.this));
 
-        WaitDialog.show(GasStationListActivity.this,"稍等...");
+        TipGifDialog.show(GasStationListActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         mainViewModel.getParamSelect(GasStationListActivity.this).observe( GasStationListActivity.this, new Observer<ParamOilBean>() {
             @Override
             public void onChanged(ParamOilBean paramOilBean) {
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 if (null == paramOilBean)
                     return;
 
@@ -305,12 +305,12 @@ public class GasStationListActivity extends BaseActivity {
 
     public void reqData(RefreshLayout refreshLayout, int pageIndex, double latitude, double longitude) {
         if (null == refreshLayout) {
-            WaitDialog.show(GasStationListActivity.this, "刷新数据！稍等");
+            TipGifDialog.show(GasStationListActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         }
 
         if (null == selectSortsParam || null == selectDistanceParam || null == selectOilParam) {
             mainViewModel.getParamSelect(GasStationListActivity.this);
-            TipDialog.show(GasStationListActivity.this,"查询参数错误,请重试", TipDialog.TYPE.WARNING);
+            TipGifDialog.show(GasStationListActivity.this,"查询参数错误,请重试", TipGifDialog.TYPE.WARNING);
             return;
         }
         mLatitude = latitude;
@@ -331,7 +331,7 @@ public class GasStationListActivity extends BaseActivity {
             @Override
             public void onChanged(List<OilStationBean> oilStationBeans) {
                 if (null == refreshLayout) {
-                    WaitDialog.dismiss();
+                    TipGifDialog.dismiss();
                 } else {
                     if (isRefresh) {
                         refreshLayout.finishRefresh();

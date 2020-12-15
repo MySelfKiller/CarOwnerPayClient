@@ -28,8 +28,7 @@ import com.kayu.form_verify.Validate;
 import com.kayu.form_verify.validator.PhoneValidator;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.SMSCountDownTimer;
-import com.kayu.utils.StringUtil;
-import com.kongzue.dialog.v3.WaitDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 
 import java.util.HashMap;
 
@@ -123,7 +122,7 @@ public class OrderTrackingActivity extends AppCompatActivity {
 
     @SuppressLint("HandlerLeak")
     private void sendSmsRequest() {
-        WaitDialog.show(OrderTrackingActivity.this,"发送验证码...");
+        TipGifDialog.show(OrderTrackingActivity.this, "发送验证码...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = OrderTrackingActivity.this;
         reqInfo.reqUrl = HttpConfig.HOST+HttpConfig.INTERFACE_ORDER_CODE;
@@ -134,7 +133,7 @@ public class OrderTrackingActivity extends AppCompatActivity {
         reqInfo.handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
                     ToastUtils.show("验证码发送成功");
@@ -153,7 +152,7 @@ public class OrderTrackingActivity extends AppCompatActivity {
 
     @SuppressLint("HandlerLeak")
     private void getInfo(String phone, String code) {
-        WaitDialog.show(OrderTrackingActivity.this,"查询中...");
+        TipGifDialog.show(OrderTrackingActivity.this, "查询中...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = OrderTrackingActivity.this;
         reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_ORDER_DETAIL;
@@ -167,7 +166,7 @@ public class OrderTrackingActivity extends AppCompatActivity {
         reqInfo.handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
                     OrderDetailBean orderDetailBean = (OrderDetailBean) resInfo.responseData;

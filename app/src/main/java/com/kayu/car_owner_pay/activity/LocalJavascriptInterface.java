@@ -20,7 +20,7 @@ import com.kayu.utils.callback.ImageCallback;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.v3.MessageDialog;
-import com.kongzue.dialog.v3.TipDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 
 public class LocalJavascriptInterface {
     private Context mContext;
@@ -41,7 +41,7 @@ public class LocalJavascriptInterface {
 //            }
 //        });
         if (StringUtil.isEmpty(s)) {
-            TipDialog.show((AppCompatActivity) mContext, "数据错误，无法保存！", TipDialog.TYPE.ERROR);
+            TipGifDialog.show((AppCompatActivity) mContext, "数据错误，无法保存！", TipGifDialog.TYPE.ERROR);
             return;
         }
         KWApplication.getInstance().loadImg(s,null,new ImageCallback() {
@@ -50,9 +50,9 @@ public class LocalJavascriptInterface {
                 String fileName = "qr_"+System.currentTimeMillis() + ".jpg";
                 boolean isSaveSuccess = ImageUtil.saveImageToGallery(mContext, resource,fileName);
                 if (isSaveSuccess) {
-                    TipDialog.show((AppCompatActivity) mContext, "保存成功", TipDialog.TYPE.SUCCESS);
+                    TipGifDialog.show((AppCompatActivity) mContext, "保存成功", TipGifDialog.TYPE.SUCCESS);
                 } else {
-                    TipDialog.show((AppCompatActivity) mContext, "保存失败", TipDialog.TYPE.ERROR);
+                    TipGifDialog.show((AppCompatActivity) mContext, "保存失败", TipGifDialog.TYPE.ERROR);
                 }
             }
 
@@ -66,12 +66,12 @@ public class LocalJavascriptInterface {
     @JavascriptInterface
     public void sharedWechat(String jsonStr){
         if (null == jsonStr) {
-            TipDialog.show((AppCompatActivity) mContext, "分享数据错误！", TipDialog.TYPE.ERROR);
+            TipGifDialog.show((AppCompatActivity) mContext, "分享数据错误！", TipGifDialog.TYPE.ERROR);
             return;
         }
         WXSharedBean sharedBean = GsonHelper.fromJson(jsonStr, WXSharedBean.class);
         if (null == sharedBean) {
-            TipDialog.show((AppCompatActivity) mContext, "分享数据错误！", TipDialog.TYPE.ERROR);
+            TipGifDialog.show((AppCompatActivity) mContext, "分享数据错误！", TipGifDialog.TYPE.ERROR);
             return;
         }
 
@@ -81,7 +81,7 @@ public class LocalJavascriptInterface {
         switch (sharedBean.object) {
             case 0://0图片，1音乐，2视频，3网页
                 if (StringUtil.isEmpty(sharedBean.qrCode)) {
-                    TipDialog.show((AppCompatActivity) mContext, "分享的图片地址不存在！", TipDialog.TYPE.ERROR);
+                    TipGifDialog.show((AppCompatActivity) mContext, "分享的图片地址不存在！", TipGifDialog.TYPE.ERROR);
                     break;
                 }
                 KWApplication.getInstance().loadImg(sharedBean.qrCode,null,new ImageCallback() {
@@ -99,14 +99,14 @@ public class LocalJavascriptInterface {
                 break;
             case 1:
                 if (StringUtil.isEmpty(sharedBean.url)) {
-                    TipDialog.show((AppCompatActivity) mContext, "分享的音频地址不存在！", TipDialog.TYPE.ERROR);
+                    TipGifDialog.show((AppCompatActivity) mContext, "分享的音频地址不存在！", TipGifDialog.TYPE.ERROR);
                     break;
                 }
                 wxShare.shareMusic(sharedBean.type,sharedBean.url, sharedBean.title, sharedBean.desc);
                 break;
             case 2:
                 if (StringUtil.isEmpty(sharedBean.url)) {
-                    TipDialog.show((AppCompatActivity) mContext, "分享的视频地址不存在！", TipDialog.TYPE.ERROR);
+                    TipGifDialog.show((AppCompatActivity) mContext, "分享的视频地址不存在！", TipGifDialog.TYPE.ERROR);
                     break;
                 }
 
@@ -114,7 +114,7 @@ public class LocalJavascriptInterface {
                 break;
             case 3:
                 if (StringUtil.isEmpty(sharedBean.url)) {
-                    TipDialog.show((AppCompatActivity) mContext, "分享的网页地址不存在！", TipDialog.TYPE.ERROR);
+                    TipGifDialog.show((AppCompatActivity) mContext, "分享的网页地址不存在！", TipGifDialog.TYPE.ERROR);
                     break;
                 }
                 wxShare.shareUrl(sharedBean.type,sharedBean.url, sharedBean.title, sharedBean.desc,null);

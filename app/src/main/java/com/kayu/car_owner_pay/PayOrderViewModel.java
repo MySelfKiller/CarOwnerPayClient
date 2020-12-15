@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.hjq.toast.ToastUtils;
+import com.kayu.car_owner_pay.activity.login.LoginAutoActivity;
 import com.kayu.car_owner_pay.data_parser.AliPayDataParse;
 import com.kayu.car_owner_pay.data_parser.WxPayDataParse;
 import com.kayu.car_owner_pay.http.HttpConfig;
@@ -21,7 +22,7 @@ import com.kayu.car_owner_pay.http.ResponseInfo;
 import com.kayu.car_owner_pay.http.parser.NormalIntParse;
 import com.kayu.car_owner_pay.wxapi.AliPayBean;
 import com.kayu.car_owner_pay.wxapi.WxPayBean;
-import com.kongzue.dialog.v3.WaitDialog;
+import com.kongzue.dialog.v3.TipGifDialog;
 
 import java.util.HashMap;
 
@@ -47,7 +48,7 @@ public class PayOrderViewModel extends ViewModel {
 
     @SuppressLint("HandlerLeak")
     private void loadPayInfo(Context context, String shopCode,String serviceCode, int payFlag) {
-        WaitDialog.show((AppCompatActivity) context,"获取支付信息。。。");
+        TipGifDialog.show((AppCompatActivity) context, "获取支付信息...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         RequestInfo reques = new RequestInfo();
         reques.context = context;
 //        if (orderFlag == 1) {
@@ -71,7 +72,7 @@ public class PayOrderViewModel extends ViewModel {
             @Override
             public void handleMessage(Message msg) {
                 ResponseInfo resInfo = (ResponseInfo) msg.obj;
-                WaitDialog.dismiss();
+                TipGifDialog.dismiss();
                 if (resInfo.status == 1) {
                     if (payFlag ==1) {//微信订单
                         WxPayBean wxPayBean = (WxPayBean) resInfo.responseData;
