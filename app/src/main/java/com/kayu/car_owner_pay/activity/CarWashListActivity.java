@@ -29,7 +29,6 @@ import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.location.CoordinateTransformUtil;
 import com.kayu.utils.location.LocationManagerUtil;
 import com.kongzue.dialog.v3.TipGifDialog;
-import com.kongzue.dialog.v3.TipGifDialog;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
@@ -112,6 +111,9 @@ public class CarWashListActivity extends BaseActivity {
                     return;
                 isRefresh = true;
                 pageIndex = 1;
+                if (null != stationAdapter){
+                    stationAdapter.removeAllData(true);
+                }
                 AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
                 double[] bddfsdfs = CoordinateTransformUtil.gcj02tobd09(location.getLongitude(), location.getLatitude());
                 reqData(refreshLayout, pageIndex,bddfsdfs[1],bddfsdfs[0],location.getCity());
@@ -131,6 +133,22 @@ public class CarWashListActivity extends BaseActivity {
         });
 
         station_rv.setLayoutManager(new LinearLayoutManager(CarWashListActivity.this));
+
+        stationAdapter = new WashStationAdapter(CarWashListActivity.this,null,true,true,new ItemCallback() {
+            @Override
+            public void onItemCallback(int position, Object obj) {
+                Intent intent = new Intent(CarWashListActivity.this, WashStationActivity.class);
+                intent.putExtra("shopCode",((WashStationBean)obj).shopCode);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onDetailCallBack(int position, Object obj) {
+
+            }
+        });
+        station_rv.setAdapter(stationAdapter);
+
         param_recycle_view.setLayoutManager(new LinearLayoutManager(CarWashListActivity.this));
 
         TipGifDialog.show(CarWashListActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
@@ -258,6 +276,9 @@ public class CarWashListActivity extends BaseActivity {
                 isRefresh = true;
                 AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
                 double[] bddfsdfs = CoordinateTransformUtil.gcj02tobd09(location.getLongitude(), location.getLatitude());
+                if (null != stationAdapter){
+                    stationAdapter.removeAllData(true);
+                }
                 reqData(null, pageIndex,bddfsdfs[1],bddfsdfs[0],location.getCity());
             }
 
@@ -282,8 +303,8 @@ public class CarWashListActivity extends BaseActivity {
         mLatitude = latitude;
         mLongitude = longitude;
         mCityName = cityName;
-        if (isRefresh && null != stationAdapter)
-            stationAdapter.removeAllData();
+//        if (isRefresh && null != stationAdapter)
+//            stationAdapter.removeAllData(true);
         HashMap<String,Object> dataMap = new HashMap<>();
 
         dataMap.put("pageNum",pageIndex);
@@ -307,29 +328,17 @@ public class CarWashListActivity extends BaseActivity {
                         refreshLayout.finishLoadMore();
                     }
                 }
-                if (null == oilStationBeans)
-                    return;
+//                if (null == oilStationBeans)
+//                    return;
                 if (isLoadmore) {
                     if (null != stationAdapter) {
                         if (null != oilStationBeans && oilStationBeans.size() > 0) {
-                            stationAdapter.addAllData(oilStationBeans, false);
+                            stationAdapter.addAllData(oilStationBeans, selectSortsParam.val, false);
                         }
                     }
                 } else {
-                    stationAdapter = new WashStationAdapter(CarWashListActivity.this,oilStationBeans, selectSortsParam.val,new ItemCallback() {
-                        @Override
-                        public void onItemCallback(int position, Object obj) {
-                            Intent intent = new Intent(CarWashListActivity.this, WashStationActivity.class);
-                            intent.putExtra("shopCode",((WashStationBean)obj).shopCode);
-                            startActivity(intent);
-                        }
+                    stationAdapter.addAllData(oilStationBeans, selectSortsParam.val, true);
 
-                        @Override
-                        public void onDetailCallBack(int position, Object obj) {
-
-                        }
-                    });
-                    station_rv.setAdapter(stationAdapter);
                 }
                 isLoadmore = false;
                 isRefresh = false;

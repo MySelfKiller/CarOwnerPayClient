@@ -92,6 +92,27 @@ public class HomeGasStationFragment extends Fragment {
         param_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
         station_rv.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        oilStationAdapter = new OilStationAdapter(requireContext(), null,true,true, new ItemCallback() {
+            @Override
+            public void onItemCallback(int position, Object obj) {
+//                                    FragmentManager fg = requireActivity().getSupportFragmentManager();
+//                                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
+//                                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                                    fragmentTransaction.add(R.id.main_root_lay,new OilStationActivity(((OilStationBean)obj).gasId));
+//                                    fragmentTransaction.addToBackStack("ddd");
+//                                    fragmentTransaction.commit();
+                Intent intent = new Intent(getContext(),OilStationActivity.class);
+                intent.putExtra("gasId",((OilStationBean)obj).gasId);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onDetailCallBack(int position, Object obj) {
+
+            }
+        });
+        station_rv.setAdapter(oilStationAdapter);
+
         mainViewModel.getParamSelect(requireContext()).observe( requireActivity(), new Observer<ParamOilBean>() {
             @Override
             public void onChanged(ParamOilBean paramOilBean) {
@@ -275,7 +296,7 @@ public class HomeGasStationFragment extends Fragment {
         mLatitude = latitude;
         mLongitude = longitude;
         if (isRefresh && null != oilStationAdapter)
-            oilStationAdapter.removeAllData();
+            oilStationAdapter.removeAllData(true);
 
         HashMap<String,Object> dataMap = new HashMap<>();
         dataMap.put("pageNow",pageIndex);
@@ -294,8 +315,8 @@ public class HomeGasStationFragment extends Fragment {
                 } else {
                     callback.onSuccess();
                 }
-                if (null == oilStationBeans)
-                    return;
+//                if (null == oilStationBeans)
+//                    return;
                 if (isLoadmore) {
                     if (null != oilStationAdapter) {
                         if (null != oilStationBeans && oilStationBeans.size() > 0) {
@@ -304,27 +325,7 @@ public class HomeGasStationFragment extends Fragment {
                         }
                     }
                 } else {
-                    oilStationAdapter = new OilStationAdapter(requireContext(), oilStationBeans, new ItemCallback() {
-                        @Override
-                        public void onItemCallback(int position, Object obj) {
-//                                    FragmentManager fg = requireActivity().getSupportFragmentManager();
-//                                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
-//                                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                                    fragmentTransaction.add(R.id.main_root_lay,new OilStationActivity(((OilStationBean)obj).gasId));
-//                                    fragmentTransaction.addToBackStack("ddd");
-//                                    fragmentTransaction.commit();
-                            Intent intent = new Intent(getContext(),OilStationActivity.class);
-                            intent.putExtra("gasId",((OilStationBean)obj).gasId);
-                            startActivity(intent);
-                        }
-
-                        @Override
-                        public void onDetailCallBack(int position, Object obj) {
-
-                        }
-                    });
-                    station_rv.setAdapter(oilStationAdapter);
-
+                    oilStationAdapter.addAllData(oilStationBeans, true);
                 }
                 viewPager.setObjectForPosition(view,fragment_id);
             }

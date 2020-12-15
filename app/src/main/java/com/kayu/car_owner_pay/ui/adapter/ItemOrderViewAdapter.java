@@ -59,8 +59,7 @@ public class ItemOrderViewAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (viewType == VIEW_TYPE_EMPTY) {
             View emptyView = LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_view_tab, parent, false);
 
-            return new RecyclerView.ViewHolder(emptyView) {
-            };
+            return new RecyclerView.ViewHolder(emptyView) {};
 
         }
 

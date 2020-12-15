@@ -17,10 +17,17 @@ import com.kayu.utils.DoubleUtils;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.NoMoreClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class OilStationAdapter extends RecyclerView.Adapter<OilStationAdapter.loanHolder> {
-
+public class OilStationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    /**
+     * viewType--分别为item以及空view
+     */
+    public static final int VIEW_TYPE_ITEM = 1;
+    public static final int VIEW_TYPE_EMPTY = 0;
+    boolean isShowEmptyPage = false;
+    boolean isLoadingPage = false;
     private Context context;
     private List<OilStationBean> dataList;
     private ItemCallback itemCallback;
@@ -30,20 +37,26 @@ public class OilStationAdapter extends RecyclerView.Adapter<OilStationAdapter.lo
         if (isRemoveAllData && null != this.dataList) {
             this.dataList.clear();
         }
+        if (null  ==  this.dataList)
+            this.dataList = new ArrayList<>();
         this.dataList.addAll(dataList);
         notifyDataSetChanged();
     }
-    public void removeAllData(){
+    public void removeAllData(boolean isLoadingPage){
         if (null != this.dataList){
             this.dataList.clear();
         }
+        this.isLoadingPage = isLoadingPage;
+        isShowEmptyPage = true;
         notifyDataSetChanged();
     }
 
 
-    public OilStationAdapter(Context context, List<OilStationBean> data, ItemCallback itemCallback){
+    public OilStationAdapter(Context context, List<OilStationBean> data,boolean isShowEmptyPage, boolean isLoadingPage, ItemCallback itemCallback){
         this.context = context;
         dataList = data;
+        this.isShowEmptyPage = isShowEmptyPage;
+        this.isLoadingPage = isLoadingPage;
         this.itemCallback = itemCallback;
 //        this.flag = flag;
 
@@ -51,61 +64,92 @@ public class OilStationAdapter extends RecyclerView.Adapter<OilStationAdapter.lo
 
     @NonNull
     @Override
-    public loanHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        if (viewType == VIEW_TYPE_EMPTY) {
+            View emptyView;
+            if (isLoadingPage) {
+                emptyView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.empty_view_tab_home, viewGroup, false);
+            } else {
+                emptyView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.empty_view_tab, viewGroup, false);
+            }
+            return new RecyclerView.ViewHolder(emptyView) {};
+        }
+
         View view = LayoutInflater.from(context).inflate(R.layout.item_home_station,viewGroup,false);
-        loanHolder holder = new loanHolder(view);
+        LoanHolder holder = new LoanHolder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final loanHolder loanHolder, final int i) {
-        OilStationBean oilStationBean = dataList.get(i);
-        KWApplication.getInstance().loadImg(oilStationBean.gasLogoSmall,loanHolder.img);
-        loanHolder.name.setText(oilStationBean.gasName);
-        loanHolder.location.setText(oilStationBean.gasAddress);
-        loanHolder.distance.setText(oilStationBean.distance+"km");
-        loanHolder.oil_price.setText("￥"+oilStationBean.priceYfq);
-        loanHolder.oil_price_full.setText("￥"+oilStationBean.priceOfficial);
-        loanHolder.oil_rebate.setText(oilStationBean.offDiscount+"折");
-        loanHolder.oil_rebate.setVisibility(View.VISIBLE);
-        loanHolder.oil_price_sub.setText( "降"+DoubleUtils.sub(oilStationBean.priceOfficial,oilStationBean.priceYfq)+"元");
-        loanHolder.mView.setOnClickListener(new NoMoreClickListener() {
-            @Override
-            protected void OnMoreClick(View view) {
-                itemCallback.onItemCallback(i,oilStationBean);
-            }
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder loanHolder, final int i) {
+        if (loanHolder instanceof LoanHolder) {
+            LoanHolder vh = (LoanHolder) loanHolder;
+            OilStationBean oilStationBean = dataList.get(i);
+            KWApplication.getInstance().loadImg(oilStationBean.gasLogoSmall, vh.img);
+            vh.name.setText(oilStationBean.gasName);
+            vh.location.setText(oilStationBean.gasAddress);
+            vh.distance.setText(oilStationBean.distance + "km");
+            vh.oil_price.setText("￥" + oilStationBean.priceYfq);
+            vh.oil_price_full.setText("￥" + oilStationBean.priceOfficial);
+            vh.oil_rebate.setText(oilStationBean.offDiscount + "折");
+            vh.oil_rebate.setVisibility(View.VISIBLE);
+            vh.oil_price_sub.setText("降" + DoubleUtils.sub(oilStationBean.priceOfficial, oilStationBean.priceYfq) + "元");
+            vh.mView.setOnClickListener(new NoMoreClickListener() {
+                @Override
+                protected void OnMoreClick(View view) {
+                    itemCallback.onItemCallback(i, oilStationBean);
+                }
 
-            @Override
-            protected void OnMoreErrorClick() {
+                @Override
+                protected void OnMoreErrorClick() {
 
-            }
-        });
-        loanHolder.navi.setOnClickListener(new NoMoreClickListener() {
-            @Override
-            protected void OnMoreClick(View view) {
-                KWApplication.getInstance().toNavi(context,String.valueOf(oilStationBean.gasAddressLatitude),String.valueOf(oilStationBean.gasAddressLongitude),oilStationBean.gasAddress,"GCJ02");
-            }
+                }
+            });
+            vh.navi.setOnClickListener(new NoMoreClickListener() {
+                @Override
+                protected void OnMoreClick(View view) {
+                    KWApplication.getInstance().toNavi(context, String.valueOf(oilStationBean.gasAddressLatitude), String.valueOf(oilStationBean.gasAddressLongitude), oilStationBean.gasAddress, "GCJ02");
+                }
 
-            @Override
-            protected void OnMoreErrorClick() {
+                @Override
+                protected void OnMoreErrorClick() {
 
+                }
+            });
+        } else {
+            if (!isShowEmptyPage) {
+                loanHolder.itemView.setVisibility(View.GONE);
+            } else {
+                loanHolder.itemView.setVisibility(View.VISIBLE);
             }
-        });
+        }
+
     }
-
 
     @Override
     public int getItemCount() {
-        return dataList==null?0:dataList.size();
+        if (null == dataList || dataList.size() == 0) {
+            return 1;
+        }
+        return dataList.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        //在这里进行判断，如果我们的集合的长度为0时，我们就使用emptyView的布局
+        if (null == dataList || dataList.size() == 0) {
+            return VIEW_TYPE_EMPTY;
+        }
+        //如果有数据，则使用ITEM的布局
+        return VIEW_TYPE_ITEM;
+    }
 
-    class loanHolder extends RecyclerView.ViewHolder{
+    class LoanHolder extends RecyclerView.ViewHolder{
         private final TextView name, location,distance,oil_price,oil_price_sub,navi,oil_price_full,oil_rebate;
         private View mView;
         private final ImageView img;
 
-        public loanHolder(@NonNull View itemView) {
+        public LoanHolder(@NonNull View itemView) {
             super(itemView);
             mView = itemView;
             img = itemView.findViewById(R.id.item_station_img);

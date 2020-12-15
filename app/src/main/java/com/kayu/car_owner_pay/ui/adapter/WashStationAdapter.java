@@ -17,33 +17,46 @@ import com.kayu.utils.ItemCallback;
 import com.kayu.utils.NoMoreClickListener;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
-public class WashStationAdapter extends RecyclerView.Adapter<WashStationAdapter.loanHolder> {
-
+public class WashStationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    /**
+     * viewType--分别为item以及空view
+     */
+    public static final int VIEW_TYPE_ITEM = 1;
+    public static final int VIEW_TYPE_EMPTY = 0;
+    boolean isShowEmptyPage = false;
+    boolean isLoadingPage = false;
     private Context context;
     private List<WashStationBean> dataList;
     private ItemCallback itemCallback;
     private String selectedVal;
 
-    public void addAllData(List<WashStationBean> dataList, boolean isRemoveAllData) {
+    public void addAllData(List<WashStationBean> dataList, String  selectedVal,boolean isRemoveAllData) {
         if (isRemoveAllData && null != this.dataList) {
             this.dataList.clear();
         }
+        this.selectedVal = selectedVal;
+        if (null  ==  this.dataList)
+            this.dataList = new ArrayList<>();
         this.dataList.addAll(dataList);
         notifyDataSetChanged();
     }
-    public void removeAllData(){
+    public void removeAllData(boolean isLoadingPage){
         if (null != this.dataList){
             this.dataList.clear();
         }
+        this.isLoadingPage = isLoadingPage;
+        isShowEmptyPage = true;
         notifyDataSetChanged();
     }
 
 
-    public WashStationAdapter(Context context, List<WashStationBean> data, String  selectedVal, ItemCallback itemCallback){
-        this.selectedVal = selectedVal;
+    public WashStationAdapter(Context context, List<WashStationBean> data, boolean isShowEmptyPage,boolean isLoadingPage, ItemCallback itemCallback){
         this.context = context;
+        this.isShowEmptyPage = isShowEmptyPage;
+        this.isLoadingPage = isLoadingPage;
         dataList = data;
         this.itemCallback = itemCallback;
 //        this.flag = flag;
@@ -52,74 +65,106 @@ public class WashStationAdapter extends RecyclerView.Adapter<WashStationAdapter.
 
     @NonNull
     @Override
-    public loanHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        //在这里根据不同的viewType进行引入不同的布局
+        if (viewType == VIEW_TYPE_EMPTY) {
+            View emptyView;
+            if (isLoadingPage) {
+                emptyView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.empty_view_tab_home, viewGroup, false);
+            } else {
+                emptyView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.empty_view_tab, viewGroup, false);
+            }
+            return new RecyclerView.ViewHolder(emptyView) {};
+        }
+
         View view = LayoutInflater.from(context).inflate(R.layout.item_home_wash,viewGroup,false);
-        loanHolder holder = new loanHolder(view);
+        LoanHolder holder = new LoanHolder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final loanHolder loanHolder, final int i) {
-        WashStationBean washStationBean = dataList.get(i);
-        KWApplication.getInstance().loadImg(washStationBean.doorPhotoUrl,loanHolder.img);
-        loanHolder.name.setText(washStationBean.shopName);
-        loanHolder.location.setText(washStationBean.address);
-        DecimalFormat df = new DecimalFormat("0.0");//格式化小数
-        String num = df.format((float)Integer.parseInt(washStationBean.distance)/1000.0);
-        loanHolder.distance.setText(num+"km");
-        for (WashStationBean.ServiceListDTO item: washStationBean.serviceList) {
-            if (item.serviceCode.equals(selectedVal)) {
-                loanHolder.oil_price.setText("￥"+item.finalPrice);
-                loanHolder.oil_price_sub.setText("￥"+item.price);
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder loanHolder, final int i) {
+        if (loanHolder instanceof LoanHolder) {
+            LoanHolder vh = (LoanHolder) loanHolder;
+            WashStationBean washStationBean = dataList.get(i);
+            KWApplication.getInstance().loadImg(washStationBean.doorPhotoUrl,vh.img);
+            vh.name.setText(washStationBean.shopName);
+            vh.location.setText(washStationBean.address);
+            DecimalFormat df = new DecimalFormat("0.0");//格式化小数
+            String num = df.format((float)Integer.parseInt(washStationBean.distance)/1000.0);
+            vh.distance.setText(num+"km");
+            for (WashStationBean.ServiceListDTO item: washStationBean.serviceList) {
+                if (item.serviceCode.equals(selectedVal)) {
+                    vh.oil_price.setText("￥"+item.finalPrice);
+                    vh.oil_price_sub.setText("￥"+item.price);
+                }
             }
-        }
-        StringBuffer sb = new StringBuffer();
-        if (washStationBean.isOpen.equals("1")) {
-            sb.append("营业中 | ");
+            StringBuffer sb = new StringBuffer();
+            if (washStationBean.isOpen.equals("1")) {
+                sb.append("营业中 | ");
+            }else {
+                sb.append("休息中 | ");
+
+            }
+            sb.append(washStationBean.openTimeStart).append("-").append(washStationBean.openTimeEnd);
+            vh.time.setText(sb.toString());
+
+            vh.mView.setOnClickListener(new NoMoreClickListener() {
+                @Override
+                protected void OnMoreClick(View view) {
+                    itemCallback.onItemCallback(i,washStationBean);
+                }
+
+                @Override
+                protected void OnMoreErrorClick() {
+
+                }
+            });
+            vh.navi.setOnClickListener(new NoMoreClickListener() {
+                @Override
+                protected void OnMoreClick(View view) {
+                    KWApplication.getInstance().toNavi(context,washStationBean.latitude,washStationBean.longitude,washStationBean.address,"BD09");
+                }
+
+                @Override
+                protected void OnMoreErrorClick() {
+
+                }
+            });
         }else {
-            sb.append("休息中 | ");
-
+            if (!isShowEmptyPage) {
+                loanHolder.itemView.setVisibility(View.GONE);
+            } else {
+                loanHolder.itemView.setVisibility(View.VISIBLE);
+            }
         }
-        sb.append(washStationBean.openTimeStart).append("-").append(washStationBean.openTimeEnd);
-        loanHolder.time.setText(sb.toString());
 
-        loanHolder.mView.setOnClickListener(new NoMoreClickListener() {
-            @Override
-            protected void OnMoreClick(View view) {
-                itemCallback.onItemCallback(i,washStationBean);
-            }
-
-            @Override
-            protected void OnMoreErrorClick() {
-
-            }
-        });
-        loanHolder.navi.setOnClickListener(new NoMoreClickListener() {
-            @Override
-            protected void OnMoreClick(View view) {
-                KWApplication.getInstance().toNavi(context,washStationBean.latitude,washStationBean.longitude,washStationBean.address,"BD09");
-            }
-
-            @Override
-            protected void OnMoreErrorClick() {
-
-            }
-        });
     }
-
 
     @Override
     public int getItemCount() {
-        return dataList==null?0:dataList.size();
+        if (null == dataList || dataList.size() == 0) {
+            return 1;
+        }
+        return dataList.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        //在这里进行判断，如果我们的集合的长度为0时，我们就使用emptyView的布局
+        if (null == dataList || dataList.size() == 0) {
+            return VIEW_TYPE_EMPTY;
+        }
+        //如果有数据，则使用ITEM的布局
+        return VIEW_TYPE_ITEM;
+    }
 
-    class loanHolder extends RecyclerView.ViewHolder{
+    class LoanHolder extends RecyclerView.ViewHolder{
         private final TextView name, location,distance,oil_price,oil_price_sub,navi,time;
         private View mView;
         private final ImageView img;
 
-        public loanHolder(@NonNull View itemView) {
+        public LoanHolder(@NonNull View itemView) {
             super(itemView);
             mView = itemView;
             img = itemView.findViewById(R.id.item_wash_img);

@@ -103,6 +103,8 @@ public class GasStationListActivity extends BaseActivity {
                     return;
                 isRefresh = true;
                 pageIndex = 1;
+                if ( null != oilStationAdapter)
+                    oilStationAdapter.removeAllData(true);
                 AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
                 reqData(refreshLayout, pageIndex,location.getLatitude(),location.getLongitude());
             }
@@ -119,6 +121,22 @@ public class GasStationListActivity extends BaseActivity {
             }
         });
         station_rv.setLayoutManager(new LinearLayoutManager(GasStationListActivity.this));
+
+        oilStationAdapter = new OilStationAdapter(GasStationListActivity.this, null,true,true, new ItemCallback() {
+            @Override
+            public void onItemCallback(int position, Object obj) {
+                Intent intent = new Intent(GasStationListActivity.this,OilStationActivity.class);
+                intent.putExtra("gasId",((OilStationBean)obj).gasId);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onDetailCallBack(int position, Object obj) {
+
+            }
+        });
+        station_rv.setAdapter(oilStationAdapter);
+
 
         TipGifDialog.show(GasStationListActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         mainViewModel.getParamSelect(GasStationListActivity.this).observe( GasStationListActivity.this, new Observer<ParamOilBean>() {
@@ -292,6 +310,8 @@ public class GasStationListActivity extends BaseActivity {
 
                 isRefresh = true;
                 pageIndex = 1;
+                if ( null != oilStationAdapter)
+                    oilStationAdapter.removeAllData(true);
                 AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
                 reqData(null, pageIndex,location.getLatitude(),location.getLongitude());
             }
@@ -315,8 +335,6 @@ public class GasStationListActivity extends BaseActivity {
         }
         mLatitude = latitude;
         mLongitude = longitude;
-        if (isRefresh && null != oilStationAdapter)
-            oilStationAdapter.removeAllData();
 
         HashMap<String,Object> dataMap = new HashMap<>();
         dataMap.put("pageNow",pageIndex);
@@ -340,8 +358,8 @@ public class GasStationListActivity extends BaseActivity {
                         refreshLayout.finishLoadMore();
                     }
                 }
-                if (null == oilStationBeans)
-                    return;
+//                if (null == oilStationBeans)
+//                    return;
                 if (isLoadmore) {
                     if (null != oilStationAdapter) {
                         if (null != oilStationBeans && oilStationBeans.size() > 0) {
@@ -350,20 +368,7 @@ public class GasStationListActivity extends BaseActivity {
                         }
                     }
                 } else {
-                    oilStationAdapter = new OilStationAdapter(GasStationListActivity.this, oilStationBeans, new ItemCallback() {
-                        @Override
-                        public void onItemCallback(int position, Object obj) {
-                            Intent intent = new Intent(GasStationListActivity.this,OilStationActivity.class);
-                            intent.putExtra("gasId",((OilStationBean)obj).gasId);
-                            startActivity(intent);
-                        }
-
-                        @Override
-                        public void onDetailCallBack(int position, Object obj) {
-
-                        }
-                    });
-                    station_rv.setAdapter(oilStationAdapter);
+                    oilStationAdapter.addAllData(oilStationBeans, true);
                 }
                 isRefresh = false;
                 isLoadmore = false;

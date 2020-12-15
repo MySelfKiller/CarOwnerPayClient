@@ -91,6 +91,22 @@ public class HomeCarWashFragment extends Fragment {
         station_rv.setLayoutManager(new LinearLayoutManager(getContext()));
         param_recycle_view.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        stationAdapter = new WashStationAdapter(getContext(),null,true,true,new ItemCallback() {
+            @Override
+            public void onItemCallback(int position, Object obj) {
+                Intent intent = new Intent(getContext(), WashStationActivity.class);
+                intent.putExtra("shopCode",((WashStationBean)obj).shopCode);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onDetailCallBack(int position, Object obj) {
+
+            }
+        });
+        station_rv.setAdapter(stationAdapter);
+
+
         mainViewModel.getParamWash(requireContext()).observe(requireActivity(), new Observer<ParamWashBean>() {
             @Override
             public void onChanged(ParamWashBean paramWashBean) {
@@ -224,7 +240,7 @@ public class HomeCarWashFragment extends Fragment {
         mLongitude = longitude;
         mCityName = cityName;
         if (isRefresh && null != stationAdapter)
-            stationAdapter.removeAllData();
+            stationAdapter.removeAllData(true);
         HashMap<String,Object> dataMap = new HashMap<>();
         /**
          * "pageNum":1,
@@ -250,35 +266,17 @@ public class HomeCarWashFragment extends Fragment {
                 }else {
                     callback.onSuccess();
                 }
-                if (null == oilStationBeans)
-                    return;
+//                if (null == oilStationBeans)
+//                    return;
                 if (isLoadmore) {
                     if (null != stationAdapter) {
                         if (null != oilStationBeans && oilStationBeans.size() > 0) {
-                            stationAdapter.addAllData(oilStationBeans, false);
+                            stationAdapter.addAllData(oilStationBeans, selectSortsParam.val, false);
                         }
                     }
                 } else {
-                    stationAdapter = new WashStationAdapter(getContext(),oilStationBeans, selectSortsParam.val,new ItemCallback() {
-                        @Override
-                        public void onItemCallback(int position, Object obj) {
-//                                    FragmentManager fg = requireActivity().getSupportFragmentManager();
-//                                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
-//                                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                                    fragmentTransaction.add(R.id.main_root_lay,new WashStationActivity(((WashStationBean)obj).shopCode));
-//                                    fragmentTransaction.addToBackStack("ddd");
-//                                    fragmentTransaction.commit();
-                            Intent intent = new Intent(getContext(), WashStationActivity.class);
-                            intent.putExtra("shopCode",((WashStationBean)obj).shopCode);
-                            startActivity(intent);
-                        }
+                    stationAdapter.addAllData(oilStationBeans, selectSortsParam.val, true);
 
-                        @Override
-                        public void onDetailCallBack(int position, Object obj) {
-
-                        }
-                    });
-                    station_rv.setAdapter(stationAdapter);
 
                 }
                 viewPager.setObjectForPosition(view,fragment_id);
