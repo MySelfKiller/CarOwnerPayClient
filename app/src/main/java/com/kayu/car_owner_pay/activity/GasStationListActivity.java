@@ -26,7 +26,6 @@ import com.kayu.utils.ItemCallback;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.location.LocationManagerUtil;
 import com.kongzue.dialog.v3.TipGifDialog;
-import com.kongzue.dialog.v3.TipGifDialog;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
@@ -43,23 +42,10 @@ public class GasStationListActivity extends BaseActivity {
     SortsParam selectSortsParam ;
     private MainViewModel mainViewModel;
     private OilStationAdapter oilStationAdapter;
-    private double mLatitude = 0;//纬度
-    private double mLongitude = 0;//经度
     private String keyword = null;//搜索关键字
     boolean isLoadmore = false;
     boolean isRefresh = false;
     private int pageIndex;
-    //    private Callback callback;
-//    private View view;
-//    private AdaptiveHeightViewPager viewPager;
-//    private int fragment_id;
-//    private Context context;
-
-//    public GasStationActivity(AdaptiveHeightViewPager viewPager, int fragment_id, Callback callback) {
-//        this.fragment_id = fragment_id;
-//        this.viewPager = viewPager;
-//        this.callback = callback;
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -149,14 +135,12 @@ public class GasStationListActivity extends BaseActivity {
                 for (DistancesParam item : paramOilBean.distancesParamList){
                     if (item.isDefault == 1){
                         param_distance.setText(item.name);
-//                        distance = item.val;
                         selectDistanceParam = item;
                     }
                 }
                 for (SortsParam item : paramOilBean.sortsParamList) {
                     if (item.isDefault == 1){
                         param_sort.setText(item.name);
-//                        sort = item.val;
                         selectSortsParam = item;
                     }
                 }
@@ -164,7 +148,6 @@ public class GasStationListActivity extends BaseActivity {
                     for (OilsParam oilsParam : oilsTypeParam.oilsParamList) {
                         if (oilsParam.isDefault == 1) {
                             param_oil_type.setText(oilsParam.oilName);
-//                            oilNo = oilsParam.oilNo;
                             selectOilParam = oilsParam;
                         }
                     }
@@ -230,20 +213,11 @@ public class GasStationListActivity extends BaseActivity {
                         param_distance.setSelected(true);
                     }
                 });
-//                viewPager.setObjectForPosition(view,fragment_id);
                 refreshLayout.autoRefresh();
             }
         });
 
     }
-
-
-//    @Override
-//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-////        this.view = view;
-//
-//    }
 
     private void showParamViewData(int flag, List<ParamParent> data) {
         if (param_recycle_view.getVisibility() != View.VISIBLE)
@@ -333,8 +307,6 @@ public class GasStationListActivity extends BaseActivity {
             TipGifDialog.show(GasStationListActivity.this,"查询参数错误,请重试", TipGifDialog.TYPE.WARNING);
             return;
         }
-        mLatitude = latitude;
-        mLongitude = longitude;
 
         HashMap<String,Object> dataMap = new HashMap<>();
         dataMap.put("pageNow",pageIndex);

@@ -34,7 +34,6 @@ import com.kayu.utils.ItemCallback;
 import com.kayu.utils.callback.Callback;
 import com.kayu.utils.view.AdaptiveHeightViewPager;
 import com.kongzue.dialog.v3.TipGifDialog;
-import com.kongzue.dialog.v3.TipGifDialog;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 
 import java.util.ArrayList;
@@ -95,12 +94,6 @@ public class HomeGasStationFragment extends Fragment {
         oilStationAdapter = new OilStationAdapter(requireContext(), null,true,true, new ItemCallback() {
             @Override
             public void onItemCallback(int position, Object obj) {
-//                                    FragmentManager fg = requireActivity().getSupportFragmentManager();
-//                                    FragmentTransaction fragmentTransaction = fg.beginTransaction();
-//                                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                                    fragmentTransaction.add(R.id.main_root_lay,new OilStationActivity(((OilStationBean)obj).gasId));
-//                                    fragmentTransaction.addToBackStack("ddd");
-//                                    fragmentTransaction.commit();
                 Intent intent = new Intent(getContext(),OilStationActivity.class);
                 intent.putExtra("gasId",((OilStationBean)obj).gasId);
                 startActivity(intent);

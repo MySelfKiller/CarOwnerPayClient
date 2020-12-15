@@ -26,6 +26,7 @@ public class OilStationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     public static final int VIEW_TYPE_ITEM = 1;
     public static final int VIEW_TYPE_EMPTY = 0;
+    public static final int VIEW_TYPE_LOADING = -1;
     boolean isShowEmptyPage = false;
     boolean isLoadingPage = false;
     private Context context;
@@ -33,13 +34,16 @@ public class OilStationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ItemCallback itemCallback;
 //    private String flag;
 
-    public void addAllData(List<OilStationBean> dataList, boolean isRemoveAllData) {
+    public void addAllData( List<OilStationBean> dataList, boolean isRemoveAllData) {
         if (isRemoveAllData && null != this.dataList) {
             this.dataList.clear();
         }
         if (null  ==  this.dataList)
             this.dataList = new ArrayList<>();
-        this.dataList.addAll(dataList);
+        if (null != dataList) {
+            this.dataList.addAll(dataList);
+        }
+        isLoadingPage = false;
         notifyDataSetChanged();
     }
     public void removeAllData(boolean isLoadingPage){
@@ -66,18 +70,16 @@ public class OilStationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         if (viewType == VIEW_TYPE_EMPTY) {
-            View emptyView;
-            if (isLoadingPage) {
-                emptyView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.empty_view_tab_home, viewGroup, false);
-            } else {
-                emptyView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.empty_view_tab, viewGroup, false);
-            }
+            View emptyView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.empty_view_tab, viewGroup, false);
             return new RecyclerView.ViewHolder(emptyView) {};
+        }else if (viewType == VIEW_TYPE_LOADING){
+            View emptyView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.empty_view_tab_home, viewGroup, false);
+            return new RecyclerView.ViewHolder(emptyView) {};
+        }else {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_home_station,viewGroup,false);
+            return new LoanHolder(view);
         }
 
-        View view = LayoutInflater.from(context).inflate(R.layout.item_home_station,viewGroup,false);
-        LoanHolder holder = new LoanHolder(view);
-        return holder;
     }
 
     @Override
@@ -138,7 +140,10 @@ public class OilStationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public int getItemViewType(int position) {
         //在这里进行判断，如果我们的集合的长度为0时，我们就使用emptyView的布局
         if (null == dataList || dataList.size() == 0) {
-            return VIEW_TYPE_EMPTY;
+            if (isLoadingPage)
+                return VIEW_TYPE_LOADING;
+            else
+                return VIEW_TYPE_EMPTY;
         }
         //如果有数据，则使用ITEM的布局
         return VIEW_TYPE_ITEM;

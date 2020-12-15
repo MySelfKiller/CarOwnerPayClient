@@ -1,6 +1,5 @@
 package com.kayu.car_owner_pay.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -40,12 +39,9 @@ import com.kayu.car_owner_pay.model.BannerBean;
 import com.kayu.car_owner_pay.model.CategoryBean;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.text_banner.TextBannerView;
-import com.kayu.car_owner_pay.ui.adapter.CategoryAdapter;
 import com.kayu.car_owner_pay.ui.adapter.CategoryRootAdapter;
 import com.kayu.utils.ItemCallback;
-import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
-import com.kayu.utils.ScreenUtils;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.callback.Callback;
 import com.kayu.utils.location.CoordinateTransformUtil;
@@ -125,12 +121,6 @@ public class HomeFragment extends Fragment {
         view.findViewById(R.id.home_exchange_code).setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-//                FragmentManager fg = requireActivity().getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = fg.beginTransaction();
-//                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                fragmentTransaction.add(R.id.main_root_lay, new MessageActivity());
-//                fragmentTransaction.addToBackStack("ddd");
-//                fragmentTransaction.commit();
                 startActivity(new Intent(getContext(), MessageActivity.class));
             }
 
@@ -320,23 +310,12 @@ public class HomeFragment extends Fragment {
             }
         });
 
-//        hostBannerData.add("车主 151****6046，5分钟前，加油300元，节省55元");
-//        hostBannerData.add("车主 188****2234，15分钟前，加油500元，节省100元");
-//        hostBannerData.add("车主 134****2589，20分钟前，加油600元，节省145元");
-//        for (Notice notice : indexData.noticeList){
-//            hostBannerData.add(notice.title);
-//        }
-
-
         mainViewModel.getBannerList(getContext()).observe(requireActivity(), new Observer<List<BannerBean>>() {
             @Override
             public void onChanged(List<BannerBean> bannerBeans) {
                 if (null == bannerBeans)
                     return;
                 List<String> urlList = new ArrayList<>();
-//                urlList.add("http://static.kakayuy.com/group1/M00/00/01/rBoO7123JxOADlyoAAE4u9SZe-g672.jpg");
-//                urlList.add("http://static.kakayuy.com/group1/M00/00/01/rBoO7123JxWAGoUGAAFhmDWpACM043.jpg");
-//                urlList.add("http://static.kakayuy.com/group1/M00/00/02/rBoO717kdAiAX1V-AAFAnQJ_ZdA288.JPG");
                 for (BannerBean item : bannerBeans) {
                     urlList.add(item.img);
                 }
@@ -392,12 +371,6 @@ public class HomeFragment extends Fragment {
                                 MessageDialog.show((AppCompatActivity) requireContext(), "温馨提示", "功能未开启，敬请期待");
                             }
                         }
-//                        if (!StringUtil.isEmpty(target.trim())) {
-//                            Intent intent = new Intent(getContext(), WebViewActivity.class);
-//                            intent.putExtra("url", target);
-//                            intent.putExtra("from", "首页");
-//                            getActivity().startActivity(intent);
-//                        }
                     }
                 });
             }
@@ -485,49 +458,9 @@ public class HomeFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == Constants.RC_PERMISSION_BASE) {
-//            permissionsCheck();
-//        }
     }
 
 
-//    public void permissionsCheck() {
-////        String[] perms = {Manifest.permission.CAMERA};
-//        String[] perms = ((MainActivity) requireActivity()).needPermissions;
-//
-//        ((MainActivity) requireActivity()).performCodeWithPermission(1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, perms, new BaseActivity.PermissionCallback() {
-//            @Override
-//            public void hasPermission(List<String> allPerms) {
-//                mainViewModel.sendOilPayInfo(getContext());
-//                checkLocation();
-//            }
-//
-//            @Override
-//            public void noPermission(List<String> deniedPerms, List<String> grantedPerms, Boolean hasPermanentlyDenied) {
-//                EasyPermissions.goSettingsPermissions(getActivity(), 1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, Constants.RC_PERMISSION_BASE);
-//            }
-//
-//            @Override
-//            public void showDialog(int dialogType, final EasyPermissions.DialogCallback callback) {
-//                MessageDialog dialog = MessageDialog.build((AppCompatActivity) requireActivity());
-//                dialog.setStyle(DialogSettings.STYLE.STYLE_IOS);
-//                dialog.setTheme(DialogSettings.THEME.LIGHT);
-//                dialog.setTitle(getString(R.string.app_name));
-//                dialog.setMessage(getString(R.string.dialog_rationale_ask_again));
-//                dialog.setOkButton("设置", new OnDialogButtonClickListener() {
-//
-//                    @Override
-//                    public boolean onClick(BaseDialog baseDialog, View v) {
-//                        callback.onGranted();
-//                        return false;
-//                    }
-//                });
-//                dialog.setCancelable(false);
-//
-//                dialog.show();
-//            }
-//        });
-//    }
 
     private void loadChildData() {
         if (isFirstLoad) {

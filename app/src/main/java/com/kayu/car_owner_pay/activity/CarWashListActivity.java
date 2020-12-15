@@ -2,15 +2,10 @@ package com.kayu.car_owner_pay.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,9 +34,6 @@ import java.util.List;
 
 
 public class CarWashListActivity extends BaseActivity {
-//    private View view;
-//    private final AdaptiveHeightViewPager viewPager;
-//    private int fragment_id;
     WashParam selectDistanceParam ;
     WashParam selectSortsParam ;
     private MainViewModel mainViewModel;
@@ -49,24 +41,9 @@ public class CarWashListActivity extends BaseActivity {
     private RecyclerView station_rv,param_recycle_view;
     private TextView param_distance,param_sort;
 //    private Callback callback;
-    private String mCityName;
-    private double mLatitude = 0;//纬度
-    private double mLongitude = 0;//经度
     boolean isLoadmore = false;
     boolean isRefresh = false;
     private int pageIndex;
-    //    private Context context;
-
-//    public CarWashListActivity(AdaptiveHeightViewPager viewPager, int fragment_id, Callback callback) {
-//        this.fragment_id = fragment_id;
-//        this.viewPager = viewPager;
-//        this.callback = callback;
-//    }
-
-//    public CarWashListActivity setFragment_id(int fragment_id) {
-//        this.fragment_id = fragment_id;
-//        return this;
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -207,26 +184,10 @@ public class CarWashListActivity extends BaseActivity {
                         param_distance.setSelected(true);
                     }
                 });
-//                viewPager.setObjectForPosition(view,fragment_id);
                 refreshLayout.autoRefresh();
             }
         });
     }
-
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//
-//        return inflater.inflate(R.layout.fragment_home_car_wash, container, false);
-//    }
-
-//    @Override
-//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//        this.view = view;
-//
-//    }
 
     private void showParamViewData(int flag, List<ParamParent> data) {
         if (param_recycle_view.getVisibility() == View.GONE)
@@ -300,13 +261,7 @@ public class CarWashListActivity extends BaseActivity {
             return;
         }
 
-        mLatitude = latitude;
-        mLongitude = longitude;
-        mCityName = cityName;
-//        if (isRefresh && null != stationAdapter)
-//            stationAdapter.removeAllData(true);
         HashMap<String,Object> dataMap = new HashMap<>();
-
         dataMap.put("pageNum",pageIndex);
         dataMap.put("pageSize",20);
         dataMap.put("cusLatitude",String.valueOf(latitude));
@@ -328,8 +283,6 @@ public class CarWashListActivity extends BaseActivity {
                         refreshLayout.finishLoadMore();
                     }
                 }
-//                if (null == oilStationBeans)
-//                    return;
                 if (isLoadmore) {
                     if (null != stationAdapter) {
                         if (null != oilStationBeans && oilStationBeans.size() > 0) {
@@ -342,7 +295,6 @@ public class CarWashListActivity extends BaseActivity {
                 }
                 isLoadmore = false;
                 isRefresh = false;
-//                viewPager.setObjectForPosition(view,fragment_id);
             }
         });
 
