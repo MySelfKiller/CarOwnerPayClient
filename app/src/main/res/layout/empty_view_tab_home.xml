@@ -10,20 +10,21 @@
         android:visibility="visible"
         android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_300"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_20"
         android:orientation="vertical">
         <pl.droidsonroids.gif.GifImageView
+            android:layout_marginTop="@dimen/dp_20"
             android:layout_width="@dimen/dp_50"
             android:layout_height="@dimen/dp_50"
             android:src="@drawable/empty_home_gif"/>
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:padding="@dimen/dp_5"-->
-<!--            android:text="暂无数据"-->
-<!--            android:textColor="#C8C8C8"-->
-<!--            android:textSize="@dimen/sp_16"/>-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_5"
+            android:text="正在搜索附近门店..."
+            android:textColor="#C8C8C8"
+            android:textSize="@dimen/sp_12"/>
     </LinearLayout>
 
 </LinearLayout>

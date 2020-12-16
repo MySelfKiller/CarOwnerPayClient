@@ -286,113 +286,10 @@ public class LoginAutoActivity extends BaseActivity {
                 if (JVerificationInterface.isInitSuccess()) {
                     // 判断当前的手机网络环境是否可以使用认证。
                     if (!JVerificationInterface.checkVerifyEnable(LoginAutoActivity.this)) {
-                        Intent intent = new Intent(LoginAutoActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
+                        jumpDialog("一键登录验证失败");
                         return;
                     }
                     TipGifDialog.show(LoginAutoActivity.this, "请稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
-//                    LoginSettings loginSettings = new LoginSettings();
-//                    loginSettings.setAutoFinish(true);
-//                    loginSettings.setTimeout(15 * 1000);
-//                    loginSettings.setAuthPageEventListener(new AuthPageEventListener() {
-//                        @Override
-//                        public void onEvent(int i, String s) {
-//                            LogUtil.e("JPush", "onEvent---code=" + i + ", msg=" + s);
-//
-//                        }
-//                    });
-//                    Resources resources = LoginAutoActivity.this.getResources();
-//                    View view = getLayoutInflater().inflate(R.layout.login_part_lay,null,false);
-//                    view.findViewById(R.id.login_part_phone).setOnClickListener(new NoMoreClickListener() {
-//                        @Override
-//                        protected void OnMoreClick(View view) {
-//                            startActivity(new Intent(LoginAutoActivity.this, LoginActivity.class));
-//                        }
-//
-//                        @Override
-//                        protected void OnMoreErrorClick() {
-//
-//                        }
-//                    });
-//                    view.findViewById(R.id.login_part_wechat).setOnClickListener(new NoMoreClickListener() {
-//                        @Override
-//                        protected void OnMoreClick(View view) {
-//                            wxShare = new WXShare(LoginAutoActivity.this);
-//                            wxShare.register();
-//                            wxShare.getAuth(new ItemCallback() {
-//                                @Override
-//                                public void onItemCallback(int position, Object obj) {
-//                                    Toast.makeText(LoginAutoActivity.this,"微信token"+(String)obj,Toast.LENGTH_SHORT).show();
-//                                    reqSignIn((String)obj);
-//                                }
-//
-//                                @Override
-//                                public void onDetailCallBack(int position, Object obj) {
-//
-//                                }
-//                            });
-//
-//                        }
-//
-//                        @Override
-//                        protected void OnMoreErrorClick() {
-//
-//                        }
-//                    });
-//                    JVerifyUIConfig uiConfig = new JVerifyUIConfig.Builder()
-////                            .setStatusBarTransparent(true)
-////                            .setStatusBarHidden(f)
-////                            .setStatusBarColorWithNav(true)
-////                            .setVirtualButtonTransparent(true)
-////                            .setPrivacyVirtualButtonTransparent(true)
-////                            .setPrivacyVirtualButtonTransparent(true)
-//                            .setStatusBarDarkMode(false)
-//                            .setNavColor(resources.getColor(R.color.white))
-//                            .setNavText("登录")
-//                            .setNavTextSize(20)
-////                            .setNavTextBold(true)
-//                            .setPrivacyNavColor(resources.getColor(R.color.white))
-//                            .setNavTextColor(resources.getColor(R.color.black1))
-//                            .setNavReturnImgPath("normal_btu_black")
-//                            .setNavReturnBtnOffsetX(20)
-//                            .setLogoImgPath("ic_login_bg")
-//                            .setLogoWidth(80)
-//                            .setLogoHeight(60)
-//                            .setLogoHidden(false)
-//                            .setNumberColor(resources.getColor(R.color.black1))
-//                            .setLogBtnText("一键登录")
-//                            .setLogBtnTextSize(16)
-//                            .setLogBtnHeight(40)
-//                            .setLogBtnTextColor(resources.getColor(R.color.select_text_color))
-//                            .setLogBtnImgPath("ic_login_btn_bg")
-//                            .setAppPrivacyOne(titles[0], urls[0])
-//                            .setAppPrivacyTwo(titles[1], urls[1])
-//
-//                            .setAppPrivacyColor(0xFFBBBCC5, 0xFF8998FF)
-//                            .setPrivacyCheckboxHidden(true)
-//                            .setPrivacyState(true)
-//                            .setSloganTextColor(resources.getColor(R.color.grayText2))
-//                            .setSloganTextSize(12)
-//                            .setLogoOffsetY(100)
-////                            .setLogoImgPath("logo_cm")
-//                            .setNumFieldOffsetY(190)
-//                            .setSloganOffsetY(235)
-//                            .setLogBtnOffsetY(260)
-//                            .setNumberSize(22)
-//                            .setPrivacyState(true)
-//                            .setPrivacyTextCenterGravity(true)
-////                            .setPrivacyOffsetX(30)
-//                            .setPrivacyTextSize(12)
-//                            .addCustomView(view, false, new JVerifyUIClickCallback() {
-//                                @Override
-//                                public void onClicked(Context context, View view) {
-////                                    Toast.makeText(context,"动态注册的其他按钮",Toast.LENGTH_SHORT).show();
-//                                }
-//                            })
-//                            .setNavTransparent(false).build();
-
-//                    JVerificationInterface.setCustomUIWithConfig(uiConfig);
                     JVerificationInterface.setCustomUIWithConfig(getFullScreenPortraitConfig());
                     JVerificationInterface.loginAuth(LoginAutoActivity.this,true, new VerifyListener() {
                         @Override
@@ -402,10 +299,8 @@ public class LoginAutoActivity extends BaseActivity {
 //                                JVerificationInterface.dismissLoginAuthActivity();
                                 LogUtil.e("JPush", "code=" + code + ", token=" + content + " ,operator=" + operator);
                                 sendSubRequest(content);
-                            } else if (code == 6001) {
-                                LogUtil.e("JPush", "code=" + code + ", content=" + content + " ,operator=" + operator);
-                                TipGifDialog.show(LoginAutoActivity.this, "一键登录验证失败", TipGifDialog.TYPE.ERROR);
                             } else {
+                                jumpDialog("一键登录验证失败");
                                 LogUtil.e("JPush", "code=" + code + ", content=" + content + " ,operator=" + operator);
                             }
                         }
@@ -418,7 +313,8 @@ public class LoginAutoActivity extends BaseActivity {
                     });
 
                 } else {
-                    ToastUtils.show("尚未初始化成功～！");
+                    jumpDialog("一键登录验证失败");
+//                    ToastUtils.show("尚未初始化成功～！");
                 }
             }
 
@@ -449,6 +345,18 @@ public class LoginAutoActivity extends BaseActivity {
         });
     }
 
+    private void jumpDialog(String msg){
+        MessageDialog.show(LoginAutoActivity.this,"提示",msg+"，是否需要使用其他手机号验证登录？","是","否").setCancelable(false)
+                .setOkButton(new OnDialogButtonClickListener() {
+                    @Override
+                    public boolean onClick(BaseDialog baseDialog, View v) {
+                        Intent intent = new Intent(LoginAutoActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                        return true;
+                    }
+                });
+    }
     @SuppressLint("HandlerLeak")
     private void reqSignIn(String code) {
         if (null== code || StringUtil.isEmpty(code)){

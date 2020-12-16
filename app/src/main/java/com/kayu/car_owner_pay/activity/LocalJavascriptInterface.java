@@ -17,9 +17,6 @@ import com.kayu.utils.GsonHelper;
 import com.kayu.utils.ImageUtil;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.callback.ImageCallback;
-import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
-import com.kongzue.dialog.util.BaseDialog;
-import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.TipGifDialog;
 
 public class LocalJavascriptInterface {
@@ -40,6 +37,7 @@ public class LocalJavascriptInterface {
 //                return false;
 //            }
 //        });
+//        LogUtil.e("LocalJavascriptInterface","saveImage----path:"+s);
         if (StringUtil.isEmpty(s)) {
             TipGifDialog.show((AppCompatActivity) mContext, "数据错误，无法保存！", TipGifDialog.TYPE.ERROR);
             return;

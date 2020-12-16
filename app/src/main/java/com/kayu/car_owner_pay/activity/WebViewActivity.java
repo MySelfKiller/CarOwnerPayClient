@@ -52,6 +52,7 @@ import com.kayu.utils.StringUtil;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
 import com.kongzue.dialog.v3.BottomMenu;
+import com.kongzue.dialog.v3.TipGifDialog;
 
 import java.io.File;
 import java.util.HashMap;
@@ -60,7 +61,7 @@ import java.util.Map;
 public class WebViewActivity extends AppCompatActivity {
 
     WebView wvWebView;
-    ProgressBar pbWebView;
+//    ProgressBar pbWebView;
 
     public static final String URL = "https://www.baidu.com";
     private String url;
@@ -137,15 +138,16 @@ public class WebViewActivity extends AppCompatActivity {
         back_tv.setText(from);
 
         wvWebView = findViewById(R.id.wvWebView);
-        pbWebView = findViewById(R.id.pbWebView);
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            builder.detectFileUriExposure();
-        }
-        CookieSyncManager.createInstance(this);
-        CookieSyncManager.getInstance().startSync();
-        CookieManager.getInstance().removeSessionCookie();
+//        pbWebView = findViewById(R.id.pbWebView);
+//        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+//        StrictMode.setVmPolicy(builder.build());
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+//            builder.detectFileUriExposure();
+//        }
+//        CookieSyncManager.createInstance(this);
+//        CookieSyncManager.getInstance().startSync();
+//        CookieManager.getInstance().removeSessionCookie();
+        TipGifDialog.show(this, "加载中...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
 
         initData();
     }
@@ -202,11 +204,11 @@ public class WebViewActivity extends AppCompatActivity {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 //开启DomStorage缓存
-        LogUtil.e("WebView","UserAgent: "+webSettings.getUserAgentString());
+//        LogUtil.e("WebView","UserAgent: "+webSettings.getUserAgentString());
 
         // android 5.0及以上默认不支持Mixed Content
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
             //或者
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         }
@@ -284,7 +286,7 @@ public class WebViewActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
-                pbWebView.setProgress(newProgress);
+//                pbWebView.setProgress(newProgress);
             }
 
             @Override
@@ -345,7 +347,7 @@ public class WebViewActivity extends AppCompatActivity {
 
 //                view.loadUrl(url);
                 if(url.startsWith("http:")|| url.startsWith("https:")){
-                    if (url.equals("https://www.kakayuy.com/close")){
+                    if (url.equals("https://www.ky808.cn/close")){
                         onBackPressed();
                         return true;
                     }else {
@@ -389,15 +391,19 @@ public class WebViewActivity extends AppCompatActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 title_name.setText(titleName);
-                pbWebView.setVisibility(View.VISIBLE);
+                TipGifDialog.show(WebViewActivity.this, "加载中...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
+//                pbWebView.setVisibility(View.VISIBLE);
                 super.onPageStarted(view, url, favicon);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 view.getSettings().setLoadsImagesAutomatically(true);
-                pbWebView.setVisibility(View.GONE);
-                title_name.setText(StringUtil.getTrimedString(wvWebView.getTitle()));
+//                pbWebView.setVisibility(View.GONE);
+                LogUtil.e("WebView","onPageFinished-----title:"+view.getTitle());
+                TipGifDialog.dismiss();
+                title_name.postDelayed(() -> title_name.setText(view.getTitle()),100);
+
 
                 CookieManager cookieManager = CookieManager.getInstance();
                 String CookieStr = cookieManager.getCookie(url);

@@ -1,18 +1,18 @@
 package com.kayu.car_owner_pay.ui;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -28,6 +28,7 @@ import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.gcssloop.widget.PagerGridLayoutManager;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.activity.AgentWebViewActivity;
 import com.kayu.car_owner_pay.activity.BannerImageLoader;
 import com.kayu.car_owner_pay.activity.CarWashListActivity;
 import com.kayu.car_owner_pay.activity.GasStationListActivity;
@@ -98,7 +99,8 @@ public class HomeFragment extends Fragment {
     };
     private TextView location_tv,notify_show;
     private PagerAdapter adapter;
-    private ImageView title_iv;
+    private LinearLayout title_lay_bg;
+    private FadingScrollView scrollView;
     //    private List<Fragment> subFragmentList;
 
 //    private double distance;//距离/km
@@ -109,7 +111,7 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 //        LogUtil.e("HomeFragment----","----onCreateView---");
         mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        return inflater.inflate(R.layout.fragment_home_new, container, false);
     }
 
     @Override
@@ -130,7 +132,11 @@ public class HomeFragment extends Fragment {
             }
         });
         notify_show = view.findViewById(R.id.home_notify_show);
-        title_iv = view.findViewById(R.id.home_title_iv);
+        title_lay_bg = view.findViewById(R.id.home_title_lay);
+        title_lay_bg.setAlpha(0);
+        scrollView = view.findViewById(R.id.home_scroll);
+        scrollView.setFadingView(title_lay_bg);
+        scrollView.setFadingHeightView(banner);
         category_rv = view.findViewById(R.id.home_category_rv);
         hostTextBanner = view.findViewById(R.id.home_hostTextBanner);
         slidingTabLayout = view.findViewById(R.id.list_ctl);
@@ -319,7 +325,7 @@ public class HomeFragment extends Fragment {
                 for (BannerBean item : bannerBeans) {
                     urlList.add(item.img);
                 }
-                title_iv.setBackgroundColor(Color.parseColor(bannerBeans.get(0).bgColor));
+//                title_lay.setBackgroundColor(Color.parseColor(bannerBeans.get(0).bgColor));
 //                StatusBarUtil.setStatusBarColor(getActivity(), Color.parseColor(bannerBeans.get(0).bgColor));
                 banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR)
                         .setIndicatorGravity(BannerConfig.RIGHT)
@@ -336,10 +342,10 @@ public class HomeFragment extends Fragment {
 
                             @Override
                             public void onPageSelected(int position) {
-                                if (getUserVisibleHint()) {
-                                    title_iv.setBackgroundColor(Color.parseColor(bannerBeans.get(position).bgColor));
+//                                if (getUserVisibleHint()) {
+//                                    title_lay.setBackgroundColor(Color.parseColor(bannerBeans.get(position).bgColor));
 //                                    StatusBarUtil.setStatusBarColor(getActivity(), Color.parseColor(bannerBeans.get(position).bgColor));
-                                }
+//                                }
                             }
 
                             @Override
@@ -392,7 +398,7 @@ public class HomeFragment extends Fragment {
 //                    mColumns = 4;
 //                }
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.dp_84) * mRows);
-                layoutParams.topMargin = getResources().getDimensionPixelSize(R.dimen.dp_8);
+                layoutParams.topMargin = getResources().getDimensionPixelSize(R.dimen.dp_14);
                 category_rv.setLayoutParams(layoutParams);
 
                 PagerGridLayoutManager mLayoutManager = new PagerGridLayoutManager(mRows, mColumns, PagerGridLayoutManager

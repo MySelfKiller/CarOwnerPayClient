@@ -47,7 +47,7 @@
         android:paddingHorizontal="@dimen/dp_5"
         android:paddingVertical="@dimen/dp_1"
         android:textColor="@color/white"
-        android:textSize="@dimen/sp_8"
+        android:textSize="@dimen/sp_10"
         android:visibility="visible"
         android:layout_marginStart="@dimen/dp_35"
         app:layout_constraintStart_toStartOf="@id/item_cate_img"

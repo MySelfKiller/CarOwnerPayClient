@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -199,6 +198,7 @@ public class PersonalFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && !mHasLoadedOnce) {
+//            StatusBarUtil.setTranslucentStatus(requireActivity());
             refreshLayout.autoRefresh();
             mHasLoadedOnce = true;
         }
