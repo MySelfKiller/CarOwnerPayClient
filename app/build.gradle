@@ -21,8 +21,8 @@ android {
         applicationId "com.kayu.car_owner_pay"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0.0"
+        versionCode 3
+        versionName "1.0.2"
 
 //        ndk {
 //            //选择要添加的对应 cpu 类型的 .so 库。
@@ -74,7 +74,7 @@ android {
         variant.outputs.all {
             def fileName
             def date = new Date()
-            def formattedDate = date.format('yyyyMMdd')
+            def formattedDate = date.format('yyyyMMddHHmm')
             if (variant.buildType.name.equals('release')) {
                 fileName = "CarOwnerPay_KaYu_${variant.mergedFlavor.versionName}_release_${formattedDate}.apk"
             } else if (variant.buildType.name.equals('debug')) {

@@ -201,8 +201,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             @Override
             public void showDialog(int dialogType, final EasyPermissions.DialogCallback callback) {
                 MessageDialog dialog = MessageDialog.build((AppCompatActivity) MainActivity.this);
-                dialog.setStyle(DialogSettings.STYLE.STYLE_IOS);
-                dialog.setTheme(DialogSettings.THEME.LIGHT);
                 dialog.setTitle(getString(R.string.app_name));
                 dialog.setMessage(getString(R.string.dialog_rationale_ask_again));
                 dialog.setOkButton("设置", new OnDialogButtonClickListener() {
@@ -290,7 +288,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             final String url = updateInfo.url;
             messageDialog.setTitle("检测到新版");
             messageDialog.setMessage(updateInfo.content);
-            messageDialog.setOkButton("下载");
+            messageDialog.setOkButton("升级");
             if (!isMustUpdate) {
                 messageDialog.setCancelButton("取消");
                 messageDialog.setCancelButton((baseDialog, v) -> {
@@ -298,7 +296,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                     return false;
                 });
             }
-            messageDialog.setCancelable(!isMustUpdate);
+            messageDialog.setCancelable(false);
             messageDialog.setOkButton(new OnDialogButtonClickListener() {
                 @Override
                 public boolean onClick(BaseDialog baseDialog, View v) {

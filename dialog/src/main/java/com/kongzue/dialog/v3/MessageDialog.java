@@ -1,13 +1,12 @@
 package com.kongzue.dialog.v3;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.text.TextUtilsCompat;
 
 import com.kongzue.dialog.R;
 import com.kongzue.dialog.interfaces.OnBackClickListener;
@@ -253,6 +251,7 @@ public class MessageDialog extends BaseDialog {
                 txtDialogTip.setVisibility(View.GONE);
             } else {
                 txtDialogTip.setVisibility(View.VISIBLE);
+                txtDialogTip.setMovementMethod(LinkMovementMethod.getInstance());
                 txtDialogTip.setText(message);
             }
         }

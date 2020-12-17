@@ -149,7 +149,7 @@ public class LoginAutoActivity extends BaseActivity {
                     if (isFirstShow) {
                         String menss = "请您务必谨慎阅读、充分理解\"" + titles[0] + "\"和\"" + titles[1] + "\"各条款，包括但不限于：为了向你提供及时通讯，内容分享等服务，我们需要收集你的定位信息，操作日志信息" +
                                 "等。你可以在\"设置\"中查看、变更、删除个人信息并管理你的授权。" +
-                                "<br>你可阅读<font color=\"#007aff\"><a href=\"" + urls[0] + "\" style=\"text-decoration:none;\">《" + titles[0] + "》</a></font>和<font color=\"#007aff\"><a href=\"" + urls[1] + "\" style=\"text-decoration:none;\">《" + titles[1] + "》</a></font>了解详细信息" +
+                                "<br>你可阅读<font color=\"#007aff\"><a href=\"" + urls[0] + "\" style=\"text-decoration:none;\">《" + titles[0] + "》</a></font>和<font color=\"#007aff\"><a href=\"" + urls[1] + "\" style=\"text-decoration:none;\">《" + titles[1] + "》</a></font>了解详细信息。" +
                                 "如您同意，请点击确定接收我们的服务";
                         MessageDialog.show(LoginAutoActivity.this,
                                 titles[0] + "和" + titles[1], Html.fromHtml(menss)
@@ -295,13 +295,14 @@ public class LoginAutoActivity extends BaseActivity {
                         @Override
                         public void onResult(int code, String content, String operator) {
                             TipGifDialog.dismiss();
+                            LogUtil.e("JPush", "code=" + code + ", token=" + content + " ,operator=" + operator);
                             if (code == 6000) {
 //                                JVerificationInterface.dismissLoginAuthActivity();
-                                LogUtil.e("JPush", "code=" + code + ", token=" + content + " ,operator=" + operator);
                                 sendSubRequest(content);
+                            } else if (code == 6002){
+                                //取消登录
                             } else {
                                 jumpDialog("一键登录验证失败");
-                                LogUtil.e("JPush", "code=" + code + ", content=" + content + " ,operator=" + operator);
                             }
                         }
                     },new AuthPageEventListener(){
