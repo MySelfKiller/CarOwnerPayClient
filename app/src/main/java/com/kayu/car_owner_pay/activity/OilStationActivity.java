@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.activity.login.LoginAutoActivity;
 import com.kayu.car_owner_pay.model.OilStationBean;
 import com.kayu.car_owner_pay.model.OilsParam;
 import com.kayu.car_owner_pay.model.OilsTypeParam;
@@ -28,6 +29,7 @@ import com.kayu.utils.ItemCallback;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
+import com.kongzue.dialog.v3.TipDialog;
 import com.kongzue.dialog.v3.TipGifDialog;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
@@ -58,9 +60,9 @@ public class OilStationActivity extends BaseActivity {
 //    private ConstraintLayout tip_lay;
 //    private TextView tip_content;
 //    private TextView tip_title;
-    private RefreshLayout refreshLayout;
-    boolean isLoadmore = false;
-    boolean isRefresh = false;
+//    private RefreshLayout refreshLayout;
+//    boolean isLoadmore = false;
+//    boolean isRefresh = false;
 
 //    public OilStationActivity(String gasId) {
 //        this.gasId = gasId;
@@ -91,21 +93,21 @@ public class OilStationActivity extends BaseActivity {
         title_name.setText("详情");
 //        back_tv.setText("首页");
 
-        refreshLayout = (RefreshLayout) findViewById(R.id.refreshLayout);
-        refreshLayout.setEnableAutoLoadMore(false);
-        refreshLayout.setEnableLoadMore(false);
-        refreshLayout.setEnableLoadMoreWhenContentNotFull(true);//是否在列表不满一页时候开启上拉加载功能
-        refreshLayout.setEnableOverScrollBounce(true);//是否启用越界回弹
-        refreshLayout.setEnableOverScrollDrag(true);
-        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                if (isRefresh || isLoadmore)
-                    return;
-                isRefresh = true;
-                loadView();
-            }
-        });
+//        refreshLayout = (RefreshLayout) findViewById(R.id.refreshLayout);
+//        refreshLayout.setEnableAutoLoadMore(false);
+//        refreshLayout.setEnableLoadMore(false);
+//        refreshLayout.setEnableLoadMoreWhenContentNotFull(true);//是否在列表不满一页时候开启上拉加载功能
+//        refreshLayout.setEnableOverScrollBounce(true);//是否启用越界回弹
+//        refreshLayout.setEnableOverScrollDrag(true);
+//        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+//            @Override
+//            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+//                if (isRefresh || isLoadmore)
+//                    return;
+//                isRefresh = true;
+//                loadView();
+//            }
+//        });
 
 
         station_img = findViewById(R.id.station_img);
@@ -132,7 +134,8 @@ public class OilStationActivity extends BaseActivity {
 //        manager1.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
         select_oil_gun_rv.setLayoutManager(manager1);
 
-        refreshLayout.autoRefresh();
+//        refreshLayout.autoRefresh();
+        loadView();
     }
 
 //    @Override
@@ -185,12 +188,17 @@ public class OilStationActivity extends BaseActivity {
 //                }
 //            }
 //        });
-
+        TipGifDialog.show(OilStationActivity.this, "请稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         mainViewModel.getOilStationDetail(OilStationActivity.this, gasId).observe(OilStationActivity.this, new Observer<OilStationBean>() {
 
             @SuppressLint("SetTextI18n")
             @Override
             public void onChanged(OilStationBean oilStationBean) {
+                if (null == oilStationBean) {
+                    TipGifDialog.show(OilStationActivity.this, "数据获取错误", TipGifDialog.TYPE.ERROR);
+                    return;
+                }
+                TipGifDialog.dismiss();
                 station_name.setText(oilStationBean.gasName);
                 station_location.setText(oilStationBean.gasAddress);
 
@@ -242,11 +250,6 @@ public class OilStationActivity extends BaseActivity {
 
                     }
                 });
-
-                if (isRefresh) {
-                    refreshLayout.finishRefresh();
-                    isRefresh = false;
-                }
             }
         });
     }

@@ -21,6 +21,7 @@ import com.kayu.car_owner_pay.model.WashStationDetailBean;
 import com.kayu.utils.GetJuLiUtils;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.location.LocationManagerUtil;
+import com.kongzue.dialog.v3.TipGifDialog;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 
@@ -170,6 +171,8 @@ public class WashStationActivity extends BaseActivity {
 //                fragmentTransaction.add(R.id.main_root_lay, new WashOrderFragment(selectedListDTO,serviceType));
 //                fragmentTransaction.addToBackStack("ddd");
 //                fragmentTransaction.commit();
+                if (null == selectedListDTO)
+                    return;
                 Intent intent = new Intent(WashStationActivity.this, WashOrderActivity.class);
                 intent.putExtra("selectedListDTO", selectedListDTO);
                 intent.putExtra("serviceType",serviceType);
@@ -250,12 +253,15 @@ public class WashStationActivity extends BaseActivity {
 
             }
         });
-
+        TipGifDialog.show(WashStationActivity.this, "请稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         mainViewModel.getWashStoreDetail(WashStationActivity.this, shopCode).observe(WashStationActivity.this, new Observer<WashStationDetailBean>() {
             @Override
             public void onChanged(WashStationDetailBean washStationDetailBean) {
-                if (null != washStationDetailBean)
+                if (null == washStationDetailBean) {
+                    TipGifDialog.show(WashStationActivity.this, "数据获取错误", TipGifDialog.TYPE.ERROR);
+                } else {
                     initViewData(washStationDetailBean);
+                }
             }
         });
 

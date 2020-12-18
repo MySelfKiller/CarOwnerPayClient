@@ -327,8 +327,6 @@ public class LoginAutoActivity extends BaseActivity {
             @Override
             public void showDialog(int dialogType, final EasyPermissions.DialogCallback callback) {
                 MessageDialog dialog = MessageDialog.build((AppCompatActivity) LoginAutoActivity.this);
-                dialog.setStyle(DialogSettings.STYLE.STYLE_IOS);
-                dialog.setTheme(DialogSettings.THEME.LIGHT);
                 dialog.setTitle(getString(R.string.app_name));
                 dialog.setMessage(getString(R.string.permiss_read_phone));
                 dialog.setOkButton("设置", new OnDialogButtonClickListener() {

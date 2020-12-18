@@ -44,6 +44,7 @@ import static com.kongzue.dialog.util.DialogSettings.blurAlpha;
  */
 public class TipGifDialog extends BaseDialog {
 
+    private static AppCompatActivity mContext;
     private DialogSettings.THEME tipTheme;
 
     public enum TYPE {
@@ -65,7 +66,7 @@ public class TipGifDialog extends BaseDialog {
     private RelativeLayout boxProgressGif;
     private GifImageView progressGif;
     private ProgressView progress;
-    private RelativeLayout boxTip;
+//    private RelativeLayout boxTip;
     private TextView txtInfo;
 
     private int tipTime = 1500;
@@ -179,10 +180,11 @@ public class TipGifDialog extends BaseDialog {
             }
         }
     }
+
     public static TipGifDialog show(AppCompatActivity context, CharSequence message, TYPE type, int resID) {
         synchronized (TipGifDialog.class) {
             TipGifDialog waitDialog = build(context);
-
+            mContext = context;
             waitDialogTemp.onDismissListener = new OnDismissListener() {
                 @Override
                 public void onDismiss() {
@@ -193,15 +195,17 @@ public class TipGifDialog extends BaseDialog {
             };
 
             if (waitDialog == null) {
-                waitDialogTemp.setTip(type);
-                waitDialogTemp.setTip(context.getResources(),resID);
+//                waitDialogTemp.setTip(type);
+                waitDialogTemp.setTip(type,context.getResources(),resID);
                 waitDialogTemp.setMessage(message);
+                waitDialogTemp.autoDismiss();
                 return waitDialogTemp;
             } else {
                 waitDialog.message = message;
-                waitDialog.setTip(type);
-                waitDialog.setTip(context.getResources(),resID);
+//                waitDialog.setTip(type);
+                waitDialog.setTip(type,context.getResources(),resID);
                 waitDialog.showDialog();
+                waitDialog.autoDismiss();
                 return waitDialog;
             }
         }
@@ -222,9 +226,6 @@ public class TipGifDialog extends BaseDialog {
     
     @Override
     public void bindView(View rootView) {
-        if (boxTip != null) {
-            boxTip.removeAllViews();
-        }
         if (boxBlur != null) {
             boxBlur.removeAllViews();
         }
@@ -235,7 +236,6 @@ public class TipGifDialog extends BaseDialog {
         boxProgressGif = rootView.findViewById(R.id.box_progress_gif);
         progressGif = rootView.findViewById(R.id.progress_gif);
         progress = rootView.findViewById(R.id.progress);
-        boxTip = rootView.findViewById(R.id.box_tip);
         txtInfo = rootView.findViewById(R.id.txt_info);
         
         refreshView();
@@ -276,27 +276,23 @@ public class TipGifDialog extends BaseDialog {
                     txtInfo.setTextColor(darkColor);
                     if (type != null) {
                         boxProgress.setVisibility(View.GONE);
+                        boxProgressGif.setVisibility(View.VISIBLE);
                         switch (type) {
                             case OTHER:
-                                boxProgressGif.setVisibility(View.VISIBLE);
                                 progressGif.setImageDrawable(tipImage);
                                 break;
                             case ERROR:
-                                boxTip.setVisibility(View.VISIBLE);
-                                boxTip.setBackgroundResource(R.mipmap.img_error_dark);
+                                progressGif.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.img_error_dark));
                                 break;
                             case WARNING:
-                                boxTip.setVisibility(View.VISIBLE);
-                                boxTip.setBackgroundResource(R.mipmap.img_warning_dark);
+                                progressGif.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.img_warning_dark));
                                 break;
                             case SUCCESS:
-                                boxTip.setVisibility(View.VISIBLE);
-                                boxTip.setBackgroundResource(R.mipmap.img_finish_dark);
+                                progressGif.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.img_finish_dark));
                                 break;
                         }
                     } else {
                         boxProgress.setVisibility(View.VISIBLE);
-                        boxTip.setVisibility(View.GONE);
                         boxProgressGif.setVisibility(View.GONE);
                     }
                     break;
@@ -310,28 +306,23 @@ public class TipGifDialog extends BaseDialog {
                     txtInfo.setTextColor(lightColor);
                     if (type != null) {
                         boxProgress.setVisibility(View.GONE);
-
+                        boxProgressGif.setVisibility(View.VISIBLE);
                         switch (type) {
                             case OTHER:
-                                boxProgressGif.setVisibility(View.VISIBLE);
                                 progressGif.setImageDrawable(tipImage);
                                 break;
                             case ERROR:
-                                boxTip.setVisibility(View.VISIBLE);
-                                boxTip.setBackgroundResource(R.mipmap.img_error);
+                                progressGif.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.img_error));
                                 break;
                             case WARNING:
-                                boxTip.setVisibility(View.VISIBLE);
-                                boxTip.setBackgroundResource(R.mipmap.img_warning);
+                                progressGif.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.img_warning));
                                 break;
                             case SUCCESS:
-                                boxTip.setVisibility(View.VISIBLE);
-                                boxTip.setBackgroundResource(R.mipmap.img_finish);
+                                progressGif.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.img_finish_dark));
                                 break;
                         }
                     } else {
                         boxProgress.setVisibility(View.VISIBLE);
-                        boxTip.setVisibility(View.GONE);
                         boxProgressGif.setVisibility(View.GONE);
                     }
                     break;
@@ -378,10 +369,6 @@ public class TipGifDialog extends BaseDialog {
             
             if (customView != null) {
                 boxProgress.setVisibility(View.GONE);
-                boxTip.setBackground(null);
-                boxTip.setVisibility(View.VISIBLE);
-                boxTip.addView(customView);
-                if (onBindView != null) onBindView.onBind(this, customView);
             }
         }
     }
@@ -484,8 +471,8 @@ public class TipGifDialog extends BaseDialog {
         return this;
     }
     
-    public TipGifDialog setTip(Resources resources, int resId) {
-        this.type = TYPE.OTHER;
+    public TipGifDialog setTip(TYPE type,Resources resources, int resId) {
+        this.type = type;
         try {
             tipImage =  new GifDrawable( resources, resId );
         } catch (IOException e) {
@@ -521,21 +508,6 @@ public class TipGifDialog extends BaseDialog {
     
     public DialogSettings.THEME getTheme() {
         return tipTheme;
-    }
-    
-    public TipGifDialog setCustomView(View customView) {
-        this.customView = customView;
-        refreshView();
-        return this;
-    }
-    
-    private OnBindView onBindView;
-    
-    public TipGifDialog setCustomView(int customViewLayoutId, OnBindView onBindView) {
-        customView = LayoutInflater.from(context.get()).inflate(customViewLayoutId, null);
-        this.onBindView = onBindView;
-        refreshView();
-        return this;
     }
     
     public boolean getCancelable() {
