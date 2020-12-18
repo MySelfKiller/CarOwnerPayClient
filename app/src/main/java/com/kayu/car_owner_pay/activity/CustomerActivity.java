@@ -1,5 +1,6 @@
 package com.kayu.car_owner_pay.activity;
 
+import android.Manifest;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +8,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -14,10 +17,18 @@ import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.model.SystemParam;
+import com.kayu.utils.Constants;
 import com.kayu.utils.ImageUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
+import com.kayu.utils.callback.Callback;
 import com.kayu.utils.callback.ImageCallback;
+import com.kayu.utils.permission.EasyPermissions;
+import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
+import com.kongzue.dialog.util.BaseDialog;
+import com.kongzue.dialog.v3.MessageDialog;
+
+import java.util.List;
 
 public class CustomerActivity extends BaseActivity {
 
@@ -75,7 +86,18 @@ public class CustomerActivity extends BaseActivity {
                     call_btn.setOnClickListener(new NoMoreClickListener() {
                         @Override
                         protected void OnMoreClick(View view) {
-                            KWApplication.getInstance().callPhone(CustomerActivity.this,systemParam.content);
+                            permissionsCheck(new String[]{Manifest.permission.CALL_PHONE}, R.string.permiss_call_phone,new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    KWApplication.getInstance().callPhone(CustomerActivity.this,systemParam.content);
+                                }
+
+                                @Override
+                                public void onError() {
+
+                                }
+                            });
+
                         }
 
                         @Override
@@ -102,17 +124,29 @@ public class CustomerActivity extends BaseActivity {
                 save_btn.setOnClickListener(new NoMoreClickListener() {
                     @Override
                     protected void OnMoreClick(View view) {
-                        if (null == qrcodeBitmap) {
-                            ToastUtils.show("保存图片不存在");
-                            return;
-                        }
-                        String fileName = "qr_"+System.currentTimeMillis() + ".jpg";
-                        boolean isSaveSuccess = ImageUtil.saveImageToGallery(CustomerActivity.this, qrcodeBitmap,fileName);
-                        if (isSaveSuccess) {
-                            ToastUtils.show("保存成功");
-                        } else {
-                            ToastUtils.show("保存失败");
-                        }
+                        permissionsCheck(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, R.string.permiss_write_store,new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                if (null == qrcodeBitmap) {
+                                    ToastUtils.show("保存图片不存在");
+                                    return;
+                                }
+                                String fileName = "qr_"+System.currentTimeMillis() + ".jpg";
+                                boolean isSaveSuccess = ImageUtil.saveImageToGallery(CustomerActivity.this, qrcodeBitmap,fileName);
+                                if (isSaveSuccess) {
+                                    ToastUtils.show("保存成功");
+                                } else {
+                                    ToastUtils.show("保存失败");
+                                }
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        });
+
+
 
                     }
 
@@ -121,6 +155,45 @@ public class CustomerActivity extends BaseActivity {
 
                     }
                 });
+            }
+        });
+    }
+
+    public void permissionsCheck(String[] perms, int resId, @NonNull Callback callback) {
+//        String[] perms = {Manifest.permission.CAMERA};
+        performCodeWithPermission(1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, perms, new PermissionCallback() {
+            @Override
+            public void hasPermission(List<String> allPerms) {
+                callback.onSuccess();
+            }
+
+            @Override
+            public void noPermission(List<String> deniedPerms, List<String> grantedPerms, Boolean hasPermanentlyDenied) {
+                EasyPermissions.goSettingsPermissions(CustomerActivity.this, 1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, Constants.RC_PERMISSION_BASE);
+            }
+
+            @Override
+            public void showDialog(int dialogType, final EasyPermissions.DialogCallback callback) {
+                MessageDialog dialog = MessageDialog.build((AppCompatActivity) CustomerActivity.this);
+                dialog.setTitle(getString(R.string.app_name));
+                dialog.setMessage(getString(resId));
+                dialog.setOkButton("确定", new OnDialogButtonClickListener() {
+
+                    @Override
+                    public boolean onClick(BaseDialog baseDialog, View v) {
+                        callback.onGranted();
+                        return false;
+                    }
+                });
+                dialog.setCancelButton("取消",new OnDialogButtonClickListener() {
+                    @Override
+                    public boolean onClick(BaseDialog baseDialog, View v) {
+                        return false;
+                    }
+                });
+                dialog.setCancelable(false);
+
+                dialog.show();
             }
         });
     }

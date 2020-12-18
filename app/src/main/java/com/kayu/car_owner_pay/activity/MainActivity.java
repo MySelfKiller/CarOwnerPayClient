@@ -1,5 +1,6 @@
 package com.kayu.car_owner_pay.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -165,15 +166,15 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     }
 
     public void permissionsCheck() {
-//        String[] perms = {Manifest.permission.CAMERA};
-        String[] perms = needPermissions;
+        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
+//        String[] perms = needPermissions;
 
         performCodeWithPermission(1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, perms, new PermissionCallback() {
             @Override
             public void hasPermission(List<String> allPerms) {
                 mViewModel.sendOilPayInfo(MainActivity.this);
                 if (!LocationManagerUtil.getSelf().isLocServiceEnable()){
-                    MessageDialog.show(MainActivity.this, "定位服务未开启", "请打开定位服务", "开启定位").setCancelable(false)
+                    MessageDialog.show(MainActivity.this, "定位服务未开启", "请打开定位服务", "开启定位服务","取消").setCancelable(false)
                             .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
                                 @Override
                                 public boolean onClick(BaseDialog baseDialog, View v) {
@@ -182,12 +183,18 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                                     intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
-                                    appManager.finishAllActivity();
-                                    LocationManagerUtil.getSelf().stopLocation();
-                                    finish();
+//                                    appManager.finishAllActivity();
+//                                    LocationManagerUtil.getSelf().stopLocation();
+//                                    finish();
                                     return true;
                                 }
-                            });
+                            }).setCancelButton(new OnDialogButtonClickListener() {
+                        @Override
+                        public boolean onClick(BaseDialog baseDialog, View v) {
+
+                            return false;
+                        }
+                    });
                 }
                 LocationManagerUtil.getSelf().startLocation();
                 reqUpdate();
@@ -202,12 +209,17 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             public void showDialog(int dialogType, final EasyPermissions.DialogCallback callback) {
                 MessageDialog dialog = MessageDialog.build((AppCompatActivity) MainActivity.this);
                 dialog.setTitle(getString(R.string.app_name));
-                dialog.setMessage(getString(R.string.dialog_rationale_ask_again));
-                dialog.setOkButton("设置", new OnDialogButtonClickListener() {
+                dialog.setMessage(getString(R.string.permiss_location));
+                dialog.setOkButton("确定", new OnDialogButtonClickListener() {
 
                     @Override
                     public boolean onClick(BaseDialog baseDialog, View v) {
                         callback.onGranted();
+                        return false;
+                    }
+                }).setCancelButton("取消", new OnDialogButtonClickListener() {
+                    @Override
+                    public boolean onClick(BaseDialog baseDialog, View v) {
                         return false;
                     }
                 });

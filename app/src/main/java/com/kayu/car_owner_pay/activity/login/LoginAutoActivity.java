@@ -329,11 +329,20 @@ public class LoginAutoActivity extends BaseActivity {
                 MessageDialog dialog = MessageDialog.build((AppCompatActivity) LoginAutoActivity.this);
                 dialog.setTitle(getString(R.string.app_name));
                 dialog.setMessage(getString(R.string.permiss_read_phone));
-                dialog.setOkButton("设置", new OnDialogButtonClickListener() {
+                dialog.setOkButton("确定", new OnDialogButtonClickListener() {
 
                     @Override
                     public boolean onClick(BaseDialog baseDialog, View v) {
                         callback.onGranted();
+                        return false;
+                    }
+                });
+                dialog.setCancelButton("取消",new OnDialogButtonClickListener() {
+                    @Override
+                    public boolean onClick(BaseDialog baseDialog, View v) {
+                        Intent intent = new Intent(LoginAutoActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
                         return false;
                     }
                 });

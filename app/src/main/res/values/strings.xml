@@ -13,7 +13,10 @@
 
     </string>
     <string name="dialog_rationale_ask_again">APP缺少正常运行时所必须的权限，请在系统设置内允许APP获得相应权限：</string>
-    <string name="permiss_read_phone">缺少读取手机状态权限，请去设置允许获取相关权限，才可使用一键登录功能。</string>
+    <string name="permiss_read_phone">请允许读取手机状态权限，方便您一键登录。</string>
+    <string name="permiss_call_phone">请允许拨打电话权限，方便您一键拨打客服电话。</string>
+    <string name="permiss_location">请允许定位权限，方便为您展示附近加油站。</string>
+    <string name="permiss_write_store">请允许存储数据权限，方便您保存二维码图片。</string>
 
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>

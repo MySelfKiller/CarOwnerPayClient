@@ -58,7 +58,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WebViewActivity extends AppCompatActivity {
+public class WebViewActivity extends BaseActivity {
 
     WebView wvWebView;
 //    ProgressBar pbWebView;

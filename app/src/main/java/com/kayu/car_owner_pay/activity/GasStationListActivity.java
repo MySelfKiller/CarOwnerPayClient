@@ -1,11 +1,14 @@
 package com.kayu.car_owner_pay.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,9 +25,14 @@ import com.kayu.car_owner_pay.model.ParamParent;
 import com.kayu.car_owner_pay.model.SortsParam;
 import com.kayu.car_owner_pay.ui.adapter.OilStationAdapter;
 import com.kayu.car_owner_pay.ui.adapter.ParamParentAdapter;
+import com.kayu.utils.Constants;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.location.LocationManagerUtil;
+import com.kayu.utils.permission.EasyPermissions;
+import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
+import com.kongzue.dialog.util.BaseDialog;
+import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.TipGifDialog;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
@@ -46,6 +54,7 @@ public class GasStationListActivity extends BaseActivity {
     boolean isLoadmore = false;
     boolean isRefresh = false;
     private int pageIndex;
+    private RefreshLayout refreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,7 +85,7 @@ public class GasStationListActivity extends BaseActivity {
         param_sort = findViewById(R.id.station_param_sort);
         param_recycle_view = findViewById(R.id.station_param_recycler);
         param_recycle_view.setLayoutManager(new LinearLayoutManager(GasStationListActivity.this));
-        RefreshLayout refreshLayout = (RefreshLayout) findViewById(R.id.refreshLayout);
+        refreshLayout = (RefreshLayout) findViewById(R.id.refreshLayout);
         refreshLayout.setEnableAutoLoadMore(false);
         refreshLayout.setEnableLoadMore(true);
         refreshLayout.setEnableLoadMoreWhenContentNotFull(true);//是否在列表不满一页时候开启上拉加载功能
@@ -124,6 +133,78 @@ public class GasStationListActivity extends BaseActivity {
         station_rv.setAdapter(oilStationAdapter);
 
 
+        permissionsCheck();
+    }
+
+    public void permissionsCheck() {
+        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
+//        String[] perms = needPermissions;
+
+        performCodeWithPermission(1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, perms, new PermissionCallback() {
+            @Override
+            public void hasPermission(List<String> allPerms) {
+                if (!LocationManagerUtil.getSelf().isLocServiceEnable()){
+                    MessageDialog.show(GasStationListActivity.this, "定位服务未开启", "请打开定位服务", "开启定位服务","取消").setCancelable(false)
+                            .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
+                                @Override
+                                public boolean onClick(BaseDialog baseDialog, View v) {
+                                    baseDialog.doDismiss();
+                                    Intent intent = new Intent();
+                                    intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+//                                    appManager.finishAllActivity();
+//                                    LocationManagerUtil.getSelf().stopLocation();
+//                                    finish();
+                                    onBackPressed();
+                                    return true;
+                                }
+                            }).setCancelButton(new OnDialogButtonClickListener() {
+                        @Override
+                        public boolean onClick(BaseDialog baseDialog, View v) {
+                            onBackPressed();
+                            return false;
+                        }
+                    });
+                }else {
+                    loadParam();
+                }
+                LocationManagerUtil.getSelf().startLocation();
+            }
+
+            @Override
+            public void noPermission(List<String> deniedPerms, List<String> grantedPerms, Boolean hasPermanentlyDenied) {
+                EasyPermissions.goSettingsPermissions(GasStationListActivity.this, 1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, Constants.RC_PERMISSION_BASE);
+            }
+
+            @Override
+            public void showDialog(int dialogType, final EasyPermissions.DialogCallback callback) {
+                MessageDialog dialog = MessageDialog.build((AppCompatActivity) GasStationListActivity.this);
+                dialog.setTitle(getString(R.string.app_name));
+                dialog.setMessage(getString(R.string.permiss_location));
+                dialog.setOkButton("确定", new OnDialogButtonClickListener() {
+
+                    @Override
+                    public boolean onClick(BaseDialog baseDialog, View v) {
+                        callback.onGranted();
+                        return false;
+                    }
+                }).setCancelButton("取消", new OnDialogButtonClickListener() {
+                    @Override
+                    public boolean onClick(BaseDialog baseDialog, View v) {
+                        onBackPressed();
+                        return false;
+                    }
+                });
+                dialog.setCancelable(false);
+
+                dialog.show();
+            }
+        });
+    }
+
+
+    private void loadParam() {
         TipGifDialog.show(GasStationListActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         mainViewModel.getParamSelect(GasStationListActivity.this).observe( GasStationListActivity.this, new Observer<ParamOilBean>() {
             @Override
@@ -216,7 +297,6 @@ public class GasStationListActivity extends BaseActivity {
                 refreshLayout.autoRefresh();
             }
         });
-
     }
 
     private void showParamViewData(int flag, List<ParamParent> data) {
