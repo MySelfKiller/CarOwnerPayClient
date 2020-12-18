@@ -92,10 +92,10 @@ public class OilStationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             vh.location.setText(oilStationBean.gasAddress);
             vh.distance.setText(oilStationBean.distance + "km");
             vh.oil_price.setText("￥" + oilStationBean.priceYfq);
-            vh.oil_price_full.setText("￥" + oilStationBean.priceOfficial);
-            vh.oil_rebate.setText(oilStationBean.offDiscount + "折");
+            vh.oil_price_full.setText("￥" + oilStationBean.priceGun);
+            vh.oil_rebate.setText(oilStationBean.gunDiscount + "折");
             vh.oil_rebate.setVisibility(View.VISIBLE);
-            vh.oil_price_sub.setText("降" + DoubleUtils.sub(oilStationBean.priceOfficial, oilStationBean.priceYfq) + "元");
+            vh.oil_price_sub.setText("降" + DoubleUtils.sub(oilStationBean.priceGun, oilStationBean.priceYfq) + "元");
             vh.mView.setOnClickListener(new NoMoreClickListener() {
                 @Override
                 protected void OnMoreClick(View view) {

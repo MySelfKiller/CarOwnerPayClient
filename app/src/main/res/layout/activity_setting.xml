@@ -152,6 +152,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:paddingHorizontal="@dimen/dp_20"
                 android:paddingVertical="@dimen/dp_5">
 
@@ -174,6 +175,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_1"
+                android:visibility="gone"
                 android:layout_marginHorizontal="@dimen/dp_17"
                 android:background="@color/divider2" />
 

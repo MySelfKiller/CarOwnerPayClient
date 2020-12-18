@@ -205,14 +205,14 @@ public class PersonalFragment extends Fragment {
     }
 
     private void initView() {
-        if (null != LocationManagerUtil.getSelf().getLoccation()){
-            mainViewModel.getReminder(getContext(), LocationManagerUtil.getSelf().getLoccation().getCity()).observe(requireActivity(), new Observer<String>() {
-                @Override
-                public void onChanged(String parameter) {
+//        if (null != LocationManagerUtil.getSelf().getLoccation()){
+//            mainViewModel.getReminder(getContext(), LocationManagerUtil.getSelf().getLoccation().getCity()).observe(requireActivity(), new Observer<String>() {
+//                @Override
+//                public void onChanged(String parameter) {
 //                    explain_content.setText(parameter);
-                }
-            });
-        }
+//                }
+//            });
+//        }
 
         mainViewModel.getUserInfo(getContext()).observe(requireActivity(), new Observer<UserBean>() {
             @Override
