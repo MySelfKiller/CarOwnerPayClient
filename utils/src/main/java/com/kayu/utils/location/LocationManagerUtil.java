@@ -9,8 +9,6 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.AMapLocationQualityReport;
 
-import java.text.SimpleDateFormat;
-
 public class LocationManagerUtil {
 
     private AMapLocation loc = null;
@@ -24,7 +22,7 @@ public class LocationManagerUtil {
         initLocation(context);
     }
 
-    public static void init(Context context){
+    public static synchronized void init(Context context){
         if (null == context){
             throw new IllegalArgumentException("Context must not be null.");
         }
@@ -108,7 +106,7 @@ public class LocationManagerUtil {
         public void onLocationChanged(AMapLocation location) {
             if (null != location) {
 
-                StringBuffer sb = new StringBuffer();
+//                StringBuffer sb = new StringBuffer();
                 //errCode等于0代表定位成功，其他的为定位失败，具体的可以参照官网定位错误码说明
 
                 if(location.getErrorCode() == 0){
@@ -141,23 +139,23 @@ public class LocationManagerUtil {
 //                    sb.append("定位时间: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(location.getTime()) + "\n");
                 } else {
                     //定位失败
-                    sb.append("定位失败" + "\n");
-                    sb.append("错误码:" + location.getErrorCode() + "\n");
-                    sb.append("错误信息:" + location.getErrorInfo() + "\n");
-                    sb.append("错误描述:" + location.getLocationDetail() + "\n");
+//                    sb.append("定位失败" + "\n");
+//                    sb.append("错误码:" + location.getErrorCode() + "\n");
+//                    sb.append("错误信息:" + location.getErrorInfo() + "\n");
+//                    sb.append("错误描述:" + location.getLocationDetail() + "\n");
                 }
-                sb.append("***定位质量报告***").append("\n");
-                sb.append("* WIFI开关：").append(location.getLocationQualityReport().isWifiAble() ? "开启":"关闭").append("\n");
-                sb.append("* GPS状态：").append(getGPSStatusString(location.getLocationQualityReport().getGPSStatus())).append("\n");
-                sb.append("* GPS星数：").append(location.getLocationQualityReport().getGPSSatellites()).append("\n");
-                sb.append("* 网络类型：" + location.getLocationQualityReport().getNetworkType()).append("\n");
-                sb.append("* 网络耗时：" + location.getLocationQualityReport().getNetUseTime()).append("\n");
-                sb.append("****************").append("\n");
-                //定位之后的回调时间
-                sb.append("回调时间: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()) + "\n");
+//                sb.append("***定位质量报告***").append("\n");
+//                sb.append("* WIFI开关：").append(location.getLocationQualityReport().isWifiAble() ? "开启":"关闭").append("\n");
+//                sb.append("* GPS状态：").append(getGPSStatusString(location.getLocationQualityReport().getGPSStatus())).append("\n");
+//                sb.append("* GPS星数：").append(location.getLocationQualityReport().getGPSSatellites()).append("\n");
+//                sb.append("* 网络类型：" + location.getLocationQualityReport().getNetworkType()).append("\n");
+//                sb.append("* 网络耗时：" + location.getLocationQualityReport().getNetUseTime()).append("\n");
+//                sb.append("****************").append("\n");
+//                //定位之后的回调时间
+//                sb.append("回调时间: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()) + "\n");
 
                 //解析定位结果，
-                String result = sb.toString();
+//                String result = sb.toString();
 //                LogUtil.e("hm",result);
             } else {
 //                LogUtil.e("hm","定位失败，loc is null");
@@ -203,6 +201,22 @@ public class LocationManagerUtil {
         // 设置定位参数
 //    locationClient.setLocationOption(locationOption);
         // 启动定位
+        if (!locationClient.isStarted()){
+            locationClient.startLocation();
+        }
+
+    }
+    /**
+     * 重新开始定位
+     *
+     * @since 2.8.0
+     * @author hongming.wang
+     *
+     */
+    public void reStartLocation(){
+        // 设置定位参数
+//    locationClient.setLocationOption(locationOption);
+        // 启动定位
         if (locationClient.isStarted()){
             locationClient.stopLocation();
         }
@@ -236,8 +250,8 @@ public class LocationManagerUtil {
              * 在Activity的onDestroy中一定要执行AMapLocationClient的onDestroy
              */
             locationClient.onDestroy();
-            locationClient = null;
-            locationOption = null;
+//            locationClient = null;
+//            locationOption = null;
         }
     }
 }

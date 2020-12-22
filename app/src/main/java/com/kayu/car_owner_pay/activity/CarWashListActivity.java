@@ -173,7 +173,9 @@ public class CarWashListActivity extends BaseActivity {
                 }else {
                     loadParam();
                 }
-                LocationManagerUtil.getSelf().startLocation();
+                if (null == LocationManagerUtil.getSelf().getLoccation()){
+                    LocationManagerUtil.getSelf().reStartLocation();
+                }
             }
 
             @Override

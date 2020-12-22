@@ -212,6 +212,20 @@ public class HomeFragment extends Fragment {
         });
 
 //        checkLocation();
+        LocationManagerUtil.getSelf().setLocationListener(new LocationCallback() {
+            @Override
+            public void onLocationChanged(AMapLocation location) {
+//                    LogUtil.e("HomeFragment----","----onStart--------LocationCallback");
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                cityName = location.getCity();
+                location_tv.setText(cityName);
+                if (!mHasLoadedOnce) {
+                    refreshLayout.autoRefresh();
+                    mHasLoadedOnce = true;
+                }
+            }
+        });
 
     }
 
@@ -227,23 +241,6 @@ public class HomeFragment extends Fragment {
                 initView();
             }
 //            LogUtil.e("HomeFragment----","----onStart------isCreated");
-            LocationManagerUtil.getSelf().setLocationListener(new LocationCallback() {
-                @Override
-                public void onLocationChanged(AMapLocation location) {
-//                    LogUtil.e("HomeFragment----","----onStart--------LocationCallback");
-                    if (location.getErrorCode() == 0) {
-                        latitude = location.getLatitude();
-                        longitude = location.getLongitude();
-                        cityName = location.getCity();
-                        location_tv.setText(cityName);
-                        if (!mHasLoadedOnce) {
-                            refreshLayout.autoRefresh();
-                            mHasLoadedOnce = true;
-                        }
-
-                    }
-                }
-            });
             isCreated = true;
         }
 

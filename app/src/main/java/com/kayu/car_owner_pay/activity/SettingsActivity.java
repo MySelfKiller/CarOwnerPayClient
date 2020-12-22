@@ -126,7 +126,7 @@ public class SettingsActivity extends BaseActivity {
                                 editor.commit();
                                 AppManager.getAppManager().finishAllActivity();
                                 LocationManagerUtil.getSelf().stopLocation();
-//                        LocationManager.getSelf().destroyLocation();
+//                                LocationManagerUtil.getSelf().destroyLocation();
                                 startActivity(new Intent(SettingsActivity.this, LoginAutoActivity.class));
                                 finish();
                                 return false;

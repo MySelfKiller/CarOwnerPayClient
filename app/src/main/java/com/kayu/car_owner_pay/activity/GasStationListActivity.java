@@ -28,6 +28,7 @@ import com.kayu.car_owner_pay.ui.adapter.ParamParentAdapter;
 import com.kayu.utils.Constants;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.NoMoreClickListener;
+import com.kayu.utils.location.LocationCallback;
 import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.permission.EasyPermissions;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
@@ -132,7 +133,6 @@ public class GasStationListActivity extends BaseActivity {
         });
         station_rv.setAdapter(oilStationAdapter);
 
-
         permissionsCheck();
     }
 
@@ -169,7 +169,9 @@ public class GasStationListActivity extends BaseActivity {
                 }else {
                     loadParam();
                 }
-                LocationManagerUtil.getSelf().startLocation();
+                if (null == LocationManagerUtil.getSelf().getLoccation()){
+                    LocationManagerUtil.getSelf().reStartLocation();
+                }
             }
 
             @Override

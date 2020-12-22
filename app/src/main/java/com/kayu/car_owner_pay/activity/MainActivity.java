@@ -156,8 +156,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             } else {
                 appManager.finishAllActivity();
                 LocationManagerUtil.getSelf().stopLocation();
-//                LocationManager.getSelf().destroyLocation();
+                LocationManagerUtil.getSelf().destroyLocation();
                 finish();
+                System.exit(0);
             }
         } else{//取出我们返回栈保存的Fragment,这里会从栈顶开始弹栈
             getSupportFragmentManager().popBackStack();
@@ -196,7 +197,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         }
                     });
                 }
-                LocationManagerUtil.getSelf().startLocation();
+                LocationManagerUtil.getSelf().reStartLocation();
                 reqUpdate();
             }
 
