@@ -94,6 +94,7 @@
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".activity.MessageActivity"
@@ -169,10 +170,12 @@
         <activity
             android:name=".activity.login.LoginActivity"
             android:screenOrientation="unspecified"
+            android:launchMode="singleTask"
             tools:ignore="Instantiatable,LockedOrientationActivity" />
         <activity
             android:name=".activity.login.LoginAutoActivity"
             android:screenOrientation="unspecified"
+            android:launchMode="singleTask"
             tools:ignore="Instantiatable,LockedOrientationActivity" />
         <activity
             android:name="com.cmic.sso.sdk.activity.OAuthActivity"

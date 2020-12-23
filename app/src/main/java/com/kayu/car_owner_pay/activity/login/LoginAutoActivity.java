@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.CookieManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -89,7 +90,9 @@ public class LoginAutoActivity extends BaseActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
         setContentView(R.layout.activity_login_new);
-
+        //登录的时候先清楚一下cookie缓存
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.removeAllCookie();
         sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         ask_btn = findViewById(R.id.login_auto_btn);

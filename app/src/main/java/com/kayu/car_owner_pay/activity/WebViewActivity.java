@@ -198,19 +198,14 @@ public class WebViewActivity extends BaseActivity {
 
 //启用地理定位
         webSettings.setGeolocationEnabled(true);
-        webSettings.setUseWideViewPort(true);
         webSettings.setSupportMultipleWindows(true);
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 //开启DomStorage缓存
 //        LogUtil.e("WebView","UserAgent: "+webSettings.getUserAgentString());
 
         // android 5.0及以上默认不支持Mixed Content
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-            //或者
-            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         }
         wvWebView.addJavascriptInterface(new LocalJavascriptInterface(this),"androidMethod");
         wvWebView.requestFocus();
@@ -400,7 +395,7 @@ public class WebViewActivity extends BaseActivity {
             public void onPageFinished(WebView view, String url) {
                 view.getSettings().setLoadsImagesAutomatically(true);
 //                pbWebView.setVisibility(View.GONE);
-                LogUtil.e("WebView","onPageFinished-----title:"+view.getTitle());
+//                LogUtil.e("WebView","onPageFinished-----title:"+view.getTitle());
                 TipGifDialog.dismiss();
                 title_name.postDelayed(() -> title_name.setText(view.getTitle()),100);
 
