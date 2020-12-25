@@ -9,7 +9,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -44,6 +47,7 @@ import com.kayu.car_owner_pay.http.ResponseInfo;
 import com.kayu.car_owner_pay.http.parser.LoginDataParse;
 import com.kayu.car_owner_pay.model.LoginInfo;
 import com.kayu.car_owner_pay.model.SystemParam;
+import com.kayu.car_owner_pay.ui.text_link.UrlClickableSpan;
 import com.kayu.car_owner_pay.wxapi.WXShare;
 import com.kayu.utils.Constants;
 import com.kayu.utils.GsonHelper;
@@ -150,12 +154,12 @@ public class LoginAutoActivity extends BaseActivity {
                     urls = systemParam.url.split("@@");
                     isFirstShow = sp.getBoolean(Constants.isShowDialog, true);
                     if (isFirstShow) {
-                        String menss = "请您务必谨慎阅读、充分理解\"" + titles[0] + "\"和\"" + titles[1] + "\"各条款，包括但不限于：为了向你提供及时通讯，内容分享等服务，我们需要收集你的定位信息，操作日志信息" +
-                                "等。你可以在\"设置\"中查看、变更、删除个人信息并管理你的授权。" +
-                                "<br>你可阅读<font color=\"#007aff\"><a href=\"" + urls[0] + "\" style=\"text-decoration:none;\">《" + titles[0] + "》</a></font>和<font color=\"#007aff\"><a href=\"" + urls[1] + "\" style=\"text-decoration:none;\">《" + titles[1] + "》</a></font>了解详细信息。" +
-                                "如您同意，请点击确定接收我们的服务";
+//                        String menss = "请您务必谨慎阅读、充分理解\"" + titles[0] + "\"与\"" + titles[1] + "\"各条款，包括但不限于：为了向你提供及时通讯，内容分享等服务，我们需要收集你的定位信息，操作日志信息" +
+//                                "等。你可以在\"设置\"中查看、变更、删除个人信息并管理你的授权。" +
+//                                "<br>你可阅读<font color=\"#007aff\"><a href=\"" + urls[0] + "\" style=\"text-decoration:none;\">《" + titles[0] + "》</a></font>与<font color=\"#007aff\"><a href=\"" + urls[1] + "\" style=\"text-decoration:none;\">《" + titles[1] + "》</a></font>了解详细信息。" +
+//                                "如您同意，请点击确定接收我们的服务";
                         MessageDialog.show(LoginAutoActivity.this,
-                                titles[0] + "和" + titles[1], Html.fromHtml(menss)
+                                titles[1] + "与" + titles[0], KWApplication.getInstance().getClickableSpan(LoginAutoActivity.this,titles,urls)
                                 , "同意", "暂不使用")
                                 .setCancelable(false).setOkButton(new OnDialogButtonClickListener() {
                             @Override
@@ -180,7 +184,33 @@ public class LoginAutoActivity extends BaseActivity {
                     }
 
 
-                    user_agreement.setText(titles[0]);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    int title1Index = stringBuilder.length();
+                    stringBuilder.append(titles[1]);
+                    int title1End = stringBuilder.length();
+
+                    stringBuilder.append("与");
+                    int title2Index = stringBuilder.length();
+                    stringBuilder.append(titles[0]);
+                    int title2End = stringBuilder.length();
+                    SpannableString spannableString = new SpannableString(stringBuilder.toString());
+                    //设置下划线文字
+//                    spannableString.setSpan(new NoUnderlineSpan(), title1Index, title1End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    //设置文字的单击事件
+                    spannableString.setSpan(new UrlClickableSpan(LoginAutoActivity.this,urls[1]), title1Index, title1End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    //设置文字的前景色
+                    spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.deep_yellow2)), title1Index, title1End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    //设置下划线文字
+//                    spannableString.setSpan(new NoUnderlineSpan(), title2Index, title2End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    //设置文字的单击事件
+                    spannableString.setSpan(new UrlClickableSpan(LoginAutoActivity.this,urls[0]), title2Index, title2End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    //设置文字的前景色
+                    spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.deep_yellow2)), title2Index, title2End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    user_agreement.setMovementMethod(LinkMovementMethod.getInstance());
+
+                    user_agreement.setText(spannableString);
 //                    user_privacy.setText(titles[1]);
                     user_agreement.setOnClickListener(new NoMoreClickListener() {
                         @Override

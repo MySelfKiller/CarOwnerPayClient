@@ -326,12 +326,8 @@ public class LoginActivity extends BaseActivity {
                     String[] urls = systemParam.url.split("@@");
                     isFirstShow = sp.getBoolean(Constants.isShowDialog,true);
                     if (isFirstShow) {
-                        String menss = "请您务必谨慎阅读、充分理解\""+titles[0]+"\"和\""+titles[1]+"\"各条款，包括但不限于：为了向你提供及时通讯，内容分享等服务，我们需要收集你的定位信息，操作日志信息" +
-                                "等。你可以在\"设置\"中查看、变更、删除个人信息并管理你的授权。" +
-                                "<br>你可阅读<font color=\"#007aff\"><a href=\"" +urls[0]+"\" style=\"text-decoration:none;\">《"+titles[0]+"》</a></font>和<font color=\"#007aff\"><a href=\""+urls[1]+"\" style=\"text-decoration:none;\">《"+titles[1]+"》</a></font>了解详细信息" +
-                                "如您同意，请点击确定接收我们的服务";
                         MessageDialog.show(LoginActivity.this,
-                                titles[0]+"和"+titles[1], Html.fromHtml(menss)
+                                titles[0]+"和"+titles[1], KWApplication.getInstance().getClickableSpan(LoginActivity.this,titles,urls)
                                 ,"同意","暂不使用")
                                 .setCancelable(false).setOkButton(new OnDialogButtonClickListener() {
                             @Override
@@ -356,12 +352,12 @@ public class LoginActivity extends BaseActivity {
                     }
 
 
-                    user_agreement.setText(titles[0]);
-                    user_privacy.setText(titles[1]);
+                    user_agreement.setText(titles[1]);
+                    user_privacy.setText(titles[0]);
                     user_agreement.setOnClickListener(new NoMoreClickListener() {
                         @Override
                         protected void OnMoreClick(View view) {
-                            jumpWeb(titles[0],urls[0]);
+                            jumpWeb(titles[1],urls[1]);
                         }
 
                         @Override
@@ -372,7 +368,7 @@ public class LoginActivity extends BaseActivity {
                     user_privacy.setOnClickListener(new NoMoreClickListener() {
                         @Override
                         protected void OnMoreClick(View view) {
-                            jumpWeb(titles[1],urls[1]);
+                            jumpWeb(titles[0],urls[0]);
                         }
 
                         @Override

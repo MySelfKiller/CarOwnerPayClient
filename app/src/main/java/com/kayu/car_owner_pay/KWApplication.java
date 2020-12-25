@@ -10,9 +10,13 @@ import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,6 +36,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.http.HttpConfig;
 import com.kayu.car_owner_pay.model.MapInfoModel;
+import com.kayu.car_owner_pay.ui.text_link.UrlClickableSpan;
 import com.kayu.utils.Constants;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.StringUtil;
@@ -514,6 +519,43 @@ public class KWApplication extends Application {
             ToastUtils.show("您尚未安装腾讯地图");
 
         }
+    }
+
+    /**
+     * 获取可点击的SpannableString
+     * @return
+     */
+    public SpannableString getClickableSpan(Context context, String[] titles, String[] urls) {
+        StringBuilder messSB = new StringBuilder();
+        messSB.append("请您务必谨慎阅读、充分理解\"");
+        messSB.append(titles[1]);
+        messSB.append( "\"与\"");
+        messSB.append(titles[0]);
+        messSB.append("\"各条款，包括但不限于：为了向你提供及时通讯，内容分享等服务，我们需要收集你的定位信息，操作日志信息等。你可以在\"设置\"中查看、变更、删除个人信息并管理你的授权。\n你可阅读《");
+        int title1Index = messSB.length()-1;
+        messSB.append(titles[1]);
+        int title1End = messSB.length()+1;
+        messSB.append("》与《");
+        int title2Index = messSB.length()-1;
+        messSB.append(titles[0]);
+        int title2End = messSB.length()+1;
+        messSB.append("》了解详细信息。如您同意，请点击确定接受我们的服务");
+        SpannableString spannableString = new SpannableString(messSB.toString());
+
+        //设置下划线文字
+//        spannableString.setSpan(new NoUnderlineSpan(), title1Index, title1End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        //设置文字的单击事件
+        spannableString.setSpan(new UrlClickableSpan(context,urls[1]), title1Index, title1End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        //设置文字的前景色
+        spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), title1Index, title1End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        //设置下划线文字
+//        spannableString.setSpan(new NoUnderlineSpan(), title2Index, title2End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        //设置文字的单击事件
+        spannableString.setSpan(new UrlClickableSpan(context,urls[0]), title2Index, title2End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        //设置文字的前景色
+        spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), title2Index, title2End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannableString;
     }
 
 
