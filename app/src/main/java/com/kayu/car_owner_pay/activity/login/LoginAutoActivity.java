@@ -85,6 +85,7 @@ public class LoginAutoActivity extends BaseActivity {
     String[] urls;//协议连接
     private WXShare wxShare;
     private LinearLayout auto_progress;
+    private ImageView bg_img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,7 @@ public class LoginAutoActivity extends BaseActivity {
         sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         ask_btn = findViewById(R.id.login_auto_btn);
+        bg_img = findViewById(R.id.login_auto_bg);
         activation_btn = findViewById(R.id.login_activation_btn);
         order_list_tv = findViewById(R.id.login_order_list_tv);
         auto_progress = findViewById(R.id.login_auto_progress);
@@ -150,8 +152,13 @@ public class LoginAutoActivity extends BaseActivity {
             public void onChanged(SystemParam systemParam) {
                 TipGifDialog.dismiss();
                 if (null != systemParam && systemParam.type == 3) {
+                    if (!StringUtil.isEmpty(systemParam.content)) {
+                        KWApplication.getInstance().loadImg(systemParam.content,bg_img);
+                    }
                     titles = systemParam.title.split("@@");
                     urls = systemParam.url.split("@@");
+                    if (titles.length !=2 || urls.length !=2)
+                        return;
                     isFirstShow = sp.getBoolean(Constants.isShowDialog, true);
                     if (isFirstShow) {
 //                        String menss = "请您务必谨慎阅读、充分理解\"" + titles[0] + "\"与\"" + titles[1] + "\"各条款，包括但不限于：为了向你提供及时通讯，内容分享等服务，我们需要收集你的定位信息，操作日志信息" +
