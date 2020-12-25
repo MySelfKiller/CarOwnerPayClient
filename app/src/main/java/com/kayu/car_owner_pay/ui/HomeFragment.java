@@ -1,16 +1,19 @@
 package com.kayu.car_owner_pay.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
@@ -28,14 +31,17 @@ import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.gcssloop.widget.PagerGridLayoutManager;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.activity.ActivationActivity;
 import com.kayu.car_owner_pay.activity.AgentWebViewActivity;
 import com.kayu.car_owner_pay.activity.BannerImageLoader;
 import com.kayu.car_owner_pay.activity.CarWashListActivity;
 import com.kayu.car_owner_pay.activity.GasStationListActivity;
+import com.kayu.car_owner_pay.activity.MainActivity;
 import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.activity.MessageActivity;
 import com.kayu.car_owner_pay.activity.MyPagerAdapter;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
+import com.kayu.car_owner_pay.activity.login.LoginAutoActivity;
 import com.kayu.car_owner_pay.model.BannerBean;
 import com.kayu.car_owner_pay.model.CategoryBean;
 import com.kayu.car_owner_pay.model.SystemParam;
@@ -49,6 +55,7 @@ import com.kayu.utils.location.CoordinateTransformUtil;
 import com.kayu.utils.location.LocationCallback;
 import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.view.AdaptiveHeightViewPager;
+import com.kongzue.dialog.v3.CustomDialog;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
@@ -156,8 +163,10 @@ public class HomeFragment extends Fragment {
                     return;
                 isRefresh = true;
                 pageIndex = 1;
-                initView();
+                if (mHasLoadedOnce)
+                    initView();
                 initListView();
+                mHasLoadedOnce = true;
 
             }
         });
@@ -220,15 +229,15 @@ public class HomeFragment extends Fragment {
                 longitude = location.getLongitude();
                 cityName = location.getCity();
                 location_tv.setText(cityName);
-                if (!mHasLoadedOnce) {
+                if (!isHasLocation) {
+                    isHasLocation = true;
                     refreshLayout.autoRefresh();
-                    mHasLoadedOnce = true;
                 }
             }
         });
 
     }
-
+    private boolean isHasLocation = false;
     private boolean mHasLoadedOnce = false;// 页面已经加载过
     private boolean isCreated = false;
 
@@ -288,7 +297,15 @@ public class HomeFragment extends Fragment {
         });
     }
 
+
+
     private void initView() {
+        mainViewModel.getUserRole(requireContext()).observe(requireActivity(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                KWApplication.getInstance().userRole = integer;
+            }
+        });
         mainViewModel.getParamSelect(requireContext());
         mainViewModel.getParamWash(requireContext());
         mainViewModel.getNotifyNum(getContext()).observe(requireActivity(), new Observer<Integer>() {
@@ -354,6 +371,12 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void OnBannerClick(int position) {
                         String target = bannerBeans.get(position).href;
+                        int  isPublic = bannerBeans.get(position).isPublic;
+                        Integer userRole = KWApplication.getInstance().userRole;
+                        if (null !=userRole && userRole == -2 &&  isPublic == 0){
+                            KWApplication.getInstance().showDialog(getContext());
+                            return;
+                        }
                         if (StringUtil.equals(bannerBeans.get(position).type, "KY_GAS")) {
                             startActivity(new Intent(getContext(), GasStationListActivity.class));
                         }else if (StringUtil.equals(bannerBeans.get(position).type, "KY_WASH")){
@@ -418,6 +441,11 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onItemCallback(int position, Object obj) {
                         CategoryBean categoryBean = (CategoryBean) obj;
+                        Integer userRole = KWApplication.getInstance().userRole;
+                        if (null !=userRole && userRole == -2 && categoryBean.isPublic == 0){
+                            KWApplication.getInstance().showDialog(getContext());
+                            return;
+                        }
                         String target = categoryBean.href;
                         if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
                             startActivity(new Intent(getContext(), GasStationListActivity.class));

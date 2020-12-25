@@ -16,6 +16,5 @@ public class CategoryBean {
     public String href;//H5跳转链接
     //"type": "KY_H5"
     public String type;//跳转类型
-
-
+    public Integer isPublic; //是否公开
 }

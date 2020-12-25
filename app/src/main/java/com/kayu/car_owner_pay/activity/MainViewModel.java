@@ -190,6 +190,40 @@ public class MainViewModel extends ViewModel {
         loadParameter(context, 30);
         return userTipLiveData;
     }
+
+    private MutableLiveData<Integer> userRoleLiveData;
+
+    //身份 -2：游客、0:普通用户、1:会员用户、2:经销商(团长)、3:运营商
+    public LiveData<Integer> getUserRole(Context context){
+        if (null == userRoleLiveData)
+            userRoleLiveData = new MutableLiveData<>();
+        loadUserRole(context);
+        return userRoleLiveData;
+    }
+
+    @SuppressLint("HandlerLeak")
+    private void loadUserRole(Context context){
+        RequestInfo request = new RequestInfo();
+        request.context = context;
+        request.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_GET_USER_ROLE;
+        request.parser = new NormalIntParse();
+        request.handler = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                ResponseInfo response = (ResponseInfo)msg.obj;
+                if (response.status == 1) {
+                    //身份 -2：游客、0:普通用户、1:会员用户、2:经销商(团长)、3:运营商
+                    userRoleLiveData.setValue((Integer) response.responseData);
+                } else {
+                    ToastUtils.show(response.msg);
+                }
+                super.handleMessage(msg);
+            }
+        };
+        ReqUtil.getInstance().setReqInfo(request);
+        ReqUtil.getInstance().requestGetJSON(new ResponseCallback(request));
+    }
+
     public LiveData<SystemParam> getParameter(Context context, int type) {
 //        if (null == parameterLiveData)
         parameterLiveData = new MutableLiveData<>();

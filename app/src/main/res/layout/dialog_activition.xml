@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<androidx.constraintlayout.widget.ConstraintLayout -->
+<!--    android:background="@color/grayBg"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent">-->
+
+<!--    -->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_30"
+        android:paddingVertical="@dimen/dp_30"
+        android:paddingHorizontal="@dimen/dp_10"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/white_bg_shape_4">
+        <TextView
+            android:id="@+id/dia_act_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="免费办理会员"
+            android:textSize="@dimen/sp_20"
+            android:textColor="@color/deep_yellow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/dia_act_context"/>
+        <TextView
+            android:id="@+id/dia_act_context"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="成为会员，立享全球超百项特权"
+            android:textSize="@dimen/sp_13"
+            android:textColor="@color/black1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dia_act_title"
+            app:layout_constraintBottom_toTopOf="@id/dia_act_btn_handle"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/dia_act_btn_handle"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:text="立即免费办理"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            android:layout_marginVertical="@dimen/dp_15"
+            android:layout_marginHorizontal="@dimen/dp_10"
+            android:background="@drawable/login_buttom_shape"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dia_act_context"
+            app:layout_constraintBottom_toTopOf="@id/dia_act_title_sub"
+            />
+        <TextView
+            android:id="@+id/dia_act_title_sub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="——  已办理车友团特权卡  ——"
+            android:textSize="@dimen/sp_11"
+            android:textColor="@color/dark_grey_2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dia_act_btn_handle"
+            app:layout_constraintBottom_toTopOf="@id/dia_act_btn_activ"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/dia_act_btn_activ"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:text="激活车友团特权卡"
+            android:textColor="@color/deep_yellow2"
+            android:textSize="@dimen/sp_14"
+            android:layout_marginVertical="@dimen/dp_10"
+            android:layout_marginHorizontal="@dimen/dp_10"
+            android:background="@drawable/login_yellow_solid_shape"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dia_act_title_sub"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

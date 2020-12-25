@@ -12,7 +12,7 @@ public class NormalIntParse extends BaseParse {
         JSONObject jsonObject = new JSONObject(jsonStr);
         int status = jsonObject.optInt("status");
         String msg = jsonObject.optString("message");
-        int data = jsonObject.optInt("data");
+        Integer data = jsonObject.optInt("data");
         ResponseInfo responseInfo = new ResponseInfo(status,msg);
         responseInfo.responseData = data;
 

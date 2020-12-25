@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.activity.WashStationActivity;
@@ -91,6 +92,11 @@ public class HomeCarWashFragment extends Fragment {
         stationAdapter = new WashStationAdapter(getContext(),null,true,true,new ItemCallback() {
             @Override
             public void onItemCallback(int position, Object obj) {
+                Integer userRole = KWApplication.getInstance().userRole;
+                if (null !=userRole && userRole == -2 ){
+                    KWApplication.getInstance().showDialog(getContext());
+                    return;
+                }
                 Intent intent = new Intent(getContext(), WashStationActivity.class);
                 intent.putExtra("shopCode",((WashStationBean)obj).shopCode);
                 startActivity(intent);

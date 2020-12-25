@@ -19,12 +19,16 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
@@ -34,11 +38,14 @@ import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.hjq.toast.ToastUtils;
+import com.kayu.car_owner_pay.activity.ActivationActivity;
+import com.kayu.car_owner_pay.activity.WebViewActivity;
 import com.kayu.car_owner_pay.http.HttpConfig;
 import com.kayu.car_owner_pay.model.MapInfoModel;
 import com.kayu.car_owner_pay.ui.text_link.UrlClickableSpan;
 import com.kayu.utils.Constants;
 import com.kayu.utils.LogUtil;
+import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.Utils;
 import com.kayu.utils.callback.Callback;
@@ -50,6 +57,7 @@ import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
 import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.v3.BottomMenu;
+import com.kongzue.dialog.v3.CustomDialog;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.TipGifDialog;
 
@@ -65,6 +73,8 @@ import cn.jiguang.verifysdk.api.RequestCallback;
 
 public class KWApplication extends Application {
 
+    //身份 -2：游客、0:普通用户、1:会员用户、2:经销商(团长)、3:运营商
+    public Integer userRole;
     public int displayWidth = 0;
     public int displayHeight = 0;
     private static KWApplication self;
@@ -558,5 +568,43 @@ public class KWApplication extends Application {
         return spannableString;
     }
 
+    public void showDialog(Context context){
+        CustomDialog.show((AppCompatActivity) context, R.layout.dialog_activition, new CustomDialog.OnBindView() {
+            @Override
+            public void onBind(final CustomDialog dialog, View v) {
+                TextView dia_title = v.findViewById(R.id.dia_act_title);
+                TextView dia_content = v.findViewById(R.id.dia_act_context);
+                AppCompatButton dia_btn_handle = v.findViewById(R.id.dia_act_btn_handle);
+                dia_btn_handle.setOnClickListener(new NoMoreClickListener() {
+                    @Override
+                    protected void OnMoreClick(View view) {
+                        // FIXME: 2020/12/25 需要请求接口获取url
+                        Intent intent = new Intent(context, WebViewActivity.class);
+                        intent.putExtra("url", "http://www.baidu.com");
+                        context.startActivity(intent);
+                    }
 
+                    @Override
+                    protected void OnMoreErrorClick() {
+
+                    }
+                });
+                TextView dia_title_sub = v.findViewById(R.id.dia_act_title_sub);
+                AppCompatButton dia_btn_activ = v.findViewById(R.id.dia_act_btn_activ);
+                dia_btn_activ.setOnClickListener(new NoMoreClickListener() {
+                    @Override
+                    protected void OnMoreClick(View view) {
+                        Intent intent = new Intent(context, ActivationActivity.class);
+                        context.startActivity(intent);
+                    }
+
+                    @Override
+                    protected void OnMoreErrorClick() {
+
+                    }
+                });
+
+            }
+        }).setFullScreen(false).setCustomLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    }
 }

@@ -41,6 +41,7 @@ public class HttpConfig {
     public static final String INTERFACE_WASH_ORDER_REFUND_INFO = "api/v1/cworder/rfdinfo/"; //获取洗车订单退款信息
     public static final String INTERFACE_WASH_ORDER_REFUND = "api/v1/cworder/refund"; //洗车订单申请退款
 
+    public static final String INTERFACE_GET_USER_ROLE = "api/v1/user/getRole";        //获取用户身份
     public static final String INTERFACE_GET_PARAMETER = "api/parameter/getSystemParameter";        //获取系统参数配置
     public static final String INTERFACE_WECHAT = "api/parameter/wechatCustomer";        //微信客服
     public static final String INTERFACE_USER_INFO = "api/v1/user/getdetail";        //用户信息
