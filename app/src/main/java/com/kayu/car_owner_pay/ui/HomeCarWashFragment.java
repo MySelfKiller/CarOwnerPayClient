@@ -94,7 +94,7 @@ public class HomeCarWashFragment extends Fragment {
             public void onItemCallback(int position, Object obj) {
                 Integer userRole = KWApplication.getInstance().userRole;
                 if (null !=userRole && userRole == -2 ){
-                    KWApplication.getInstance().showDialog(getContext());
+                    KWApplication.getInstance().showRegDialog(getContext());
                     return;
                 }
                 Intent intent = new Intent(getContext(), WashStationActivity.class);

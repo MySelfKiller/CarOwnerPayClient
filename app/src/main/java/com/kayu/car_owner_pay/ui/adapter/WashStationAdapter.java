@@ -127,7 +127,7 @@ public class WashStationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 protected void OnMoreClick(View view) {
                     Integer userRole = KWApplication.getInstance().userRole;
                     if (null !=userRole && userRole == -2 ){
-                        KWApplication.getInstance().showDialog(context);
+                        KWApplication.getInstance().showRegDialog(context);
                         return;
                     }
                     KWApplication.getInstance().toNavi(context,washStationBean.latitude,washStationBean.longitude,washStationBean.address,"BD09");

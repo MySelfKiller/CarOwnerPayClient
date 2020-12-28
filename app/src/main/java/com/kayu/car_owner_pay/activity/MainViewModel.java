@@ -183,7 +183,14 @@ public class MainViewModel extends ViewModel {
 
     private MutableLiveData<SystemParam> parameterLiveData;
     private MutableLiveData<SystemParam> userTipLiveData;
+    private MutableLiveData<SystemParam> regDialogTipLiveData;
 
+    public LiveData<SystemParam> getRegDialogTip(Context context) {
+//        if (null == parameterLiveData)
+        regDialogTipLiveData = new MutableLiveData<>();
+        loadParameter(context, 34);
+        return regDialogTipLiveData;
+    }
     public LiveData<SystemParam> getUserTips(Context context) {
 //        if (null == parameterLiveData)
         userTipLiveData = new MutableLiveData<>();
@@ -252,6 +259,8 @@ public class MainViewModel extends ViewModel {
                 }
                 if (type == 30) {
                     userTipLiveData.setValue(systemParam);
+                } else if (type  == 34){
+                    regDialogTipLiveData.setValue(systemParam);
                 } else {
                     parameterLiveData.setValue(systemParam);
                 }

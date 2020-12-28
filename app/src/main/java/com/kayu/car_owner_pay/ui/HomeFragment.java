@@ -300,6 +300,12 @@ public class HomeFragment extends Fragment {
 
 
     private void initView() {
+        mainViewModel.getRegDialogTip(requireContext()).observe(requireActivity(), new Observer<SystemParam>() {
+            @Override
+            public void onChanged(SystemParam systemParam) {
+                KWApplication.getInstance().regDialogTip = systemParam;
+            }
+        });
         mainViewModel.getUserRole(requireContext()).observe(requireActivity(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
@@ -374,7 +380,7 @@ public class HomeFragment extends Fragment {
                         int  isPublic = bannerBeans.get(position).isPublic;
                         Integer userRole = KWApplication.getInstance().userRole;
                         if (null !=userRole && userRole == -2 &&  isPublic == 0){
-                            KWApplication.getInstance().showDialog(getContext());
+                            KWApplication.getInstance().showRegDialog(getContext());
                             return;
                         }
                         if (StringUtil.equals(bannerBeans.get(position).type, "KY_GAS")) {
@@ -443,7 +449,7 @@ public class HomeFragment extends Fragment {
                         CategoryBean categoryBean = (CategoryBean) obj;
                         Integer userRole = KWApplication.getInstance().userRole;
                         if (null !=userRole && userRole == -2 && categoryBean.isPublic == 0){
-                            KWApplication.getInstance().showDialog(getContext());
+                            KWApplication.getInstance().showRegDialog(getContext());
                             return;
                         }
                         String target = categoryBean.href;

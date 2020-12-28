@@ -42,6 +42,7 @@ import com.kayu.car_owner_pay.activity.ActivationActivity;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
 import com.kayu.car_owner_pay.http.HttpConfig;
 import com.kayu.car_owner_pay.model.MapInfoModel;
+import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.ui.text_link.UrlClickableSpan;
 import com.kayu.utils.Constants;
 import com.kayu.utils.LogUtil;
@@ -61,6 +62,9 @@ import com.kongzue.dialog.v3.CustomDialog;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.TipGifDialog;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
@@ -75,6 +79,8 @@ public class KWApplication extends Application {
 
     //身份 -2：游客、0:普通用户、1:会员用户、2:经销商(团长)、3:运营商
     public Integer userRole;
+    //注册dialog内容
+    public SystemParam regDialogTip;
     public int displayWidth = 0;
     public int displayHeight = 0;
     private static KWApplication self;
@@ -567,20 +573,57 @@ public class KWApplication extends Application {
         spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), title2Index, title2End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannableString;
     }
+    private String title = null;
+    private String desc = null;
+    private String regBtn = null;
+    private String pastTitle = null;
+    private String pastBtn = null;
+//    private String url = null;
+    public void showRegDialog(Context context) {
 
-    public void showDialog(Context context){
+        if (null != regDialogTip && !StringUtil.isEmpty(regDialogTip.content)){
+            try {
+                //{
+                // "title": "免费办理会员",
+                // "desc": "成为会员，立享全球超百项特权",
+                // "regBtn": "立即免费办理",
+                // "pastTitle": "已办理熊猫特权卡",
+                // "pastBtn": "激活熊猫特权卡"
+                //}
+                JSONObject contentJSon = new JSONObject(regDialogTip.content);
+                title = contentJSon.getString("title");
+                desc = contentJSon.getString("desc");
+                regBtn = contentJSon.getString("regBtn");
+                pastTitle = contentJSon.getString("pastTitle");
+                pastBtn = contentJSon.getString("pastBtn");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         CustomDialog.show((AppCompatActivity) context, R.layout.dialog_activition, new CustomDialog.OnBindView() {
             @Override
             public void onBind(final CustomDialog dialog, View v) {
                 TextView dia_title = v.findViewById(R.id.dia_act_title);
+                if (!StringUtil.isEmpty(title)){
+                    dia_title.setText(title);
+                }
                 TextView dia_content = v.findViewById(R.id.dia_act_context);
+                if (!StringUtil.isEmpty(desc)){
+                    dia_content.setText(desc);
+                }
                 AppCompatButton dia_btn_handle = v.findViewById(R.id.dia_act_btn_handle);
+                if (!StringUtil.isEmpty(regBtn)){
+                    dia_btn_handle.setText(regBtn);
+                }
                 dia_btn_handle.setOnClickListener(new NoMoreClickListener() {
                     @Override
                     protected void OnMoreClick(View view) {
-                        // FIXME: 2020/12/25 需要请求接口获取url
+
+                        if (StringUtil.isEmpty(regDialogTip.url))
+                            return;
                         Intent intent = new Intent(context, WebViewActivity.class);
-                        intent.putExtra("url", "http://www.baidu.com");
+                        intent.putExtra("url", regDialogTip.url);
                         context.startActivity(intent);
                     }
 
@@ -590,7 +633,13 @@ public class KWApplication extends Application {
                     }
                 });
                 TextView dia_title_sub = v.findViewById(R.id.dia_act_title_sub);
+                if (!StringUtil.isEmpty(pastTitle)){
+                    dia_title_sub.setText(pastTitle);
+                }
                 AppCompatButton dia_btn_activ = v.findViewById(R.id.dia_act_btn_activ);
+                if (!StringUtil.isEmpty(pastBtn)){
+                    dia_btn_activ.setText(pastBtn);
+                }
                 dia_btn_activ.setOnClickListener(new NoMoreClickListener() {
                     @Override
                     protected void OnMoreClick(View view) {

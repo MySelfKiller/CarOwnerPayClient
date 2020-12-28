@@ -112,7 +112,7 @@ public class OilStationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 protected void OnMoreClick(View view) {
                     Integer userRole = KWApplication.getInstance().userRole;
                     if (null !=userRole && userRole == -2 ){
-                        KWApplication.getInstance().showDialog(context);
+                        KWApplication.getInstance().showRegDialog(context);
                         return;
                     }
                     KWApplication.getInstance().toNavi(context, String.valueOf(oilStationBean.gasAddressLatitude), String.valueOf(oilStationBean.gasAddressLongitude), oilStationBean.gasAddress, "GCJ02");
