@@ -36,7 +36,7 @@
             android:gravity="center"
             android:minHeight="0dp"
             android:paddingVertical="@dimen/dp_14"
-            android:text="一键登录"
+            android:text="注册登录"
             android:textColor="@color/black"
             android:textStyle="bold"
             android:textSize="@dimen/sp_14"

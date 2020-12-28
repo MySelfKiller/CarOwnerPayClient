@@ -39,7 +39,7 @@ public class UserBean {
     @SerializedName("lastLoginTime")
     public String lastLoginTime;//最后一次登陆时间
     @SerializedName("inviteNo")
-    public String inviteNo;//激活卡号码
+    public String inviteNo="";//激活卡号码
     @SerializedName("expAmt")
     public Double expAmt;//累计节省金额
     @SerializedName("activateTime")

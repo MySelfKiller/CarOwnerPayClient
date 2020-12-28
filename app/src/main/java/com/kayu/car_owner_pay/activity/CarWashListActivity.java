@@ -93,14 +93,16 @@ public class CarWashListActivity extends BaseActivity {
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                if (isRefresh || isLoadmore)
+                AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
+                if (isRefresh || isLoadmore || null == location) {
+                    refreshLayout.finishRefresh();
                     return;
+                }
                 isRefresh = true;
                 pageIndex = 1;
                 if (null != stationAdapter){
                     stationAdapter.removeAllData(true);
                 }
-                AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
                 double[] bddfsdfs = CoordinateTransformUtil.gcj02tobd09(location.getLongitude(), location.getLatitude());
                 reqData(refreshLayout, pageIndex,bddfsdfs[1],bddfsdfs[0],location.getCity());
             }
@@ -108,11 +110,13 @@ public class CarWashListActivity extends BaseActivity {
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
-                if (isRefresh || isLoadmore)
+                AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
+                if (isRefresh || isLoadmore || null == location) {
+                    refreshLayout.finishLoadMore();
                     return;
+                }
                 isLoadmore = true;
                 pageIndex = pageIndex + 1;
-                AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
                 double[] bddfsdfs = CoordinateTransformUtil.gcj02tobd09(location.getLongitude(), location.getLatitude());
                 reqData(refreshLayout, pageIndex,bddfsdfs[1],bddfsdfs[0],location.getCity());
             }
