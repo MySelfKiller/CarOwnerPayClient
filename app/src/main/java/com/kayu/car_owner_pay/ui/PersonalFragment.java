@@ -276,7 +276,7 @@ public class PersonalFragment extends Fragment {
                 user_name.setText(sb.toString());
                 user_balance.setText(String.valueOf(userBean.expAmt));
                 if (!StringUtil.isEmpty(userBean.inviteNo)) {
-                    card_num.setText("卡号："+userBean.inviteNo);
+                    card_num.setText("会员号："+userBean.inviteNo);
                     card_num.setVisibility(View.VISIBLE);
                 }else {
                     card_num.setVisibility(View.INVISIBLE);
