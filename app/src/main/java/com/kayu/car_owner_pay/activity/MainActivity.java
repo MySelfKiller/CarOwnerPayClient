@@ -168,8 +168,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     }
 
     public void permissionsCheck() {
-        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
-//        String[] perms = needPermissions;
+//        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
+        String[] perms = needPermissions;
 
         performCodeWithPermission(1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, perms, new PermissionCallback() {
             @Override

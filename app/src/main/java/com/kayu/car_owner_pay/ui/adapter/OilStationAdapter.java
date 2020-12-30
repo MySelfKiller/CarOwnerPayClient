@@ -110,8 +110,9 @@ public class OilStationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             vh.navi.setOnClickListener(new NoMoreClickListener() {
                 @Override
                 protected void OnMoreClick(View view) {
-                    Integer userRole = KWApplication.getInstance().userRole;
-                    if (null !=userRole && userRole == -2 ){
+                    int userRole = KWApplication.getInstance().userRole;
+                    int isPublic = KWApplication.getInstance().isGasPublic;
+                    if ( userRole == -2 && isPublic == 0){
                         KWApplication.getInstance().showRegDialog(context);
                         return;
                     }

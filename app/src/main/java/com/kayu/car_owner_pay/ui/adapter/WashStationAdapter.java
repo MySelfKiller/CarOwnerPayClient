@@ -125,8 +125,9 @@ public class WashStationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             vh.navi.setOnClickListener(new NoMoreClickListener() {
                 @Override
                 protected void OnMoreClick(View view) {
-                    Integer userRole = KWApplication.getInstance().userRole;
-                    if (null !=userRole && userRole == -2 ){
+                    int userRole = KWApplication.getInstance().userRole;
+                    int isPublic = KWApplication.getInstance().isWashPublic;
+                    if (userRole == -2 && isPublic == 0){
                         KWApplication.getInstance().showRegDialog(context);
                         return;
                     }

@@ -1,21 +1,16 @@
 package com.kayu.car_owner_pay.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -31,17 +26,13 @@ import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.gcssloop.widget.PagerGridLayoutManager;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
-import com.kayu.car_owner_pay.activity.ActivationActivity;
-import com.kayu.car_owner_pay.activity.AgentWebViewActivity;
 import com.kayu.car_owner_pay.activity.BannerImageLoader;
 import com.kayu.car_owner_pay.activity.CarWashListActivity;
 import com.kayu.car_owner_pay.activity.GasStationListActivity;
-import com.kayu.car_owner_pay.activity.MainActivity;
 import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.activity.MessageActivity;
 import com.kayu.car_owner_pay.activity.MyPagerAdapter;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
-import com.kayu.car_owner_pay.activity.login.LoginAutoActivity;
 import com.kayu.car_owner_pay.model.BannerBean;
 import com.kayu.car_owner_pay.model.CategoryBean;
 import com.kayu.car_owner_pay.model.SystemParam;
@@ -55,7 +46,6 @@ import com.kayu.utils.location.CoordinateTransformUtil;
 import com.kayu.utils.location.LocationCallback;
 import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.view.AdaptiveHeightViewPager;
-import com.kongzue.dialog.v3.CustomDialog;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
@@ -343,6 +333,12 @@ public class HomeFragment extends Fragment {
                     return;
                 List<String> urlList = new ArrayList<>();
                 for (BannerBean item : bannerBeans) {
+                    if (StringUtil.equals(item.type, "KY_GAS")) {
+                        KWApplication.getInstance().isGasPublic = item.isPublic;
+                    }
+                    if (StringUtil.equals(item.type, "KY_WASH")){
+                        KWApplication.getInstance().isWashPublic = item.isPublic;
+                    }
                     urlList.add(item.img);
                 }
 //                title_lay.setBackgroundColor(Color.parseColor(bannerBeans.get(0).bgColor));
@@ -377,9 +373,9 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void OnBannerClick(int position) {
                         String target = bannerBeans.get(position).href;
-                        int  isPublic = bannerBeans.get(position).isPublic;
-                        Integer userRole = KWApplication.getInstance().userRole;
-                        if (null !=userRole && userRole == -2 &&  isPublic == 0){
+                        int isPublic = bannerBeans.get(position).isPublic;
+                        int userRole = KWApplication.getInstance().userRole;
+                        if ( userRole == -2 &&  isPublic == 0){
                             KWApplication.getInstance().showRegDialog(getContext());
                             return;
                         }
@@ -413,7 +409,16 @@ public class HomeFragment extends Fragment {
             public void onChanged(List<List<CategoryBean>> categoryBeans) {
                 if (null == categoryBeans)
                     return;
-
+                for (List<CategoryBean> list : categoryBeans) {
+                    for (CategoryBean categoryBean : list) {
+                        if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
+                            KWApplication.getInstance().isGasPublic = categoryBean.isPublic;
+                        }
+                        if (StringUtil.equals(categoryBean.type, "KY_WASH")){
+                            KWApplication.getInstance().isWashPublic = categoryBean.isPublic;
+                        }
+                    }
+                }
                 int mColumns=1, mRows = categoryBeans.size();
 //                if (categoryBeans.size() <= 4) {
 //                    mColumns = 4;
@@ -447,8 +452,9 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onItemCallback(int position, Object obj) {
                         CategoryBean categoryBean = (CategoryBean) obj;
-                        Integer userRole = KWApplication.getInstance().userRole;
-                        if (null !=userRole && userRole == -2 && categoryBean.isPublic == 0){
+                        int userRole = KWApplication.getInstance().userRole;
+                        int isPublic = categoryBean.isPublic;
+                        if (userRole == -2 && isPublic == 0){
                             KWApplication.getInstance().showRegDialog(getContext());
                             return;
                         }

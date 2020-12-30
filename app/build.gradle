@@ -21,8 +21,8 @@ android {
         applicationId "com.kayu.car_owner_pay"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 4
+        versionName "1.0.3"
 
 //        ndk {
 //            //选择要添加的对应 cpu 类型的 .so 库。

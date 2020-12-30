@@ -78,7 +78,9 @@ import cn.jiguang.verifysdk.api.RequestCallback;
 public class KWApplication extends Application {
 
     //身份 -2：游客、0:普通用户、1:会员用户、2:经销商(团长)、3:运营商
-    public Integer userRole;
+    public int userRole;
+    public int isGasPublic = 0;
+    public int isWashPublic = 0;
     //注册dialog内容
     public SystemParam regDialogTip;
     public int displayWidth = 0;

@@ -95,8 +95,9 @@ public class HomeGasStationFragment extends Fragment {
         oilStationAdapter = new OilStationAdapter(requireContext(), null,true,true, new ItemCallback() {
             @Override
             public void onItemCallback(int position, Object obj) {
-                Integer userRole = KWApplication.getInstance().userRole;
-                if (null !=userRole && userRole == -2 ){
+                int userRole = KWApplication.getInstance().userRole;
+                int isPublic = KWApplication.getInstance().isGasPublic;
+                if ( userRole == -2 && isPublic == 0){
                     KWApplication.getInstance().showRegDialog(getContext());
                     return;
                 }
