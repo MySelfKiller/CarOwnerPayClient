@@ -14,7 +14,7 @@
         android:splitMotionEvents="false"
         android:layout_marginBottom="@dimen/dp_40">
 
-        <include layout="@layout/titlebar_white"/>
+        <include layout="@layout/titlebar_whit_close"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

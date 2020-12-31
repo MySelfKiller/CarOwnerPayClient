@@ -111,7 +111,7 @@ public class WebViewActivity extends BaseActivity {
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
 //        titleName = intent.getStringExtra("title");
-        from = intent.getStringExtra("from");
+//        from = intent.getStringExtra("from");
 //        title = intent.getStringExtra("title");
         findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
             @Override
@@ -124,18 +124,24 @@ public class WebViewActivity extends BaseActivity {
 
             }
         });
-        TextView back_tv = findViewById(R.id.title_back_tv);
+        findViewById(R.id.title_close_btn).setOnClickListener(new NoMoreClickListener() {
+            @Override
+            protected void OnMoreClick(View view) {
+                finish();
+            }
+
+            @Override
+            protected void OnMoreErrorClick() {
+
+            }
+        });
+
         title_name = findViewById(R.id.title_name_tv);
 
-//        if (!StringUtil.isEmpty(titleName)){
-//            title_name.setText(titleName);
-//        }else {
-//        }
         title_name.setText(titleName);
         if (StringUtil.isEmpty(from)){
             from = "返回";
         }
-        back_tv.setText(from);
 
         wvWebView = findViewById(R.id.wvWebView);
 //        pbWebView = findViewById(R.id.pbWebView);

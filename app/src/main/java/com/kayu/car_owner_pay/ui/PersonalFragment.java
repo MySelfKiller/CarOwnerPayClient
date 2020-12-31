@@ -30,6 +30,7 @@ import com.kayu.car_owner_pay.glide.GlideRoundTransform;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.model.UserBean;
 import com.kayu.car_owner_pay.ui.income.BalanceFragment;
+import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.location.LocationManagerUtil;
@@ -123,31 +124,31 @@ public class PersonalFragment extends Fragment {
 
             }
         });
-        ConstraintLayout course_lay = view.findViewById(R.id.personal_course_lay);
-        course_lay.setOnClickListener(new NoMoreClickListener() {
-            @Override
-            protected void OnMoreClick(View view) {
-                mainViewModel.getParameter(getContext(),11).observe(requireActivity(), new Observer<SystemParam>() {
-                    @Override
-                    public void onChanged(SystemParam systemParam) {
-                        String target = systemParam.url;
-                        if (!StringUtil.isEmpty(target)){
-                            Intent intent = new Intent(getContext(), WebViewActivity.class);
-                            intent.putExtra("url",target);
-                            intent.putExtra("from","新手教程");
-                            requireActivity().startActivity(intent);
-                        }
-                    }
-                });
-
-
-            }
-
-            @Override
-            protected void OnMoreErrorClick() {
-
-            }
-        });
+//        ConstraintLayout course_lay = view.findViewById(R.id.personal_course_lay);
+//        course_lay.setOnClickListener(new NoMoreClickListener() {
+//            @Override
+//            protected void OnMoreClick(View view) {
+//                mainViewModel.getParameter(getContext(),11).observe(requireActivity(), new Observer<SystemParam>() {
+//                    @Override
+//                    public void onChanged(SystemParam systemParam) {
+//                        String target = systemParam.url;
+//                        if (!StringUtil.isEmpty(target)){
+//                            Intent intent = new Intent(getContext(), WebViewActivity.class);
+//                            intent.putExtra("url",target);
+//                            intent.putExtra("from","新手教程");
+//                            requireActivity().startActivity(intent);
+//                        }
+//                    }
+//                });
+//
+//
+//            }
+//
+//            @Override
+//            protected void OnMoreErrorClick() {
+//
+//            }
+//        });
         ConstraintLayout setting_lay = view.findViewById(R.id.personal_setting_lay);
         setting_lay.setOnClickListener(new NoMoreClickListener() {
             @Override
@@ -186,22 +187,35 @@ public class PersonalFragment extends Fragment {
 
             }
         });
-        if (getUserVisibleHint()){
-            refreshLayout.autoRefresh();
-            mHasLoadedOnce = true;
-        }
+//        if (getUserVisibleHint()){
+//            refreshLayout.autoRefresh();
+//            mHasLoadedOnce = true;
+//        }
+        isCreated = true;
     }
 
+    private boolean isCreated = false;
     private boolean mHasLoadedOnce = false;// 页面已经加载过
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && !mHasLoadedOnce) {
-//            StatusBarUtil.setTranslucentStatus(requireActivity());
+        LogUtil.e("PersonalFragment----","----setUserVisibleHint---");
+        if (isVisibleToUser && isCreated) {
+            LogUtil.e("PersonalFragment----","----setUserVisibleHint---isCreated");
             refreshLayout.autoRefresh();
-            mHasLoadedOnce = true;
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        LogUtil.e("PersonalFragment----","----onStart---");
+        if (!getUserVisibleHint())
+            return;
+        LogUtil.e("PersonalFragment----","----onStart---isVisibleToUser");
+        refreshLayout.autoRefresh();
+
     }
 
     private void initView() {

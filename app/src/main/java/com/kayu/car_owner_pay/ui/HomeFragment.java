@@ -39,6 +39,7 @@ import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.text_banner.TextBannerView;
 import com.kayu.car_owner_pay.ui.adapter.CategoryRootAdapter;
 import com.kayu.utils.ItemCallback;
+import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.callback.Callback;
@@ -149,12 +150,17 @@ public class HomeFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+//                if (!isHasLocation){
+//                    return;
+//                }
                 if (isRefresh || isLoadmore)
                     return;
                 isRefresh = true;
                 pageIndex = 1;
-                if (mHasLoadedOnce)
+                if (mHasLoadedOnce) {
+//                    LogUtil.e("HomeFragment----","----setOnRefreshListener---mHasLoadedOnce");
                     initView();
+                }
                 initListView();
                 mHasLoadedOnce = true;
 
@@ -219,30 +225,57 @@ public class HomeFragment extends Fragment {
                 longitude = location.getLongitude();
                 cityName = location.getCity();
                 location_tv.setText(cityName);
-                if (!isHasLocation) {
-                    isHasLocation = true;
+                isHasLocation = true;
+                if (!hasAutoRefresh) {
+//                    LogUtil.e("HomeFragment----","----onLocationChanged--- hasAutoRefresh----" );
                     refreshLayout.autoRefresh();
+                    hasAutoRefresh = true;
                 }
             }
         });
-
+        isCreated = true;
     }
     private boolean isHasLocation = false;
     private boolean mHasLoadedOnce = false;// 页面已经加载过
     private boolean isCreated = false;
+    private boolean hasAutoRefresh= false;
 
     @Override
     public void onStart() {
         super.onStart();
+        if (!getUserVisibleHint())
+            return;
 //        LogUtil.e("HomeFragment----","----onStart---");
-        if (!isCreated) {
-            if (!mHasLoadedOnce) {
-                initView();
-            }
-//            LogUtil.e("HomeFragment----","----onStart------isCreated");
-            isCreated = true;
+        if (!mHasLoadedOnce) {
+//            LogUtil.e("HomeFragment----","----onStart---mHasLoadedOnce");
+            initView();
+        }
+        if (isHasLocation) {
+            refreshLayout.autoRefresh();
+            hasAutoRefresh = true;
+//            LogUtil.e("HomeFragment----","----onStart---isHasLocation");
+
         }
 
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+//        LogUtil.e("HomeFragment----","----setUserVisibleHint---");
+        if (isVisibleToUser && isCreated) {
+//            LogUtil.e("HomeFragment----","----setUserVisibleHint---isCreated");
+            if (!mHasLoadedOnce) {
+//                LogUtil.e("HomeFragment----","----setUserVisibleHint---mHasLoadedOnce");
+                initView();
+            }
+            if (isHasLocation) {
+                refreshLayout.autoRefresh();
+                hasAutoRefresh = true;
+//                LogUtil.e("HomeFragment----","----setUserVisibleHint---isHasLocation");
+
+            }
+        }
     }
 
     private int fragIndex = 0;
