@@ -55,6 +55,7 @@ public class PersonalFragment extends Fragment {
     private LinearLayout more_lay;
     private ImageView user_card_bg;
     private LinearLayout income_lay;
+    private TextView user_expAmt,user_rewad;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -71,7 +72,11 @@ public class PersonalFragment extends Fragment {
         user_head_img = view.findViewById(R.id.personal_user_head_img);
         //用户名称
         user_name = view.findViewById(R.id.personal_user_name);
-        //卡余额
+        //累计节省
+        user_expAmt = view.findViewById(R.id.personal_user_expAmt);
+        //收益
+        user_rewad = view.findViewById(R.id.personal_user_rewad);
+        //可体现
         user_balance = view.findViewById(R.id.personal_user_balance);
         user_card_bg = view.findViewById(R.id.personal_user_card_bg);
         KWApplication.getInstance().loadImg(R.mipmap.ic_personal_bg,user_card_bg,new GlideRoundTransform(getContext()));
@@ -288,7 +293,9 @@ public class PersonalFragment extends Fragment {
                         break;
                 }
                 user_name.setText(sb.toString());
-                user_balance.setText(String.valueOf(userBean.expAmt));
+                user_balance.setText(String.valueOf(userBean.balance));
+                user_expAmt.setText(String.valueOf(userBean.expAmt));
+                user_rewad.setText(String.valueOf(userBean.rewardAmt));
                 if (!StringUtil.isEmpty(userBean.inviteNo)) {
                     card_num.setText("卡号："+userBean.inviteNo);
                     card_num.setVisibility(View.VISIBLE);

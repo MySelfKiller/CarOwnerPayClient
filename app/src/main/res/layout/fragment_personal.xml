@@ -150,7 +150,7 @@
 <!--                            app:layout_constraintStart_toStartOf="parent" />-->
 
                         <TextView
-                            android:id="@+id/personal_user_balance"
+                            android:id="@+id/personal_user_expAmt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dp_120"
@@ -257,6 +257,7 @@
                                     app:layout_constraintEnd_toEndOf="@id/id_tag_divider"
                                     app:layout_constraintTop_toTopOf="parent"/>
                                 <TextView
+                                    android:id="@+id/personal_user_rewad"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="0.00"
@@ -280,6 +281,7 @@
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"/>
                                 <TextView
+                                    android:id="@+id/personal_user_balance"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="0.00"

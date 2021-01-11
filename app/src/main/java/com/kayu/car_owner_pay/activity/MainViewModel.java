@@ -69,9 +69,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public LiveData<UserBean> getUserInfo(Context context) {
-        if (null == userLiveData) {
-            userLiveData = new MutableLiveData<>();
-        }
+        userLiveData = new MutableLiveData<>();
         loadUserData(context);
         return userLiveData;
     }
@@ -202,7 +200,7 @@ public class MainViewModel extends ViewModel {
 
     //身份 -2：游客、0:普通用户、1:会员用户、2:经销商(团长)、3:运营商
     public LiveData<Integer> getUserRole(Context context){
-        if (null == userRoleLiveData)
+//        if (null == userRoleLiveData)
             userRoleLiveData = new MutableLiveData<>();
         loadUserRole(context);
         return userRoleLiveData;
@@ -541,8 +539,8 @@ public class MainViewModel extends ViewModel {
     }
 
     public LiveData<List<OilStationBean>> getStationList(Context context,HashMap<String,Object> dataMap){
-        if (null == stationListData) {
-        }
+//        if (null == stationListData) {
+//        }
         stationListData = new MutableLiveData<>();
         loadStationList(context,dataMap);
         return stationListData;
@@ -574,8 +572,8 @@ public class MainViewModel extends ViewModel {
     }
 
     public LiveData<List<WashStationBean>> getWashStationList(Context context,HashMap<String,Object> dataMap){
-        if (null == washStationListData) {
-        }
+//        if (null == washStationListData) {
+//        }
         washStationListData = new MutableLiveData<>();
         loadWashStationList(context,dataMap);
         return washStationListData;
@@ -612,9 +610,9 @@ public class MainViewModel extends ViewModel {
      * @return
      */
     public LiveData<List<BannerBean>> getBannerList(Context mContext){
-        if (null == bannerListData) {
-            bannerListData = new MutableLiveData<List<BannerBean>>();
-        }
+//        if (null == bannerListData) {
+//        }
+        bannerListData = new MutableLiveData<List<BannerBean>>();
         loadBanners(mContext);
         return bannerListData;
     }
@@ -650,9 +648,9 @@ public class MainViewModel extends ViewModel {
      * @return
      */
     public LiveData<List<String>> getNotifyList(Context mContext){
-        if (null == notifyListLiveData) {
-            notifyListLiveData = new MutableLiveData<List<String>>();
-        }
+//        if (null == notifyListLiveData) {
+//        }
+        notifyListLiveData = new MutableLiveData<List<String>>();
         loadNotifyList(mContext);
         return notifyListLiveData;
     }
@@ -687,9 +685,9 @@ public class MainViewModel extends ViewModel {
      * @return
      */
     public LiveData<Integer> getNotifyNum(Context mContext){
-        if (null == notifyNumLiveData) {
-            notifyNumLiveData = new MutableLiveData<Integer>();
-        }
+//        if (null == notifyNumLiveData) {
+//        }
+        notifyNumLiveData = new MutableLiveData<Integer>();
         loadNotifyNum(mContext);
         return notifyNumLiveData;
     }
@@ -726,9 +724,9 @@ public class MainViewModel extends ViewModel {
      * @return
      */
     public LiveData<List<List<CategoryBean>>> getCategoryList(Context mContext) {
-        if (null == categoryListData) {
-            categoryListData = new MutableLiveData<>();
-        }
+//        if (null == categoryListData) {
+//        }
+        categoryListData = new MutableLiveData<>();
         loadCategorys(mContext);
         return categoryListData;
     }
