@@ -211,11 +211,11 @@ public class GasStationListActivity extends BaseActivity {
 
 
     private void loadParam() {
-        TipGifDialog.show(GasStationListActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
+//        TipGifDialog.show(GasStationListActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         mainViewModel.getParamSelect(GasStationListActivity.this).observe( GasStationListActivity.this, new Observer<ParamOilBean>() {
             @Override
             public void onChanged(ParamOilBean paramOilBean) {
-                TipGifDialog.dismiss();
+//                TipGifDialog.dismiss();
                 if (null == paramOilBean)
                     return;
 
@@ -300,7 +300,12 @@ public class GasStationListActivity extends BaseActivity {
                         param_distance.setSelected(true);
                     }
                 });
-                refreshLayout.autoRefresh();
+//                refreshLayout.autoRefresh();
+                AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
+                pageIndex = 1;
+                if ( null != oilStationAdapter)
+                    oilStationAdapter.removeAllData(true);
+                reqData(null, pageIndex,location.getLatitude(),location.getLongitude());
             }
         });
     }

@@ -214,11 +214,11 @@ public class CarWashListActivity extends BaseActivity {
     }
 
     private void loadParam() {
-        TipGifDialog.show(CarWashListActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
+//        TipGifDialog.show(CarWashListActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         mainViewModel.getParamWash(CarWashListActivity.this).observe(CarWashListActivity.this, new Observer<ParamWashBean>() {
             @Override
             public void onChanged(ParamWashBean paramWashBean) {
-                TipGifDialog.dismiss();
+//                TipGifDialog.dismiss();
                 if (null == paramWashBean)
                     return;
                 for (WashParam item : paramWashBean.desList){
@@ -270,7 +270,13 @@ public class CarWashListActivity extends BaseActivity {
                         param_distance.setSelected(true);
                     }
                 });
-                refreshLayout.autoRefresh();
+                AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
+                pageIndex = 1;
+                if (null != stationAdapter){
+                    stationAdapter.removeAllData(true);
+                }
+                double[] bddfsdfs = CoordinateTransformUtil.gcj02tobd09(location.getLongitude(), location.getLatitude());
+                reqData(null, pageIndex,bddfsdfs[1],bddfsdfs[0],location.getCity());
             }
         });
     }

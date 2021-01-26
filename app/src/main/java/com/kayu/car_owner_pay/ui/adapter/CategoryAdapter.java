@@ -79,7 +79,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         holder.tv_title.setText(dataList.get(position).title);
         holder.tv_title_sub.setText(dataList.get(position).remark);
-        if (!StringUtil.isEmpty(dataList.get(position).tag.trim())) {
+        if (!StringUtil.isEmpty(dataList.get(position).tag)) {
             holder.tv_tag.setText(dataList.get(position).tag);
             holder.tv_tag.setVisibility(View.VISIBLE);
         } else {

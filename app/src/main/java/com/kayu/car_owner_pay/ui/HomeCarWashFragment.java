@@ -259,7 +259,7 @@ public class HomeCarWashFragment extends Fragment {
                 if (null == refreshLayout) {
                     TipGifDialog.dismiss();
                 }else {
-                    callback.onSuccess();
+//                    callback.onSuccess();
                 }
 //                if (null == oilStationBeans)
 //                    return;

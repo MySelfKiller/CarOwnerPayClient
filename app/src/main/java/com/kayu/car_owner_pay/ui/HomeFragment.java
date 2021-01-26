@@ -228,7 +228,10 @@ public class HomeFragment extends Fragment {
                 isHasLocation = true;
                 if (!hasAutoRefresh) {
 //                    LogUtil.e("HomeFragment----","----onLocationChanged--- hasAutoRefresh----" );
-                    refreshLayout.autoRefresh();
+                    isRefresh = true;
+                    pageIndex = 1;
+                    initListView();
+                    mHasLoadedOnce = true;
                     hasAutoRefresh = true;
                 }
             }
@@ -249,12 +252,15 @@ public class HomeFragment extends Fragment {
         if (!mHasLoadedOnce) {
 //            LogUtil.e("HomeFragment----","----onStart---mHasLoadedOnce");
             initView();
-        }
-        if (isHasLocation) {
-            refreshLayout.autoRefresh();
-            hasAutoRefresh = true;
+            if (isHasLocation) {
+                isRefresh = true;
+                pageIndex = 1;
+                initListView();
+                mHasLoadedOnce = true;
+                hasAutoRefresh = true;
 //            LogUtil.e("HomeFragment----","----onStart---isHasLocation");
 
+            }
         }
 
     }
@@ -268,12 +274,15 @@ public class HomeFragment extends Fragment {
             if (!mHasLoadedOnce) {
 //                LogUtil.e("HomeFragment----","----setUserVisibleHint---mHasLoadedOnce");
                 initView();
-            }
-            if (isHasLocation) {
-                refreshLayout.autoRefresh();
-                hasAutoRefresh = true;
+                if (isHasLocation) {
+                    isRefresh = true;
+                    pageIndex = 1;
+                    initListView();
+                    mHasLoadedOnce = true;
+                    hasAutoRefresh = true;
 //                LogUtil.e("HomeFragment----","----setUserVisibleHint---isHasLocation");
 
+                }
             }
         }
     }
@@ -318,6 +327,14 @@ public class HomeFragment extends Fragment {
 
             }
         });
+        if (isRefresh) {
+            refreshLayout.finishRefresh();
+            isRefresh = false;
+        }
+        if (isLoadmore) {
+            refreshLayout.finishLoadMore();
+            isLoadmore = false;
+        }
     }
 
 

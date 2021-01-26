@@ -435,7 +435,7 @@ public class KWApplication extends Application {
      * @param context
      * @param packagename 包名
      */
-    public static boolean isNavigationApk(Context context, String packagename) {
+    public boolean isNavigationApk(Context context, String packagename) {
         List<PackageInfo> packages = context.getPackageManager().getInstalledPackages(0);
         for (int i = 0; i < packages.size(); i++) {
             PackageInfo packageInfo = packages.get(i);

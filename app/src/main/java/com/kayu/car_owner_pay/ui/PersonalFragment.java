@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -35,6 +36,7 @@ import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.view.RoundImageView;
+import com.kongzue.dialog.v3.TipGifDialog;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
@@ -206,9 +208,12 @@ public class PersonalFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         LogUtil.e("PersonalFragment----","----setUserVisibleHint---");
-        if (isVisibleToUser && isCreated) {
+        if (isVisibleToUser && isCreated && !mHasLoadedOnce) {
             LogUtil.e("PersonalFragment----","----setUserVisibleHint---isCreated");
-            refreshLayout.autoRefresh();
+            TipGifDialog.show((AppCompatActivity) requireContext(), "加载中...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
+            isRefresh = true;
+            mHasLoadedOnce = true;
+            initView();
         }
     }
 
@@ -216,10 +221,13 @@ public class PersonalFragment extends Fragment {
     public void onStart() {
         super.onStart();
         LogUtil.e("PersonalFragment----","----onStart---");
-        if (!getUserVisibleHint())
+        if (!getUserVisibleHint() || mHasLoadedOnce)
             return;
         LogUtil.e("PersonalFragment----","----onStart---isVisibleToUser");
-        refreshLayout.autoRefresh();
+        TipGifDialog.show((AppCompatActivity) requireContext(), "加载中...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
+        isRefresh = true;
+        mHasLoadedOnce = true;
+        initView();
 
     }
 
@@ -236,14 +244,6 @@ public class PersonalFragment extends Fragment {
         mainViewModel.getUserInfo(getContext()).observe(requireActivity(), new Observer<UserBean>() {
             @Override
             public void onChanged(UserBean userBean) {
-                if (isRefresh) {
-                    refreshLayout.finishRefresh();
-                    isRefresh = false;
-                }
-                if (isLoadmore) {
-                    refreshLayout.finishLoadMore();
-                    isLoadmore = false;
-                }
                 if (null == userBean)
                     return;
 
@@ -376,5 +376,13 @@ public class PersonalFragment extends Fragment {
 
             }
         });
+        if (isRefresh) {
+            refreshLayout.finishRefresh();
+            isRefresh = false;
+        }
+        if (isLoadmore) {
+            refreshLayout.finishLoadMore();
+            isLoadmore = false;
+        }
     }
 }

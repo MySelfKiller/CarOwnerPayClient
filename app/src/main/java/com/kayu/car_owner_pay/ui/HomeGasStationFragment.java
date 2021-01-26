@@ -313,7 +313,7 @@ public class HomeGasStationFragment extends Fragment {
                 if (null == refreshLayout) {
                     TipGifDialog.dismiss();
                 } else {
-                    callback.onSuccess();
+//                    callback.onSuccess();
                 }
 //                if (null == oilStationBeans)
 //                    return;
