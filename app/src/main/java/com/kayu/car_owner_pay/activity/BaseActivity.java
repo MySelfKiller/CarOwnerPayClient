@@ -68,8 +68,6 @@ public class BaseActivity extends AppCompatActivity implements EasyPermissions.P
 
 //        StatusBarUtil.setTranslucent(this, 0);
 //        StatusBarUtil.setColor(this, getResources().getColor(R.color.white));
-        KWApplication.getInstance().displayWidth = ScreenUtils.getDisplayWidth(this);
-        KWApplication.getInstance().displayHeight = ScreenUtils.getDisplayHeight(this);
 //        int displayHeight = CommonUtils.getDisplayHeight(this);
 //        LogUtil.e("screen","displayWidth："+KWApplication.getInstance().displayWidth
 //                +" displayHeight："+displayHeight);

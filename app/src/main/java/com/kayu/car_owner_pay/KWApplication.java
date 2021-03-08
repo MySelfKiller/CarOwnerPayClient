@@ -29,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.multidex.MultiDexApplication;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
@@ -40,6 +41,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.activity.ActivationActivity;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
+import com.kayu.car_owner_pay.config_ad.TTAdManagerHolder;
 import com.kayu.car_owner_pay.http.HttpConfig;
 import com.kayu.car_owner_pay.model.MapInfoModel;
 import com.kayu.car_owner_pay.model.SystemParam;
@@ -47,6 +49,7 @@ import com.kayu.car_owner_pay.ui.text_link.UrlClickableSpan;
 import com.kayu.utils.Constants;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
+import com.kayu.utils.ScreenUtils;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.Utils;
 import com.kayu.utils.callback.Callback;
@@ -61,6 +64,8 @@ import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.CustomDialog;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.TipGifDialog;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,7 +80,7 @@ import cn.jiguang.verifysdk.api.JVerificationInterface;
 import cn.jiguang.verifysdk.api.RequestCallback;
 
 
-public class KWApplication extends Application {
+public class KWApplication extends MultiDexApplication {
 
     //身份 -2：游客、0:普通用户、1:会员用户、2:经销商(团长)、3:运营商
     public int userRole;
@@ -96,11 +101,18 @@ public class KWApplication extends Application {
     public static KWApplication getInstance() {
         return self;
     }
-
+    public static RefWatcher sRefWatcher = null;
     @Override
     public void onCreate() {
         self = this;
         super.onCreate();
+
+        if (!LeakCanary.isInAnalyzerProcess(this)) {
+            sRefWatcher = LeakCanary.install(this);
+        }
+        //穿山甲SDK初始化
+        //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
+        TTAdManagerHolder.init(this);
 //        setFornts();
         initDialogSetting();
         LocationManagerUtil.init(this);
