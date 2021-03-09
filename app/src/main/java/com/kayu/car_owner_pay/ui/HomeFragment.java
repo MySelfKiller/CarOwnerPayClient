@@ -517,9 +517,10 @@ public class HomeFragment extends Fragment {
                             if (!StringUtil.isEmpty(target)) {
                                 Intent intent = new Intent(getContext(), WebViewActivity.class);
                                 StringBuilder sb = new StringBuilder();
-                                sb.append(target);
+//                                sb.append(target);
+                                sb.append("https://www.ky808.cn/carfriend/static/cyt/text/index.html#/advertising");
                                 if (StringUtil.equals(categoryBean.type, "KY_H5")) {
-                                    sb.append("&token=").append(KWApplication.getInstance().token);
+                                    sb.append("?token=").append(KWApplication.getInstance().token);
                                 }
                                 intent.putExtra("url", sb.toString());
                                 intent.putExtra("from", "首页");

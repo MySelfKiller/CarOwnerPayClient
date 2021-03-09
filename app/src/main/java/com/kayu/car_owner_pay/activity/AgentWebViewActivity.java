@@ -1,10 +1,13 @@
 package com.kayu.car_owner_pay.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
@@ -13,11 +16,21 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.bytedance.sdk.openadsdk.AdSlot;
+import com.bytedance.sdk.openadsdk.TTAdConstant;
+import com.bytedance.sdk.openadsdk.TTAdManager;
+import com.bytedance.sdk.openadsdk.TTAdNative;
+import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
+import com.bytedance.sdk.openadsdk.TTRewardVideoAd;
 import com.just.agentweb.AgentWeb;
 import com.just.agentweb.DefaultWebClient;
 import com.just.agentweb.WebChromeClient;
 import com.just.agentweb.WebViewClient;
+import com.kayu.car_owner_pay.LocalJavascriptInterface;
 import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.config_ad.TTAdManagerHolder;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
@@ -160,7 +173,7 @@ public class AgentWebViewActivity extends BaseActivity {
                 .createAgentWeb()//创建AgentWeb。
                 .ready()//设置 WebSettings
                 .go(url); //WebView载入该url地址的页面并显示。
-        mAgentWeb.getJsInterfaceHolder().addJavaObject("androidMethod", new LocalJavascriptInterface(this));
+//        mAgentWeb.getJsInterfaceHolder().addJavaObject("androidMethod", new LocalJavascriptInterface(this,jsHandler));
 
         mAgentWeb.getAgentWebSettings().getWebSettings();
     }
@@ -219,7 +232,5 @@ public class AgentWebViewActivity extends BaseActivity {
         mAgentWeb.getWebLifeCycle().onDestroy();
         super.onDestroy();
     }
-
-
 
 }

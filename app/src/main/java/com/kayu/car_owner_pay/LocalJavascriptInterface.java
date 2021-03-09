@@ -1,25 +1,23 @@
-package com.kayu.car_owner_pay.activity;
+package com.kayu.car_owner_pay;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
+import android.os.Handler;
 import android.view.View;
 import android.webkit.JavascriptInterface;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.kayu.car_owner_pay.KWApplication;
-import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.activity.BaseActivity;
 import com.kayu.car_owner_pay.model.WXSharedBean;
 import com.kayu.car_owner_pay.wxapi.WXShare;
 import com.kayu.utils.Constants;
 import com.kayu.utils.GsonHelper;
 import com.kayu.utils.ImageUtil;
+import com.kayu.utils.LogUtil;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.callback.Callback;
 import com.kayu.utils.callback.ImageCallback;
@@ -29,12 +27,36 @@ import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.TipGifDialog;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 public class LocalJavascriptInterface {
     private Context mContext;
-    public LocalJavascriptInterface(Context context){
+    private Handler handler;
+
+    public LocalJavascriptInterface(Context context, Handler handler){
         this.mContext = context;
+        this.handler = handler;
+    }
+
+    @JavascriptInterface
+    public void advert(String s){
+        LogUtil.e("LocalJavascriptInterface","advert----path:"+s);
+        if (StringUtil.isEmpty(s))
+            return;
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(s);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (null  == jsonObject)
+            return;
+        int id = jsonObject.optInt("id");
+        handler.sendMessage(handler.obtainMessage(1,id,1));
+
     }
 
     @JavascriptInterface
