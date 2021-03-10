@@ -47,12 +47,22 @@ import com.bytedance.sdk.openadsdk.TTAdManager;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTRewardVideoAd;
+import com.google.gson.Gson;
 import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.LocalJavascriptInterface;
 import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.activity.login.LoginActivity;
 import com.kayu.car_owner_pay.config_ad.TTAdManagerHolder;
+import com.kayu.car_owner_pay.http.HttpConfig;
+import com.kayu.car_owner_pay.http.ReqUtil;
+import com.kayu.car_owner_pay.http.RequestInfo;
+import com.kayu.car_owner_pay.http.ResponseCallback;
+import com.kayu.car_owner_pay.http.ResponseInfo;
+import com.kayu.car_owner_pay.http.parser.NormalParse;
 import com.kayu.utils.AppUtil;
 import com.kayu.utils.Constants;
+import com.kayu.utils.DesCoderUtil;
+import com.kayu.utils.GsonHelper;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
@@ -61,9 +71,13 @@ import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
 import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.TipGifDialog;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 public class WebViewActivity extends BaseActivity {
 
@@ -77,14 +91,14 @@ public class WebViewActivity extends BaseActivity {
     private TextView title_name;
     Map<String, String> headMap =new HashMap<>();
     private static final String TAG = "RewardVideoActivity";
-
+    private long adID = 0L;
     @SuppressLint("HandlerLeak")
     private Handler jsHandler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
             LogUtil.e("WebViewActivity","advert----what:"+msg.what+"------arg1:"+msg.arg1);
             if (msg.what == 1) {
-                int id = msg.arg1;
+                adID =(long) msg.obj;
                 loadAd(TTAdManagerHolder.videoID);
 //                if (mttRewardVideoAd != null&&mIsLoaded) {
 //                    //step6:在获取到广告后展示,强烈建议在onRewardVideoCached回调后，展示广告，提升播放体验
@@ -761,6 +775,11 @@ public class WebViewActivity extends BaseActivity {
                                 " name:" + rewardName + " errorCode:" + errorCode + " errorMsg:" + errorMsg;
                         LogUtil.e(TAG, "Callback --> " + logString);
 //                        TToast.show(com.union_test.toutiao.activity.RewardVideoActivity.this, logString);
+                        if (adID == 0L )
+                            return;
+
+                        if (rewardVerify)
+                            sendADComplete(adID);
                     }
 
                     @Override
@@ -813,4 +832,72 @@ public class WebViewActivity extends BaseActivity {
         });
     }
 
+    @SuppressLint("HandlerLeak")
+    private void sendADComplete(long mfid) {
+
+        //生成requestId
+        String requestId = UUID.randomUUID().toString().replaceAll("-", "");
+        //秘钥key
+        StringBuilder keyBuilder = new StringBuilder();
+        //占位符
+        StringBuilder seatBuilder = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 8; i++) {
+            //随机索引 <= 9
+            int index = random.nextInt(10);
+            //记录索引
+            seatBuilder.append(index);
+            //记录索引对应的key
+            keyBuilder.append(requestId.charAt(index));
+        }
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("mfId",mfid);
+        map.put("timeMillis",System.currentTimeMillis());
+        HashMap<String,Object> reqDateMap = new HashMap<>();
+
+        try {
+
+            String seats = seatBuilder.toString();
+            String key = keyBuilder.toString();
+//            JSONObject jsonObject = new JSONObject(map);
+
+//            String data = DesCoderUtil.encryptDES(jsonObject.toString(),key);
+            String data = DesCoderUtil.encryptDES(GsonHelper.toJsonString(map),key);
+            reqDateMap.put("seats",seats);
+            reqDateMap.put("data",data);
+            reqDateMap.put("requestId",requestId);
+            LogUtil.e("key",key);
+            LogUtil.e("requestId",requestId);
+            LogUtil.e("data",data);
+
+        } catch (Exception e) {
+
+        }
+
+
+        final RequestInfo reqInfo = new RequestInfo();
+        reqInfo.context = WebViewActivity.this;
+        reqInfo.reqUrl = HttpConfig.HOST+HttpConfig.INTERFACE_AD_COMPLETE;
+        reqInfo.parser = new NormalParse();
+
+
+        reqInfo.reqDataMap = reqDateMap;
+        reqInfo.handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                ResponseInfo resInfo = (ResponseInfo)msg.obj;
+                if (resInfo.status ==1 ){
+//                    ToastUtils.show("奖励发放成功");
+                }else {
+//                    ToastUtils.show(resInfo.msg);
+                }
+                super.handleMessage(msg);
+            }
+        };
+
+        ResponseCallback callback = new ResponseCallback(reqInfo);
+        ReqUtil.getInstance().setReqInfo(reqInfo);
+        ReqUtil.getInstance().requestPostJSON(callback);
+    }
 }

@@ -517,8 +517,8 @@ public class HomeFragment extends Fragment {
                             if (!StringUtil.isEmpty(target)) {
                                 Intent intent = new Intent(getContext(), WebViewActivity.class);
                                 StringBuilder sb = new StringBuilder();
-//                                sb.append(target);
-                                sb.append("https://www.ky808.cn/carfriend/static/cyt/text/index.html#/advertising");
+                                sb.append(target);
+//                                sb.append("https://www.ky808.cn/carfriend/static/cyt/text/index.html#/advertising"); 测试视屏广告链接
                                 if (StringUtil.equals(categoryBean.type, "KY_H5")) {
                                     sb.append("?token=").append(KWApplication.getInstance().token);
                                 }

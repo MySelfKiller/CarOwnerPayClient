@@ -54,8 +54,8 @@ public class LocalJavascriptInterface {
         }
         if (null  == jsonObject)
             return;
-        int id = jsonObject.optInt("id");
-        handler.sendMessage(handler.obtainMessage(1,id,1));
+        long id = jsonObject.optLong("id");
+        handler.sendMessage(handler.obtainMessage(1,id));
 
     }
 

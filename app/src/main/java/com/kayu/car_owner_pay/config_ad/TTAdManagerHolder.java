@@ -15,9 +15,13 @@ import com.kayu.car_owner_pay.http.OkHttpManager;
 public class TTAdManagerHolder {
 
     private static final String TAG = "TTAdManagerHolder";
-    private static final String appID = "5138603";//应用ID
-    public static final String videoID = "945853775";//激励视屏ID
-    public static final String splashID = "887428694";//闪屏广告ID
+//    private static final String appID = "5138603";//应用ID
+//    public static final String videoID = "945853775";//激励视屏ID
+//    public static final String splashID = "887428694";//闪屏广告ID
+
+    private static final String appID = "5144457";//应用ID
+    public static final String videoID = "945900466";//激励视屏ID
+    public static final String splashID = "887446448";//闪屏广告ID
 
     private static boolean sInit;
 
