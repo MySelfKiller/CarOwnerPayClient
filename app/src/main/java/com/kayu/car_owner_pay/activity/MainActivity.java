@@ -1,22 +1,25 @@
 package com.kayu.car_owner_pay.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
@@ -29,6 +32,7 @@ import com.kayu.car_owner_pay.http.HttpConfig;
 import com.kayu.car_owner_pay.http.ReqUtil;
 import com.kayu.car_owner_pay.http.RequestInfo;
 import com.kayu.car_owner_pay.http.ResponseInfo;
+import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.ui.HomeFragment;
 import com.kayu.car_owner_pay.ui.PersonalFragment;
 import com.kayu.car_owner_pay.ui.adapter.BottomNavigationViewHelper;
@@ -39,13 +43,15 @@ import com.kayu.utils.AppUtil;
 import com.kayu.utils.Constants;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.Md5Util;
+import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
+import com.kayu.utils.callback.ImageCallback;
 import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.permission.EasyPermissions;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
-import com.kongzue.dialog.util.DialogSettings;
+import com.kongzue.dialog.v3.CustomDialog;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.TipGifDialog;
 import com.maning.updatelibrary.InstallUtils;
@@ -86,6 +92,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         }
     };
     private BottomNavigationView navigation;
+    private CustomDialog customDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,14 +106,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         setContentView(R.layout.activity_main);
         navigation = findViewById(R.id.nav_view);
         view_pager = (ViewPager) findViewById(R.id.view_pager);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        NavigationAdapter navigationAdapter = new NavigationAdapter(fragmentManager,getFragments());
-        view_pager.addOnPageChangeListener(this);
-        view_pager.setOffscreenPageLimit(2);
-        view_pager.setAdapter(navigationAdapter);
-        BottomNavigationViewHelper.disableShiftMode(navigation);
-        navigation.setItemIconTintList(null);//设置item图标颜色为null，当menu里icon设置selector的时候，
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         permissionsCheck();
     }
@@ -198,8 +197,19 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         }
                     });
                 }
-                LocationManagerUtil.getSelf().reStartLocation();
                 reqUpdate();
+                if (!mHasShowOnce1)
+                    reqActivityData(38);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                NavigationAdapter navigationAdapter = new NavigationAdapter(fragmentManager,getFragments());
+                view_pager.addOnPageChangeListener(MainActivity.this);
+                view_pager.setOffscreenPageLimit(2);
+                view_pager.setAdapter(navigationAdapter);
+                BottomNavigationViewHelper.disableShiftMode(navigation);
+                navigation.setItemIconTintList(null);//设置item图标颜色为null，当menu里icon设置selector的时候，
+                navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+                LocationManagerUtil.getSelf().reStartLocation();
+
             }
 
             @Override
@@ -475,9 +485,14 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         switch (position){
             case 0:
                 selectedItemId = R.id.navigation_home;
+                if (!mHasShowOnce1)
+                    reqActivityData(38);
                 break;
+
             case 1:
                 selectedItemId = R.id.navigation_personal;
+                if (!mHasShowOnce2)
+                    reqActivityData(39);
                 break;
         }
 //        LogUtil.e("hm","viewPage getSelectedItemId="+navigation.getSelectedItemId());
@@ -490,6 +505,109 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @SuppressLint("HandlerLeak")
+    private void reqActivityData(int type) {
+        if (type == 38) {
+            mViewModel.getHomeActivity(MainActivity.this).observe(MainActivity.this, new Observer<SystemParam>() {
+                @Override
+                public void onChanged(SystemParam systemParam) {
+                    if (null == systemParam)
+                        return;
+                    initActivityView(systemParam,type);
+                }
+            });
+
+        }else if (type ==39){
+            mViewModel.getSettingActivity(MainActivity.this).observe(MainActivity.this, new Observer<SystemParam>() {
+                @Override
+                public void onChanged(SystemParam systemParam) {
+                    if (null == systemParam)
+                        return;
+                    initActivityView(systemParam,type);
+                }
+            });
+        }
+    }
+//    private CustomPopupWindow popWindow;
+    private boolean mHasShowOnce1 = false;// 活动弹框已经显示过一次了 首页展示
+    private boolean mHasShowOnce2 = false;// 活动弹框已经显示过一次了 个人中心展示
+    private void initActivityView(SystemParam systemParam, int type) {
+        if (null == systemParam){
+            return;
+        }
+        if (type == 38 && !mHasShowOnce1){
+            showPopvView(type,systemParam.title,systemParam.url,systemParam.content);
+        }else if (type == 39 && !mHasShowOnce2){
+            showPopvView(type,systemParam.title,systemParam.url,systemParam.content);
+        }
+
+    }
+    private void showPopvView(int type,String jumpTitle, String jumpUrl,String imgUrl){
+        if (StringUtil.isEmpty(imgUrl))
+            return;
+//        final View customView = getLayoutInflater().inflate(R.layout.activity_activity_layout,null);
+
+        KWApplication.getInstance().loadImg(imgUrl, null, new ImageCallback() {
+
+            @Override
+            public void onSuccess(Bitmap resource) {
+                //对于已实例化的布局：
+                customDialog = CustomDialog.show(MainActivity.this, R.layout.activity_activity_layout, new CustomDialog.OnBindView() {
+                    @Override
+                    public void onBind(final CustomDialog dialog, View v) {
+                        ImageView showAcy = v.findViewById(R.id.act_show_img);
+                        showAcy.setImageBitmap(resource);
+//                ConstraintLayout.LayoutParams params1 = new ConstraintLayout.LayoutParams(resource.getWidth(),resource.getHeight());
+//                showAcy.setLayoutParams(params1);
+                        showAcy.setOnClickListener(new NoMoreClickListener() {
+                            @Override
+                            protected void OnMoreClick(View view) {
+                                if (!StringUtil.isEmpty(jumpUrl)){
+                                    Intent intent= new Intent(MainActivity.this, WebViewActivity.class);
+                                    intent.putExtra("url",jumpUrl);
+                                    intent.putExtra("from",jumpTitle);
+                                    startActivity(intent);
+                                }
+                                customDialog.doDismiss();
+                            }
+
+                            @Override
+                            protected void OnMoreErrorClick() {
+
+                            }
+                        });
+                        ImageView closeAct = v.findViewById(R.id.act_close_img);
+                        closeAct.setOnClickListener(new NoMoreClickListener() {
+                            @Override
+                            protected void OnMoreClick(View view) {
+                                customDialog.doDismiss();
+                            }
+
+                            @Override
+                            protected void OnMoreErrorClick() {
+
+                            }
+                        });
+                    }
+                }).setCancelable(false).setFullScreen(false).setCustomLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                if (type == 38) {
+                    mHasShowOnce1 = true;
+                } else if (type == 39) {
+                    mHasShowOnce2 = true;
+                }
+            }
+
+            @Override
+            public void onError() {
+                if (type == 38) {
+                    mHasShowOnce1 = true;
+                } else if (type == 39) {
+                    mHasShowOnce2 = true;
+                }
+            }
+        });
     }
 
 }

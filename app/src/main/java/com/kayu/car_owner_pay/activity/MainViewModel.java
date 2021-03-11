@@ -182,7 +182,21 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<SystemParam> parameterLiveData;
     private MutableLiveData<SystemParam> userTipLiveData;
     private MutableLiveData<SystemParam> regDialogTipLiveData;
+    private MutableLiveData<SystemParam> activityHomeLiveData;
+    private MutableLiveData<SystemParam> activitySettingLiveData;
 
+    public LiveData<SystemParam> getHomeActivity(Context context) {
+//        if (null == parameterLiveData)
+        activityHomeLiveData = new MutableLiveData<>();
+        loadParameter(context, 38);
+        return activityHomeLiveData;
+    }
+    public LiveData<SystemParam> getSettingActivity(Context context) {
+//        if (null == parameterLiveData)
+        activitySettingLiveData = new MutableLiveData<>();
+        loadParameter(context, 39);
+        return activitySettingLiveData;
+    }
     public LiveData<SystemParam> getRegDialogTip(Context context) {
 //        if (null == parameterLiveData)
         regDialogTipLiveData = new MutableLiveData<>();
@@ -259,6 +273,10 @@ public class MainViewModel extends ViewModel {
                     userTipLiveData.setValue(systemParam);
                 } else if (type  == 34){
                     regDialogTipLiveData.setValue(systemParam);
+                } else if(type == 38){
+                    activityHomeLiveData.setValue(systemParam);
+                } else if(type == 39){
+                    activitySettingLiveData.setValue(systemParam);
                 } else {
                     parameterLiveData.setValue(systemParam);
                 }

@@ -45,5 +45,5 @@ public class UserBean {
     @SerializedName("activateTime")
     public String activateTime;//激活时间
     @SerializedName("type")
-    public Integer type;//账号类型 1:普通用户,2:经销商,3:运营商
+    public Integer type;//账号类型 1:普通用户,2:经销商,3:运营商,-2 游客
 }
