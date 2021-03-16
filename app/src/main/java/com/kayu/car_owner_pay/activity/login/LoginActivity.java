@@ -43,6 +43,7 @@ import com.kayu.form_verify.Form;
 import com.kayu.form_verify.Validate;
 import com.kayu.form_verify.validator.PhoneValidator;
 import com.kayu.utils.Constants;
+import com.kayu.utils.DeviceIdUtils;
 import com.kayu.utils.GsonHelper;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.SMSCountDownTimer;
@@ -399,6 +400,9 @@ public class LoginActivity extends BaseActivity {
         reqInfo.parser = new LoginDataParse();
         HashMap<String,Object> reqDateMap = new HashMap<>();
         reqDateMap.put("phone",phone_number.getText().toString().trim());
+        String imei = DeviceIdUtils.getIMEI(getApplicationContext());
+        if (!StringUtil.isEmpty(imei))
+            reqDateMap.put("imei", imei);
         if (isSMSLogin){
             reqDateMap.put("code",sms_code.getText().toString().trim());
         }else {

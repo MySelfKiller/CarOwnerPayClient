@@ -18,6 +18,7 @@ public class UserBean {
      * expAmt : 0
      * activateTime : 2020-11-17 15:57:42
      * type : 2
+     * "busTitle":"已为您节省0.0"
      */
 
     @SerializedName("username")
@@ -46,4 +47,6 @@ public class UserBean {
     public String activateTime;//激活时间
     @SerializedName("type")
     public Integer type;//账号类型 1:普通用户,2:经销商,3:运营商,-2 游客
+    @SerializedName("busTitle")
+    public String busTitle;//已为你节省xxx元
 }

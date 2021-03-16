@@ -34,9 +34,11 @@ import com.kayu.form_verify.Form;
 import com.kayu.form_verify.Validate;
 import com.kayu.form_verify.validator.PhoneValidator;
 import com.kayu.utils.Constants;
+import com.kayu.utils.DeviceIdUtils;
 import com.kayu.utils.GsonHelper;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.SMSCountDownTimer;
+import com.kayu.utils.StringUtil;
 import com.kongzue.dialog.v3.TipGifDialog;
 
 import java.util.HashMap;
@@ -207,6 +209,9 @@ public class ActivationActivity extends BaseActivity {
         HashMap<String,Object> reqDateMap = new HashMap<>();
         reqDateMap.put("phone",phone_et.getText().toString().trim());
         reqDateMap.put("code",ver_code_et.getText().toString().trim());
+        String imei = DeviceIdUtils.getIMEI(getApplicationContext());
+        if (!StringUtil.isEmpty(imei))
+            reqDateMap.put("imei", imei);
 
 //        reqDateMap.put("code",sms_code.getText().toString().trim());
         reqInfo.reqDataMap = reqDateMap;

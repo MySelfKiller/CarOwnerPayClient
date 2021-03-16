@@ -55,7 +55,7 @@ public class PersonalFragment extends Fragment {
     private TextView explain_content;
     private ConstraintLayout oil_order_lay,wash_order_lay, all_order_lay;
     private LinearLayout more_lay;
-    private ImageView user_card_bg;
+//    private ImageView user_card_bg;
     private LinearLayout income_lay;
     private TextView user_expAmt,user_rewad;
 
@@ -76,12 +76,15 @@ public class PersonalFragment extends Fragment {
         user_name = view.findViewById(R.id.personal_user_name);
         //累计节省
         user_expAmt = view.findViewById(R.id.personal_user_expAmt);
+        explain_content = view.findViewById(R.id.personal_explain_content);
+
         //收益
         user_rewad = view.findViewById(R.id.personal_user_rewad);
         //可体现
         user_balance = view.findViewById(R.id.personal_user_balance);
-        user_card_bg = view.findViewById(R.id.personal_user_card_bg);
-        KWApplication.getInstance().loadImg(R.mipmap.ic_personal_bg,user_card_bg,new GlideRoundTransform(getContext()));
+        user_balance = view.findViewById(R.id.personal_user_balance);
+//        user_card_bg = view.findViewById(R.id.personal_user_card_bg);
+//        KWApplication.getInstance().loadImg(R.mipmap.ic_personal_bg,user_card_bg,new GlideRoundTransform(getContext()));
         card_num = view.findViewById(R.id.personal_card_num);
         //账户提示语
         user_tip = view.findViewById(R.id.personal_user_tip);
@@ -294,7 +297,13 @@ public class PersonalFragment extends Fragment {
                 }
                 user_name.setText(sb.toString());
                 user_balance.setText(String.valueOf(userBean.balance));
-                user_expAmt.setText(String.valueOf(userBean.expAmt));
+
+                String[] sss = userBean.busTitle.split("#");
+                if (null != sss && sss.length == 2) {
+                    explain_content.setText(sss[0]);
+                    user_expAmt.setText(sss[1]);
+                }
+
                 user_rewad.setText(String.valueOf(userBean.rewardAmt));
                 if (!StringUtil.isEmpty(userBean.inviteNo)) {
                     card_num.setText("卡号："+userBean.inviteNo);

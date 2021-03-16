@@ -50,6 +50,7 @@ import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.ui.text_link.UrlClickableSpan;
 import com.kayu.car_owner_pay.wxapi.WXShare;
 import com.kayu.utils.Constants;
+import com.kayu.utils.DeviceIdUtils;
 import com.kayu.utils.GsonHelper;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.LogUtil;
@@ -264,6 +265,9 @@ public class LoginAutoActivity extends BaseActivity {
         reqInfo.parser = new LoginDataParse();
         HashMap<String, Object> reqDateMap = new HashMap<>();
         reqDateMap.put("loginToken", loginToken);
+        String imei = DeviceIdUtils.getIMEI(getApplicationContext());
+        if (!StringUtil.isEmpty(imei))
+            reqDateMap.put("imei", imei);
 //        reqDateMap.put("password",sms_code.getText().toString().trim());
         reqInfo.reqDataMap = reqDateMap;
         reqInfo.handler = new Handler() {
@@ -417,6 +421,9 @@ public class LoginAutoActivity extends BaseActivity {
         reqInfo.parser = new LoginDataParse();
         HashMap<String,Object> reqDateMap = new HashMap<>();
         reqDateMap.put("wxCode",code);
+        String imei = DeviceIdUtils.getIMEI(getApplicationContext());
+        if (!StringUtil.isEmpty(imei))
+            reqDateMap.put("imei", imei);
 
 //        reqDateMap.put("code",sms_code.getText().toString().trim());
         reqInfo.reqDataMap = reqDateMap;
