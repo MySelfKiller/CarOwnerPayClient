@@ -112,7 +112,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     private List<Fragment> getFragments(){
         List<Fragment> list = new ArrayList<Fragment>();
-        list.add(new HomeFragment());
+        list.add(new HomeFragment(navigation));
         list.add(new PersonalFragment());
         return list;
     }

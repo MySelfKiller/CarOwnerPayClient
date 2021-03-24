@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -195,31 +196,16 @@ public final class DeviceIdUtils {
     }
 
     public static String getIMEI(Context context) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//            return null;
-//        }
-        TelephonyManager manager = (TelephonyManager) context.getSystemService(TELEPHONY_SERVICE);
-        if (manager == null) {
-            return null;
-        }
-        Class clazz = manager.getClass();
-        String imei = "";
-        String imei2 = null;
-        String imei3 = null;
-        try {
-            Method getImei=clazz.getDeclaredMethod("getImei",int.class);//(int slotId)
-            getImei.setAccessible(true);
-            imei = (String) getImei.invoke(manager);
-           String icc= manager.getDeviceId();
-            imei2 = icc;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                imei3 = manager.getImei();
-            } else {
-                imei3 = manager.getDeviceId();
+
+        String imei = IMEIUtil.getIMEI2(context);
+        if (StringUtil.isEmpty(imei)) {
+            imei = IMEIUtil.getDeviceId(context);
+            if (StringUtil.isEmpty(imei)){
+                imei = Settings.System.getString(
+                        context.getContentResolver(), Settings.Secure.ANDROID_ID);
             }
-        } catch (Exception e) {
         }
-        LogUtil.e("getDeviceId",imei+",-----,"+imei2+",-------"+imei3);
-        return StringUtil.isEmpty(imei)?imei2:imei;
+        LogUtil.e("getDeviceId",imei);
+        return imei;
     }
 }

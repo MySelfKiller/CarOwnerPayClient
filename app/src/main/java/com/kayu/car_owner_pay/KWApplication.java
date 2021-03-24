@@ -49,7 +49,6 @@ import com.kayu.car_owner_pay.ui.text_link.UrlClickableSpan;
 import com.kayu.utils.Constants;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
-import com.kayu.utils.ScreenUtils;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.Utils;
 import com.kayu.utils.callback.Callback;
@@ -86,7 +85,7 @@ public class KWApplication extends MultiDexApplication {
     public int userRole;
     public int isGasPublic = 0;
     public int isWashPublic = 0;
-    //注册dialog内容
+    //注册dialog内容,引导游客身份注册办卡等相关信息
     public SystemParam regDialogTip;
     public int displayWidth = 0;
     public int displayHeight = 0;
@@ -595,24 +594,26 @@ public class KWApplication extends MultiDexApplication {
 //    private String url = null;
     public void showRegDialog(Context context) {
 
-        if (null != regDialogTip && !StringUtil.isEmpty(regDialogTip.content)){
-            try {
-                //{
-                // "title": "免费办理会员",
-                // "desc": "成为会员，立享全球超百项特权",
-                // "regBtn": "立即免费办理",
-                // "pastTitle": "已办理熊猫特权卡",
-                // "pastBtn": "激活熊猫特权卡"
-                //}
-                JSONObject contentJSon = new JSONObject(regDialogTip.content);
-                title = contentJSon.getString("title");
-                desc = contentJSon.getString("desc");
-                regBtn = contentJSon.getString("regBtn");
-                pastTitle = contentJSon.getString("pastTitle");
-                pastBtn = contentJSon.getString("pastBtn");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        if (null == regDialogTip || StringUtil.isEmpty(regDialogTip.content)){
+
+        }
+        try {
+            //{
+            // "title": "免费办理会员",
+            // "desc": "成为会员，立享全球超百项特权",
+            // "regBtn": "立即免费办理",
+            // "pastTitle": "已办理熊猫特权卡",
+            // "pastBtn": "激活熊猫特权卡"
+            //}
+            JSONObject contentJSon = new JSONObject(regDialogTip.content);
+            title = contentJSon.getString("title");
+            desc = contentJSon.getString("desc");
+            regBtn = contentJSon.getString("regBtn");
+            pastTitle = contentJSon.getString("pastTitle");
+            pastBtn = contentJSon.getString("pastBtn");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
         }
 
         CustomDialog.show((AppCompatActivity) context, R.layout.dialog_activition, new CustomDialog.OnBindView() {

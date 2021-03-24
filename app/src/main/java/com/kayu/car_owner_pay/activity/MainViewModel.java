@@ -188,25 +188,25 @@ public class MainViewModel extends ViewModel {
     public LiveData<SystemParam> getHomeActivity(Context context) {
 //        if (null == parameterLiveData)
         activityHomeLiveData = new MutableLiveData<>();
-        loadParameter(context, 38);
+        loadSysParameter(context, 38);
         return activityHomeLiveData;
     }
     public LiveData<SystemParam> getSettingActivity(Context context) {
 //        if (null == parameterLiveData)
         activitySettingLiveData = new MutableLiveData<>();
-        loadParameter(context, 39);
+        loadSysParameter(context, 39);
         return activitySettingLiveData;
     }
     public LiveData<SystemParam> getRegDialogTip(Context context) {
 //        if (null == parameterLiveData)
         regDialogTipLiveData = new MutableLiveData<>();
-        loadParameter(context, 34);
+        loadSysParameter(context, 34);
         return regDialogTipLiveData;
     }
     public LiveData<SystemParam> getUserTips(Context context) {
 //        if (null == parameterLiveData)
         userTipLiveData = new MutableLiveData<>();
-        loadParameter(context, 30);
+        loadSysParameter(context, 30);
         return userTipLiveData;
     }
 
@@ -249,6 +249,12 @@ public class MainViewModel extends ViewModel {
         loadParameter(context, type);
         return parameterLiveData;
     }
+    public LiveData<SystemParam> getSysParameter(Context context, int type) {
+//        if (null == parameterLiveData)
+        parameterLiveData = new MutableLiveData<>();
+        loadSysParameter(context, type);
+        return parameterLiveData;
+    }
 
     @SuppressLint("HandlerLeak")
     private void loadParameter(Context context,  int type) {
@@ -285,6 +291,42 @@ public class MainViewModel extends ViewModel {
         };
         ReqUtil.getInstance().setReqInfo(request);
         ReqUtil.getInstance().requestPostJSON(new ResponseCallback(request));
+    }
+    @SuppressLint("HandlerLeak")
+    private void loadSysParameter(Context context,  int type) {
+        RequestInfo request = new RequestInfo();
+        request.context = context;
+        request.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_GET_SYS_PARAMETER;
+        HashMap<String,Object> dataMap = new HashMap<>();
+        dataMap.put("",type);
+        request.reqDataMap = dataMap;
+        request.parser = new ParameterDataParser();
+        request.handler = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                ResponseInfo response = (ResponseInfo)msg.obj;
+                SystemParam systemParam = null;
+                if (response.status == 1) {
+                    systemParam = (SystemParam) response.responseData;
+                } else {
+                    ToastUtils.show(response.msg);
+                }
+                if (type == 30) {
+                    userTipLiveData.setValue(systemParam);
+                } else if (type  == 34){
+                    regDialogTipLiveData.setValue(systemParam);
+                } else if(type == 38){
+                    activityHomeLiveData.setValue(systemParam);
+                } else if(type == 39){
+                    activitySettingLiveData.setValue(systemParam);
+                } else {
+                    parameterLiveData.setValue(systemParam);
+                }
+                super.handleMessage(msg);
+            }
+        };
+        ReqUtil.getInstance().setReqInfo(request);
+        ReqUtil.getInstance().requestGetJSON(new ResponseCallback(request));
     }
     public LiveData<SystemParam> getCustomer(Context context) {
 //        if (null == parameterLiveData)

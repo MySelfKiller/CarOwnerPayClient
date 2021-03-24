@@ -1,16 +1,22 @@
 package com.kayu.car_owner_pay.ui;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -24,11 +30,13 @@ import com.flyco.tablayout.TabEntity;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.gcssloop.widget.PagerGridLayoutManager;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.BannerImageLoader;
 import com.kayu.car_owner_pay.activity.CarWashListActivity;
 import com.kayu.car_owner_pay.activity.GasStationListActivity;
+import com.kayu.car_owner_pay.activity.MainActivity;
 import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.activity.MessageActivity;
 import com.kayu.car_owner_pay.activity.MyPagerAdapter;
@@ -36,6 +44,7 @@ import com.kayu.car_owner_pay.activity.WebViewActivity;
 import com.kayu.car_owner_pay.model.BannerBean;
 import com.kayu.car_owner_pay.model.CategoryBean;
 import com.kayu.car_owner_pay.model.SystemParam;
+import com.kayu.car_owner_pay.popupWindow.CustomPopupWindow;
 import com.kayu.car_owner_pay.text_banner.TextBannerView;
 import com.kayu.car_owner_pay.ui.adapter.CategoryRootAdapter;
 import com.kayu.utils.ItemCallback;
@@ -99,12 +108,16 @@ public class HomeFragment extends Fragment {
     private PagerAdapter adapter;
     private LinearLayout title_lay_bg;
     private FadingScrollView scrollView;
+    private BottomNavigationView navigation;
     //    private List<Fragment> subFragmentList;
 
 //    private double distance;//距离/km
 //    private int sort;//排序方式
 //    private int oilNo;//油号类型
 
+    public HomeFragment(BottomNavigationView view){
+        navigation = view;
+    }
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 //        LogUtil.e("HomeFragment----","----onCreateView---");
@@ -285,12 +298,22 @@ public class HomeFragment extends Fragment {
                 }
             }
         }
+        if (null != popWindow &&!hasClose){
+            if (isVisibleToUser){
+                popWindow.showAtLocation(navigation, Gravity.NO_GRAVITY
+                        ,(KWApplication.getInstance().displayWidth - navigation.getMeasuredWidth()) / 2
+                        ,KWApplication.getInstance().displayHeight - navigation.getMeasuredHeight() - navigation.getMeasuredHeight()/3);
+            }else {
+                popWindow.dismiss();
+            }
+        }
+
     }
 
     private int fragIndex = 0;
 
     private void initListView() {
-        mainViewModel.getParameter(getContext(), 10).observe(requireActivity(), new Observer<SystemParam>() {
+        mainViewModel.getSysParameter(getContext(), 10).observe(requireActivity(), new Observer<SystemParam>() {
             @Override
             public void onChanged(SystemParam systemParam) {
                 if (null == systemParam)
@@ -337,19 +360,31 @@ public class HomeFragment extends Fragment {
         }
     }
 
-
+    private boolean hasShow = false;
+    private boolean hasClose = false;
 
     private void initView() {
-        mainViewModel.getRegDialogTip(requireContext()).observe(requireActivity(), new Observer<SystemParam>() {
+        mainViewModel.getRegDialogTip(getActivity()).observe(getActivity(), new Observer<SystemParam>() {
             @Override
             public void onChanged(SystemParam systemParam) {
                 KWApplication.getInstance().regDialogTip = systemParam;
+                //KWApplication.getInstance().userRole == -2 &&
+                if ( null != KWApplication.getInstance().regDialogTip && KWApplication.getInstance().userRole == -2 && !hasShow) {
+                    showApplyCardDialog(getActivity(),getContext(),navigation);
+                    hasShow = true;
+                }
             }
         });
-        mainViewModel.getUserRole(requireContext()).observe(requireActivity(), new Observer<Integer>() {
+        mainViewModel.getUserRole(getActivity()).observe(getActivity(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
                 KWApplication.getInstance().userRole = integer;
+                if (integer == -2 && null != KWApplication.getInstance().regDialogTip && !hasShow) {
+                    showApplyCardDialog(getActivity(),getContext(),navigation);
+                    hasShow = true;
+                }
+//                if (integer == -2) {
+//                }
             }
         });
         mainViewModel.getParamSelect(requireContext());
@@ -439,7 +474,12 @@ public class HomeFragment extends Fragment {
                                 StringBuilder sb = new StringBuilder();
                                 sb.append(target);
                                 if (StringUtil.equals(bannerBeans.get(position).type, "KY_H5")) {
-                                    sb.append("&token=").append(KWApplication.getInstance().token);
+                                    if (target.contains("?")) {
+                                        sb.append("&token=");
+                                    } else {
+                                        sb.append("?token=");
+                                    }
+                                    sb.append(KWApplication.getInstance().token);
                                 }
                                 intent.putExtra("url", sb.toString());
                                 intent.putExtra("from", "首页");
@@ -520,7 +560,12 @@ public class HomeFragment extends Fragment {
                                 sb.append(target);
 //                                sb.append("https://www.ky808.cn/carfriend/static/cyt/text/index.html#/advertising"); 测试视屏广告链接
                                 if (StringUtil.equals(categoryBean.type, "KY_H5")) {
-                                    sb.append("?token=").append(KWApplication.getInstance().token);
+                                    if (target.contains("?")) {
+                                        sb.append("&token=");
+                                    } else {
+                                        sb.append("?token=");
+                                    }
+                                    sb.append(KWApplication.getInstance().token);
                                 }
                                 intent.putExtra("url", sb.toString());
                                 intent.putExtra("from", "首页");
@@ -584,4 +629,92 @@ public class HomeFragment extends Fragment {
 
     private double latitude, longitude;
     private String cityName;
+
+    private CustomPopupWindow popWindow;
+    private String regTips = null;
+    public void showApplyCardDialog(Activity activity, Context context, View v){
+        SystemParam regDialogTip = KWApplication.getInstance().regDialogTip;
+        if (null == regDialogTip || StringUtil.isEmpty(regDialogTip.content)){
+
+            return;
+        }
+        try {
+            //{
+            // "content": "{\"title\":\"免费办理会员\",\"desc\":\"成为会员，立享全球超百项特权\",\"regBtn\":\"立即免费办理\",\"pastTitle\":\"已办理车友团特权卡\",\"pastBtn\":\"激活车友团特权卡\",\"regTips\":\"成为特权卡会员,每年立省1000元#去办卡\"}",
+            //}
+            JSONObject contentJSon = new JSONObject(regDialogTip.content);
+            regTips = contentJSon.getString("regTips");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        String[] tips = regTips.split("#");
+        if (!StringUtil.isEmpty(regTips)){
+            if (null == tips || tips.length!=2)
+                return;
+
+        }
+        final View view = activity.getLayoutInflater().inflate(R.layout.dialog_apply_card,null);
+        ImageView dia_close = view.findViewById(R.id.dia_close_iv);
+        dia_close.setOnClickListener(new NoMoreClickListener() {
+            @Override
+            protected void OnMoreClick(View view) {
+                popWindow.dismiss();
+                hasClose = true;
+            }
+
+            @Override
+            protected void OnMoreErrorClick() {
+
+            }
+        });
+        TextView dia_content = view.findViewById(R.id.dia_act_context);
+        dia_content.setText(tips[0]);
+        AppCompatButton dia_btn_handle = view.findViewById(R.id.dia_act_btn_handle);
+        dia_btn_handle.setText(tips[1]);
+        dia_btn_handle.setOnClickListener(new NoMoreClickListener() {
+            @Override
+            protected void OnMoreClick(View view) {
+
+                if (StringUtil.isEmpty(regDialogTip.url))
+                    return;
+                Intent intent = new Intent(context, WebViewActivity.class);
+                intent.putExtra("url", regDialogTip.url);
+                context.startActivity(intent);
+            }
+
+            @Override
+            protected void OnMoreErrorClick() {
+
+            }
+        });
+
+        view.measure(View.MeasureSpec.UNSPECIFIED,View.MeasureSpec.UNSPECIFIED);
+        popWindow = new CustomPopupWindow.PopupWindowBuilder(context)
+                //.setView(R.layout.pop_layout)
+                .setView(view)
+                .size(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setFocusable(false)
+                //弹出popWindow时，背景是否变暗
+                .enableBackgroundDark(false)
+                //控制亮度
+                .setBgDarkAlpha(0.0f)
+                .setOutsideTouchable(false)
+//                            .setAnimationStyle(R.style.popWindowStyle)
+                .setOnDissmissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        //对话框销毁时
+                    }
+                })
+                .create();
+        popWindow.showAtLocation(v, Gravity.NO_GRAVITY
+                ,(KWApplication.getInstance().displayWidth - view.getMeasuredWidth()) / 2
+                ,KWApplication.getInstance().displayHeight - v.getMeasuredHeight() -v.getMeasuredHeight()/3);
+
+    }
+
+
 }

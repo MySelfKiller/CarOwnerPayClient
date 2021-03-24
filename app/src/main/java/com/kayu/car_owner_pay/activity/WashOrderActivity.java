@@ -244,7 +244,7 @@ public class WashOrderActivity extends BaseActivity {
                     initViewData(washStationDetailBean);
             }
         });
-        mainViewModel.getParameter(WashOrderActivity.this,20).observe(WashOrderActivity.this, new Observer<SystemParam>() {
+        mainViewModel.getSysParameter(WashOrderActivity.this,20).observe(WashOrderActivity.this, new Observer<SystemParam>() {
             @Override
             public void onChanged(SystemParam systemParam) {
                 if (null == systemParam){

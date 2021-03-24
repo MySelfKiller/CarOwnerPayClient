@@ -43,6 +43,7 @@ public class HttpConfig {
 
     public static final String INTERFACE_GET_USER_ROLE = "api/v1/user/getRole";        //获取用户身份
     public static final String INTERFACE_GET_PARAMETER = "api/parameter/getSystemParameter";        //获取系统参数配置
+    public static final String INTERFACE_GET_SYS_PARAMETER = "api/parameter/getSysParam/";        //获取系统参数配置
     public static final String INTERFACE_WECHAT = "api/parameter/wechatCustomer";        //微信客服
     public static final String INTERFACE_USER_INFO = "api/v1/user/getdetail";        //用户信息
     public static final String INTERFACE_BALANCE_DEAIL = "api/v1/ioitem/list";        //收入明细

@@ -340,7 +340,7 @@ public class PersonalFragment extends Fragment {
 
             }
         });
-        mainViewModel.getParameter(getContext(),10).observe(requireActivity(), new Observer<SystemParam>() {
+        mainViewModel.getSysParameter(getContext(),10).observe(requireActivity(), new Observer<SystemParam>() {
             @Override
             public void onChanged(SystemParam systemParam) {
                 if (null  == systemParam)
