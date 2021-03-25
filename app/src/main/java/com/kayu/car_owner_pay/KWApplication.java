@@ -14,8 +14,10 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.View;
@@ -47,6 +49,7 @@ import com.kayu.car_owner_pay.model.MapInfoModel;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.ui.text_link.UrlClickableSpan;
 import com.kayu.utils.Constants;
+import com.kayu.utils.DeviceIdUtils;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
@@ -96,6 +99,7 @@ public class KWApplication extends MultiDexApplication {
     private String fileName;
     public String token;//登录成功后返回的token
     private int downloadIndex;
+    public String oid = null;
 
     public static KWApplication getInstance() {
         return self;
@@ -105,7 +109,6 @@ public class KWApplication extends MultiDexApplication {
     public void onCreate() {
         self = this;
         super.onCreate();
-
         if (!LeakCanary.isInAnalyzerProcess(this)) {
             sRefWatcher = LeakCanary.install(this);
         }
@@ -670,5 +673,19 @@ public class KWApplication extends MultiDexApplication {
 
             }
         }).setFullScreen(false).setCustomLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    }
+
+    public String getOidImei() {
+        String imei = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (!StringUtil.isEmpty(oid)) {
+//                    aid = Md5Util.getStringMD5(aid);
+                imei = "oid#"+oid;
+            }
+        }else {
+            imei = DeviceIdUtils.getIMEI(this);
+
+        }
+        return imei;
     }
 }

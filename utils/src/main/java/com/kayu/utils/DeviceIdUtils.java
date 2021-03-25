@@ -196,16 +196,22 @@ public final class DeviceIdUtils {
     }
 
     public static String getIMEI(Context context) {
-
-        String imei = IMEIUtil.getIMEI2(context);
+        String imei = IMEIUtil.getMeidOnly(context,0);
         if (StringUtil.isEmpty(imei)) {
-            imei = IMEIUtil.getDeviceId(context);
-            if (StringUtil.isEmpty(imei)){
-                imei = Settings.System.getString(
-                        context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            imei = IMEIUtil.getIMEI1(context);
+            if (StringUtil.isEmpty(imei)) {
+                imei = IMEIUtil.getDeviceId(context);
+                if (StringUtil.isEmpty(imei)){
+                    String aid = Settings.System.getString(
+                            context.getContentResolver(), Settings.Secure.ANDROID_ID);
+                    if (!StringUtil.isEmpty(aid)) {
+//                    aid = Md5Util.getStringMD5(aid);
+                        imei = "aid#"+aid;
+                    }
+                }
             }
         }
-        LogUtil.e("getDeviceId",imei);
+//        LogUtil.e("getDeviceId",imei);
         return imei;
     }
 }

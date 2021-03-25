@@ -31,6 +31,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.KWApplication;
+import com.kayu.car_owner_pay.OaidHelper;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.ActivationActivity;
 import com.kayu.car_owner_pay.activity.AppManager;
@@ -265,7 +266,7 @@ public class LoginAutoActivity extends BaseActivity {
         reqInfo.parser = new LoginDataParse();
         HashMap<String, Object> reqDateMap = new HashMap<>();
         reqDateMap.put("loginToken", loginToken);
-        String imei = DeviceIdUtils.getIMEI(getApplicationContext());
+        String imei = KWApplication.getInstance().getOidImei();
         if (!StringUtil.isEmpty(imei))
             reqDateMap.put("imei", imei);
 //        reqDateMap.put("password",sms_code.getText().toString().trim());
@@ -326,6 +327,20 @@ public class LoginAutoActivity extends BaseActivity {
         performCodeWithPermission(1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, perms, new PermissionCallback() {
             @Override
             public void hasPermission(List<String> allPerms) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                    OaidHelper helper = new OaidHelper(new OaidHelper.AppIdsUpdater() {
+                        @Override
+                        public void OnIdsAvalid(boolean isSupport, String oaid, String vaid, String aaid) {
+                            if (!isSupport|| StringUtil.isEmpty(oaid)) {
+                                return;
+                            }
+                            if (!oaid.startsWith("0000")) {
+                                KWApplication.getInstance().oid = oaid;
+                            }
+                        }
+                    });
+                    helper.getDeviceIds(LoginAutoActivity.this);
+                }
                 // 检查当前是否初始化成功极光 SDK
                 if (JVerificationInterface.isInitSuccess()) {
                     // 判断当前的手机网络环境是否可以使用认证。
@@ -421,7 +436,7 @@ public class LoginAutoActivity extends BaseActivity {
         reqInfo.parser = new LoginDataParse();
         HashMap<String,Object> reqDateMap = new HashMap<>();
         reqDateMap.put("wxCode",code);
-        String imei = DeviceIdUtils.getIMEI(getApplicationContext());
+        String imei = KWApplication.getInstance().getOidImei();
         if (!StringUtil.isEmpty(imei))
             reqDateMap.put("imei", imei);
 

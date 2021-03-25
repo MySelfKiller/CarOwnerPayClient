@@ -209,7 +209,7 @@ public class ActivationActivity extends BaseActivity {
         HashMap<String,Object> reqDateMap = new HashMap<>();
         reqDateMap.put("phone",phone_et.getText().toString().trim());
         reqDateMap.put("code",ver_code_et.getText().toString().trim());
-        String imei = DeviceIdUtils.getIMEI(getApplicationContext());
+        String imei = KWApplication.getInstance().getOidImei();
         if (!StringUtil.isEmpty(imei))
             reqDateMap.put("imei", imei);
 

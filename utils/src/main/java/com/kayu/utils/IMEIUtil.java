@@ -43,6 +43,10 @@ public class IMEIUtil {
         //注意，拿第一个 IMEI 是传0，第2个 IMEI 是传1，别搞错了
         String imei1 = getImeiOrMeid(context, 0);
         String imei2 = getImeiOrMeid(context, 1);
+        LogUtil.e("imei1=",imei1);
+        LogUtil.e("imei2=",imei2);
+        LogUtil.e("imei1-md5--",Md5Util.getStringMD5(imei1));
+        LogUtil.e("imei2-md5--",Md5Util.getStringMD5(imei2));
         //sim 卡换卡位时，imei1与 imei2有可能互换，而 imeidefault 有可能不变
         if (!TextUtils.equals(imei2, imeiDefault)) {
             //返回与 imeiDefault 不一样的

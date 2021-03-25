@@ -400,7 +400,7 @@ public class LoginActivity extends BaseActivity {
         reqInfo.parser = new LoginDataParse();
         HashMap<String,Object> reqDateMap = new HashMap<>();
         reqDateMap.put("phone",phone_number.getText().toString().trim());
-        String imei = DeviceIdUtils.getIMEI(getApplicationContext());
+        String imei = KWApplication.getInstance().getOidImei();
         if (!StringUtil.isEmpty(imei))
             reqDateMap.put("imei", imei);
         if (isSMSLogin){
