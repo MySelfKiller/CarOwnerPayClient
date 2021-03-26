@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.activity.login.LogOffActivity;
 import com.kayu.car_owner_pay.activity.login.LoginAutoActivity;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.model.UserBean;
@@ -92,6 +93,18 @@ public class SettingsActivity extends BaseActivity {
         String version = AppUtil.getVersionName(SettingsActivity.this);
 
         user_name = findViewById(R.id.setting_user_name_tv);
+        findViewById(R.id.setting_log_off_tv).setOnClickListener(new NoMoreClickListener() {
+            @Override
+            protected void OnMoreClick(View view) {
+                Intent intent = new Intent(SettingsActivity.this, LogOffActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            protected void OnMoreErrorClick() {
+
+            }
+        });
 
         app_version = findViewById(R.id.setting_app_version_tv);
         app_new_version = findViewById(R.id.setting_app_new_version_tv);

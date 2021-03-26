@@ -146,6 +146,30 @@
                 android:layout_height="@dimen/dp_1"
                 android:layout_marginHorizontal="@dimen/dp_17"
                 android:background="@color/divider2" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/dp_5"
+                android:paddingHorizontal="@dimen/dp_20">
+                <TextView
+                    android:id="@+id/setting_log_off_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/dp_5"
+                    android:singleLine="true"
+                    android:text="账号注销"
+                    android:textColor="@color/black1"
+                    android:textSize="@dimen/sp_13"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_marginHorizontal="@dimen/dp_17"
+                android:background="@color/divider2" />
 
 
 

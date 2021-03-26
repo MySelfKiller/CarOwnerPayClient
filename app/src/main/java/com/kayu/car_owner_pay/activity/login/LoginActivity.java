@@ -41,6 +41,7 @@ import com.kayu.car_owner_pay.model.LoginInfo;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.form_verify.Form;
 import com.kayu.form_verify.Validate;
+import com.kayu.form_verify.validator.NotEmptyValidator;
 import com.kayu.form_verify.validator.PhoneValidator;
 import com.kayu.utils.Constants;
 import com.kayu.utils.DeviceIdUtils;
@@ -302,6 +303,7 @@ public class LoginActivity extends BaseActivity {
                 phoneValiv.addValidator(new PhoneValidator(LoginActivity.this));
                 form.addValidates(phoneValiv);
                 Validate smsValiv = new Validate(sms_code);
+                smsValiv.addValidator(new NotEmptyValidator(LoginActivity.this));
                 form.addValidates(smsValiv);
 
                 boolean isOk = form.validate();

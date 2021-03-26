@@ -1,6 +1,5 @@
 package com.kayu.car_owner_pay.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -9,13 +8,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.MainThread;
@@ -26,7 +23,6 @@ import com.bytedance.sdk.openadsdk.TTAdConstant;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTSplashAd;
-import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.login.LoginAutoActivity;
@@ -34,14 +30,7 @@ import com.kayu.car_owner_pay.activity.login.SetPasswordActivity;
 import com.kayu.car_owner_pay.config_ad.TTAdManagerHolder;
 import com.kayu.utils.Constants;
 import com.kayu.utils.ScreenUtils;
-import com.kayu.utils.location.LocationManagerUtil;
-import com.kayu.utils.permission.EasyPermissions;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
-import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
-import com.kongzue.dialog.util.BaseDialog;
-import com.kongzue.dialog.v3.MessageDialog;
-
-import java.util.List;
 
 
 public class SplashActivity extends AppCompatActivity {
@@ -57,6 +46,8 @@ public class SplashActivity extends AppCompatActivity {
     private String mCodeId = TTAdManagerHolder.splashID;
     private boolean mIsExpress = false; //是否请求模板广告
     private LinearLayout splash_img;
+    private boolean isLogin;
+    private boolean isSetPsd;
 
 
     @Override
@@ -101,7 +92,12 @@ public class SplashActivity extends AppCompatActivity {
         //在合适的时机申请权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题
         //在开屏时候申请不太合适，因为该页面倒计时结束或者请求超时会跳转，在该页面申请权限，体验不好
 //         TTAdManagerHolder.get().requestPermissionIfNecessary(this);
-        loadSplashAd();
+        SharedPreferences sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
+        isLogin = sp.getBoolean(Constants.isLogin, false);
+        isSetPsd = sp.getBoolean(Constants.isSetPsd, false);
+        if (isLogin) {
+            loadSplashAd();
+        }
         new Handler().postDelayed(runnable,1500*1);
 //        permissionsCheck();
     }
@@ -274,9 +270,6 @@ public class SplashActivity extends AppCompatActivity {
     private void goToMainActivity() {
 
         Intent intent;
-        SharedPreferences sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
-        boolean isLogin = sp.getBoolean(Constants.isLogin, false);
-        boolean isSetPsd = sp.getBoolean(Constants.isSetPsd, false);
         if (isLogin) {
             if (isSetPsd){
                 intent = new Intent(SplashActivity.this, MainActivity.class);
@@ -369,6 +362,10 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         public void run() {
             splash_img.setVisibility(View.GONE);
+            if (!isLogin) {
+//                loadSplashAd();
+                goToMainActivity();
+            }
         }
     };
 }

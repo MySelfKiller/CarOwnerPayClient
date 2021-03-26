@@ -413,16 +413,19 @@ public class LoginAutoActivity extends BaseActivity {
     }
 
     private void jumpDialog(String msg){
-        MessageDialog.show(LoginAutoActivity.this,"提示",msg+"，是否需要使用其他手机号验证登录？","是","否").setCancelable(false)
-                .setOkButton(new OnDialogButtonClickListener() {
-                    @Override
-                    public boolean onClick(BaseDialog baseDialog, View v) {
-                        Intent intent = new Intent(LoginAutoActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                        return true;
-                    }
-                });
+//        MessageDialog.show(LoginAutoActivity.this,"提示",msg+"，是否需要使用其他手机号验证登录？","是","否").setCancelable(false)
+//                .setOkButton(new OnDialogButtonClickListener() {
+//                    @Override
+//                    public boolean onClick(BaseDialog baseDialog, View v) {
+//                        Intent intent = new Intent(LoginAutoActivity.this, LoginActivity.class);
+//                        startActivity(intent);
+//                        finish();
+//                        return true;
+//                    }
+//                });
+        Intent intent = new Intent(LoginAutoActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
     @SuppressLint("HandlerLeak")
     private void reqSignIn(String code) {
