@@ -312,8 +312,9 @@ public class HomeGasStationFragment extends Fragment {
             public void onChanged(List<OilStationBean> oilStationBeans) {
                 if (null == refreshLayout) {
                     TipGifDialog.dismiss();
-                } else {
-//                    callback.onSuccess();
+                }
+                if (null != callback){
+                    callback.onSuccess();
                 }
 //                if (null == oilStationBeans)
 //                    return;
