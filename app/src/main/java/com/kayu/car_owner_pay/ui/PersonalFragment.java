@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.CustomerActivity;
+import com.kayu.car_owner_pay.activity.MainActivity;
 import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.activity.OilOrderListActivity;
 import com.kayu.car_owner_pay.activity.SettingsActivity;
@@ -243,7 +244,7 @@ public class PersonalFragment extends Fragment {
 //                }
 //            });
 //        }
-
+        mainViewModel.sendOilPayInfo(getContext());
         mainViewModel.getUserInfo(getContext()).observe(requireActivity(), new Observer<UserBean>() {
             @Override
             public void onChanged(UserBean userBean) {

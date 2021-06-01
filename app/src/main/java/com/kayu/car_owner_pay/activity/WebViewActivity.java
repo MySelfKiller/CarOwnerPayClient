@@ -58,6 +58,7 @@ import com.kayu.car_owner_pay.http.ReqUtil;
 import com.kayu.car_owner_pay.http.RequestInfo;
 import com.kayu.car_owner_pay.http.ResponseCallback;
 import com.kayu.car_owner_pay.http.ResponseInfo;
+import com.kayu.car_owner_pay.http.parser.NormalIntParse;
 import com.kayu.car_owner_pay.http.parser.NormalParse;
 import com.kayu.utils.AppUtil;
 import com.kayu.utils.Constants;
@@ -165,6 +166,7 @@ public class WebViewActivity extends BaseActivity {
         findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
+                sendOilPayInfo(WebViewActivity.this);
                 onBackPressed();
             }
 
@@ -176,6 +178,7 @@ public class WebViewActivity extends BaseActivity {
         findViewById(R.id.title_close_btn).setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
+                sendOilPayInfo(WebViewActivity.this);
                 finish();
             }
 
@@ -900,4 +903,25 @@ public class WebViewActivity extends BaseActivity {
         ReqUtil.getInstance().setReqInfo(reqInfo);
         ReqUtil.getInstance().requestPostJSON(callback);
     }
+
+    @SuppressLint("HandlerLeak")
+    public void sendOilPayInfo(Context context) {
+        RequestInfo reques = new RequestInfo();
+        reques.context = context;
+        reques.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_GAS_NOTIFIED;
+        HashMap<String, Object> reqDateMap = new HashMap<>();
+        reques.reqDataMap = reqDateMap;
+        reques.parser = new NormalIntParse();
+        reques.handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+//                ResponseInfo resInfo = (ResponseInfo) msg.obj;
+                super.handleMessage(msg);
+            }
+        };
+        ResponseCallback callback = new ResponseCallback(reques);
+        ReqUtil.getInstance().setReqInfo(reques);
+        ReqUtil.getInstance().requestPostJSON(callback);
+    }
+
 }
