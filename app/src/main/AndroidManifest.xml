@@ -16,7 +16,17 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 用于访问网络，网络定位需要上网 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- Required -->
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"
+        tools:node="merge"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+        tools:node="merge"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"
+        tools:node="merge"/>
+    <uses-permission android:name="android.permission.READ_SETTINGS"
+        tools:node="merge"/>
+    <uses-permission android:name="android.permission.GET_TASKS"
+        tools:node="merge"/>
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" /> <!-- 可选权限 -->
     <!-- suppress DeprecatedClassUsageInspection -->
     <uses-permission android:name="android.permission.GET_TASKS" /> <!-- 如果有视频相关的广告且使用textureView播放，请务必添加，否则黑屏 -->

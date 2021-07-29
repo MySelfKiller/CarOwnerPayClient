@@ -15,6 +15,8 @@ public class HttpConfig {
     public static final String INTERFACE_SET_PASSWORD = ""; //设置密码
     public static final String INTERFACE_RESET_PASSWORD = ""; //重置密码
 
+    public static final String CLOSE_WEB_VIEW = "https://www.ky808.cn/close";
+
     public static final String INTERFACE_GET_CATEGORY = "api/v1/nav/list"; //获取项目类别列表
     public static final String INTERFACE_GET_FILTER = "api/v1/gas/getfilter"; //获取加油站条件
     public static final String INTERFACE_GET_BANNER = "api/v1/banner/list"; //获取Banner列表

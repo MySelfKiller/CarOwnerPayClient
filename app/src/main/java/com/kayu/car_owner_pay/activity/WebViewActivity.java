@@ -400,7 +400,7 @@ public class WebViewActivity extends BaseActivity {
 
 //                view.loadUrl(url);
                 if(url.startsWith("http:")|| url.startsWith("https:")){
-                    if (url.equals("https://www.ky808.cn/close")){
+                    if (url.equals(HttpConfig.CLOSE_WEB_VIEW)){
                         onBackPressed();
                         return true;
                     }else {
