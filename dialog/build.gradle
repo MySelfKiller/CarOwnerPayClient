@@ -5,11 +5,11 @@ group = "com.kongzue.dialog_v3x"
 version = "3.2.4.1"
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 83
         versionName "3.2.4.1"
 
