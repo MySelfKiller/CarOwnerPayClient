@@ -3,8 +3,10 @@ package com.kayu.car_owner_pay;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
@@ -31,6 +33,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.multidex.MultiDexApplication;
 
 import com.alibaba.alibctriver.AlibcImageCenter;
@@ -48,11 +51,15 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.activity.ActivationActivity;
+import com.kayu.car_owner_pay.activity.AppManager;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
+import com.kayu.car_owner_pay.activity.login.LoginAutoActivity;
 import com.kayu.car_owner_pay.config_ad.TTAdManagerHolder;
 import com.kayu.car_owner_pay.extend.ImageImpl;
 import com.kayu.car_owner_pay.extend.ShareImpl;
 import com.kayu.car_owner_pay.http.HttpConfig;
+import com.kayu.car_owner_pay.http.OkHttpManager;
+import com.kayu.car_owner_pay.http.cookie.PersistentCookieStore;
 import com.kayu.car_owner_pay.model.MapInfoModel;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.ui.text_link.UrlClickableSpan;
@@ -110,6 +117,7 @@ public class KWApplication extends MultiDexApplication {
     public String token;//登录成功后返回的token
     private int downloadIndex;
     public String oid = null;
+    public LocalBroadcastManager localBroadcastManager;
 
     public static KWApplication getInstance() {
         return self;
@@ -142,8 +150,45 @@ public class KWApplication extends MultiDexApplication {
         SharedPreferences sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
         token = sp.getString(Constants.token,"");
         LogUtil.setIsDebug( BuildConfig.LOG_DEBUG);
+
+        localBroadcastManager = LocalBroadcastManager.getInstance(this); // 获取实例
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.kayu.broadcasttest.JUMP");
+        LocalReceiver localReceiver = new LocalReceiver();
+        localBroadcastManager.registerReceiver(localReceiver, intentFilter); // 注册本地广播监听器
     }
 
+    //记录首次异常时间
+    private long firstTime = 0;
+    private int xxx = 1;
+    private int yyy = 1;
+    class LocalReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+//            Toast.makeText(context, "received local broadcast", Toast.LENGTH_SHORT).show();
+//            LogUtil.e("接收退出广告","received local broadcast"+yyy);
+            yyy++;
+            long secondTime = System.currentTimeMillis();
+            if (firstTime == 0 || secondTime - firstTime > 1000 * 10) {
+//                LogUtil.e("强制退出","退出次数"+xxx);
+                xxx = xxx+1;
+                firstTime = secondTime;
+                // 2020/6/8 判断用户登录信息失效跳转
+                SharedPreferences sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putBoolean(Constants.isLogin, false);
+                editor.putString(Constants.login_info, "");
+                editor.apply();
+                editor.commit();
+                new PersistentCookieStore(KWApplication.getInstance()).removeAll();
+                OkHttpManager.getInstance().resetHttpClient();
+                AppManager.getAppManager().finishAllActivity();
+                LocationManagerUtil.getSelf().stopLocation();
+//                    LocationManager.getSelf().destroyLocation();
+                startActivity(new Intent(getApplicationContext(), LoginAutoActivity.class));
+            }
+        }
+    }
     private void turnOnDebug() {
         AlibcTradeCommon.turnOnDebug();
         AlibcTradeCommon.openErrorLog();
@@ -740,4 +785,6 @@ public class KWApplication extends MultiDexApplication {
         }
         return imei;
     }
+
+
 }

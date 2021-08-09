@@ -108,7 +108,7 @@
                 android:id="@+id/id_tag_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="激活码"
+                android:text="卡密码"
                 android:textSize="@dimen/sp_12"
                 android:textColor="@color/deep_yellow4"
                 android:textStyle="bold"
@@ -126,7 +126,7 @@
                 android:paddingHorizontal="@dimen/dp_5"
                 android:paddingVertical="@dimen/dp_5"
                 android:singleLine="true"
-                android:hint="请输入您的激活码"
+                android:hint="请输入您的卡密码"
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/sp_12"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -182,21 +182,23 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <TextView
                 android:id="@+id/activation_send_ver_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingVertical="@dimen/dp_15"
-                android:paddingHorizontal="@dimen/dp_15"
                 android:layout_marginStart="@dimen/dp_10"
+                android:background="@drawable/yellow_solid_shape"
+                android:paddingHorizontal="@dimen/dp_15"
+                android:paddingVertical="@dimen/dp_15"
                 android:text="获取验证码"
-                android:textSize="@dimen/sp_12"
                 android:textColor="@color/deep_yellow4"
-                app:layout_constraintStart_toEndOf="@id/id_tag_ver_code_lay"
-                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="@dimen/sp_12"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:background="@drawable/yellow_solid_shape"/>
+                app:layout_constraintStart_toEndOf="@id/id_tag_ver_code_lay"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
         </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/activation_ask_btn"

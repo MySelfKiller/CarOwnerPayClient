@@ -57,19 +57,9 @@ public class ResponseCallback implements Callback {
                 obj = (ResponseInfo) reqInfo.parser.parseJSON(reqInfo.handler,result,0);
                 if (obj.status == Constants.response_code_10101 || obj.status == Constants.response_code_10102){
                     handler.sendMessage(handler.obtainMessage(Constants.PARSE_DATA_ERROR,obj));
-                    // 2020/6/8 判断用户登录信息失效跳转
-                    SharedPreferences sp = reqInfo.context.getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sp.edit();
-                    editor.putBoolean(Constants.isLogin, false);
-                    editor.putString(Constants.login_info, "");
-                    editor.apply();
-                    editor.commit();
-                    new PersistentCookieStore(KWApplication.getInstance()).removeAll();
-                    OkHttpManager.getInstance().resetHttpClient();
-                    AppManager.getAppManager().finishAllActivity();
-                    LocationManagerUtil.getSelf().stopLocation();
-//                    LocationManager.getSelf().destroyLocation();
-                    reqInfo.context.startActivity(new Intent(reqInfo.context, LoginAutoActivity.class));
+                    Intent intent = new Intent("com.kayu.broadcasttest.JUMP");
+                    KWApplication.getInstance().localBroadcastManager.sendBroadcast(intent); // 发送本地广播
+
                 } else if (obj.status == Constants.response_code_1) {
                     handler.sendMessage(handler.obtainMessage(Constants.PARSE_DATA_SUCCESS, obj));
                 } else {

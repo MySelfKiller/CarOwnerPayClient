@@ -32,6 +32,7 @@ import com.kayu.car_owner_pay.model.ActivationCard;
 import com.kayu.car_owner_pay.model.LoginInfo;
 import com.kayu.form_verify.Form;
 import com.kayu.form_verify.Validate;
+import com.kayu.form_verify.validator.NotEmptyValidator;
 import com.kayu.form_verify.validator.PhoneValidator;
 import com.kayu.utils.Constants;
 import com.kayu.utils.DeviceIdUtils;
@@ -51,7 +52,7 @@ public class ActivationActivity extends BaseActivity {
     private EditText ver_code_et;
     private EditText card_num_et;
     private EditText phone_et;
-    private EditText code_et;
+    private EditText pwd_et;
     private SMSCountDownTimer timer;
 
     @Override
@@ -82,11 +83,11 @@ public class ActivationActivity extends BaseActivity {
         phone_et = findViewById(R.id.activation_phone_et);
         phone_et.setInputType(InputType.TYPE_CLASS_NUMBER);
         card_num_et = findViewById(R.id.activation_card_num_et);
-        code_et = findViewById(R.id.activation_code_et);
-        card_num_et.setClickable(false);
-        card_num_et.setFocusable(false);
-        code_et.setClickable(false);
-        code_et.setFocusable(false);
+        pwd_et = findViewById(R.id.activation_code_et);
+//        card_num_et.setClickable(false);
+//        card_num_et.setFocusable(false);
+//        code_et.setClickable(true);
+//        code_et.setFocusable(false);
         ver_code_et = findViewById(R.id.activation_ver_code_et);
         ver_code_et.setInputType(InputType.TYPE_CLASS_NUMBER);
         send_ver_code = findViewById(R.id.activation_send_ver_code);
@@ -122,7 +123,14 @@ public class ActivationActivity extends BaseActivity {
                 phoneValiv.addValidator(new PhoneValidator(ActivationActivity.this));
                 form.addValidates(phoneValiv);
                 Validate smsValiv = new Validate(ver_code_et);
+                smsValiv.addValidator(new NotEmptyValidator(ActivationActivity.this));
+                Validate carNoValiv = new Validate(card_num_et);
+                carNoValiv.addValidator(new NotEmptyValidator(ActivationActivity.this));
+                Validate pwdValiv = new Validate(pwd_et);
+                pwdValiv.addValidator(new NotEmptyValidator(ActivationActivity.this));
                 form.addValidates(smsValiv);
+                form.addValidates(carNoValiv);
+                form.addValidates(pwdValiv);
 
                 boolean isOk = form.validate();
                 if (isOk){
@@ -157,11 +165,11 @@ public class ActivationActivity extends BaseActivity {
                     form.addValidates(phoneValiv);
                     boolean isOk = form.validate();
                     if (isOk){
-                        getActivInfo();
+//                        getActivInfo();
                     }
                 }else {
-                    card_num_et.setText("");
-                    code_et.setText("");
+//                    card_num_et.setText("");
+//                    pwd_et.setText("");
                 }
             }
 
@@ -173,7 +181,8 @@ public class ActivationActivity extends BaseActivity {
         TipGifDialog.show(ActivationActivity.this, "发送验证码...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = ActivationActivity.this;
-        reqInfo.reqUrl = HttpConfig.HOST+HttpConfig.INTERFACE_VERIFICATION_CODE;
+//        reqInfo.reqUrl = HttpConfig.HOST+HttpConfig.INTERFACE_VERIFICATION_CODE;
+        reqInfo.reqUrl = "https://www.ws101.cn/cyt/api/sys/getCaptSms/";
         reqInfo.parser = new NormalParse();
         HashMap<String,Object> reqDateMap = new HashMap<>();
         reqDateMap.put("",phone_et.getText().toString().trim());
@@ -204,11 +213,14 @@ public class ActivationActivity extends BaseActivity {
         TipGifDialog.show(ActivationActivity.this, "确认中...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = ActivationActivity.this;
-        reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_LOGIN;
+//        reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_LOGIN;
+        reqInfo.reqUrl = "https://www.ws101.cn/cyt/api/sys/recharge2";
         reqInfo.parser = new LoginDataParse();
         HashMap<String,Object> reqDateMap = new HashMap<>();
         reqDateMap.put("phone",phone_et.getText().toString().trim());
         reqDateMap.put("code",ver_code_et.getText().toString().trim());
+        reqDateMap.put("cardNo",card_num_et.getText().toString().trim());
+        reqDateMap.put("pwd",pwd_et.getText().toString().trim());
         String imei = KWApplication.getInstance().getOidImei();
         if (!StringUtil.isEmpty(imei))
             reqDateMap.put("imei", imei);
@@ -221,22 +233,24 @@ public class ActivationActivity extends BaseActivity {
                 TipGifDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
-                    LoginInfo user = (LoginInfo) resInfo.responseData;
-                    if (null != user){
-                        SharedPreferences sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sp.edit();
-                        editor.putBoolean(Constants.isLogin,true);
-                        editor.putString(Constants.token,user.token);
-                        editor.putBoolean(Constants.isSetPsd,true);
-                        editor.putString(Constants.login_info, GsonHelper.toJsonString(user));
-                        editor.apply();
-                        editor.commit();
-                        KWApplication.getInstance().token = user.token;
-                        AppManager.getAppManager().finishAllActivity();
-                        Intent intent = new Intent(ActivationActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    }
+                    Toast.makeText(ActivationActivity.this,"激活成功，请登录！",Toast.LENGTH_SHORT).show();
+                    ActivationActivity.this.finish();
+//                    LoginInfo user = (LoginInfo) resInfo.responseData;
+//                    if (null != user){
+//                        SharedPreferences sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
+//                        SharedPreferences.Editor editor = sp.edit();
+//                        editor.putBoolean(Constants.isLogin,true);
+//                        editor.putString(Constants.token,user.token);
+//                        editor.putBoolean(Constants.isSetPsd,true);
+//                        editor.putString(Constants.login_info, GsonHelper.toJsonString(user));
+//                        editor.apply();
+//                        editor.commit();
+//                        KWApplication.getInstance().token = user.token;
+//                        AppManager.getAppManager().finishAllActivity();
+//                        Intent intent = new Intent(ActivationActivity.this, MainActivity.class);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        startActivity(intent);
+//                    }
                 }else {
                     Toast.makeText(ActivationActivity.this,resInfo.msg,Toast.LENGTH_SHORT).show();
                 }
@@ -251,41 +265,41 @@ public class ActivationActivity extends BaseActivity {
     }
 
 
-    @SuppressLint("HandlerLeak")
-    private void getActivInfo() {
-        TipGifDialog.show(ActivationActivity.this, "查询中...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
-        final RequestInfo reqInfo = new RequestInfo();
-        reqInfo.context = ActivationActivity.this;
-        reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_ACTVINFO;
-        reqInfo.parser = new ActvInfoParse();
-        HashMap<String,Object> reqDateMap = new HashMap<>();
-        reqDateMap.put("phone",phone_et.getText().toString().trim());
-//        reqDateMap.put("code",sms_code.getText().toString().trim());
-        reqInfo.reqDataMap = reqDateMap;
-        reqInfo.handler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                TipGifDialog.dismiss();
-                ResponseInfo resInfo = (ResponseInfo)msg.obj;
-                if (resInfo.status ==1 ){
-                    ActivationCard actvInfo = (ActivationCard) resInfo.responseData;
-                    if (null != actvInfo){
-                        String no = actvInfo.no;
-                        String hidNO = no.replaceAll("(\\d{3})\\d{4}(\\d{4})","$1****$2");
-                        String hidCode = actvInfo.code;
-                        card_num_et.setText(hidNO);
-                        code_et.setText(hidCode.replaceAll(actvInfo.code.substring(3),"***"));
-
-                    }
-                }
-                ToastUtils.show(resInfo.msg);
-                super.handleMessage(msg);
-            }
-        };
-
-        ResponseCallback callback = new ResponseCallback(reqInfo);
-        ReqUtil.getInstance().setReqInfo(reqInfo);
-        ReqUtil.getInstance().requestPostJSON(callback);
-
-    }
+//    @SuppressLint("HandlerLeak")
+//    private void getActivInfo() {
+//        TipGifDialog.show(ActivationActivity.this, "查询中...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
+//        final RequestInfo reqInfo = new RequestInfo();
+//        reqInfo.context = ActivationActivity.this;
+//        reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_ACTVINFO;
+//        reqInfo.parser = new ActvInfoParse();
+//        HashMap<String,Object> reqDateMap = new HashMap<>();
+//        reqDateMap.put("phone",phone_et.getText().toString().trim());
+////        reqDateMap.put("code",sms_code.getText().toString().trim());
+//        reqInfo.reqDataMap = reqDateMap;
+//        reqInfo.handler = new Handler(){
+//            @Override
+//            public void handleMessage(Message msg) {
+//                TipGifDialog.dismiss();
+//                ResponseInfo resInfo = (ResponseInfo)msg.obj;
+//                if (resInfo.status ==1 ){
+//                    ActivationCard actvInfo = (ActivationCard) resInfo.responseData;
+//                    if (null != actvInfo){
+//                        String no = actvInfo.no;
+//                        String hidNO = no.replaceAll("(\\d{3})\\d{4}(\\d{4})","$1****$2");
+//                        String hidCode = actvInfo.code;
+//                        card_num_et.setText(hidNO);
+//                        pwd_et.setText(hidCode.replaceAll(actvInfo.code.substring(3),"***"));
+//
+//                    }
+//                }
+//                ToastUtils.show(resInfo.msg);
+//                super.handleMessage(msg);
+//            }
+//        };
+//
+//        ResponseCallback callback = new ResponseCallback(reqInfo);
+//        ReqUtil.getInstance().setReqInfo(reqInfo);
+//        ReqUtil.getInstance().requestPostJSON(callback);
+//
+//    }
 }
