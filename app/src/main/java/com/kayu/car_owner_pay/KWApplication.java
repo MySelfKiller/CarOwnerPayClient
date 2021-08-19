@@ -35,13 +35,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.multidex.MultiDexApplication;
-
-import com.alibaba.alibctriver.AlibcImageCenter;
-import com.alibaba.alibctriver.AlibcNavigateCenter;
-import com.alibaba.baichuan.trade.common.AlibcTradeCommon;
-import com.baichuan.nb_trade.callback.AlibcTradeInitCallback;
-import com.baichuan.nb_trade.core.AlibcTradeBiz;
-import com.baichuan.nb_trade.core.AlibcTradeSDK;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -55,8 +48,6 @@ import com.kayu.car_owner_pay.activity.AppManager;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
 import com.kayu.car_owner_pay.activity.login.LoginAutoActivity;
 import com.kayu.car_owner_pay.config_ad.TTAdManagerHolder;
-import com.kayu.car_owner_pay.extend.ImageImpl;
-import com.kayu.car_owner_pay.extend.ShareImpl;
 import com.kayu.car_owner_pay.http.HttpConfig;
 import com.kayu.car_owner_pay.http.OkHttpManager;
 import com.kayu.car_owner_pay.http.cookie.PersistentCookieStore;
@@ -127,13 +118,6 @@ public class KWApplication extends MultiDexApplication {
     public void onCreate() {
         self = this;
         super.onCreate();
-        // 打开debug调试
-        turnOnDebug();
-        // 注册小程序三方实现（比如：分享或图片库等）
-        registerThirdInstance();
-        // 初始化SDK
-        initSDK();
-
         if (!LeakCanary.isInAnalyzerProcess(this)) {
             sRefWatcher = LeakCanary.install(this);
         }
@@ -188,41 +172,6 @@ public class KWApplication extends MultiDexApplication {
                 startActivity(new Intent(getApplicationContext(), LoginAutoActivity.class));
             }
         }
-    }
-    private void turnOnDebug() {
-        AlibcTradeCommon.turnOnDebug();
-        AlibcTradeCommon.openErrorLog();
-        AlibcTradeBiz.turnOnDebug();
-    }
-
-    private void turnOffDebug() {
-        AlibcTradeCommon.turnOffDebug();
-        AlibcTradeCommon.closeErrorLog();
-        AlibcTradeBiz.turnOffDebug();
-    }
-
-    private void registerThirdInstance() {
-        // 注册分享实现
-        ShareImpl share = new ShareImpl();
-        AlibcNavigateCenter.registerNavigateUrl(share);
-        // 注册图片库实现
-        ImageImpl image = new ImageImpl(KWApplication.this);
-        AlibcImageCenter.registerImage(image);
-    }
-    private void initSDK() {
-        // 扩展参数（默认可不设置或传空）
-        Map<String, Object> extParams = new HashMap<>(16);
-        AlibcTradeSDK.asyncInit(this, extParams, new AlibcTradeInitCallback() {
-            @Override
-            public void onSuccess() {
-                LogUtil.e("主入口", "init sdk success");
-            }
-
-            @Override
-            public void onFailure(int code, String msg) {
-                LogUtil.e("主入口", "init sdk fail: code = " + code + ", msg = " + msg);
-            }
-        });
     }
 //    public Picasso getPicasso(){
 //        return picasso;
