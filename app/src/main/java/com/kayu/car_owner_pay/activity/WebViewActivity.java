@@ -51,6 +51,7 @@ import com.google.gson.Gson;
 import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.LocalJavascriptInterface;
 import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.SettingInterface;
 import com.kayu.car_owner_pay.activity.login.LoginActivity;
 import com.kayu.car_owner_pay.config_ad.TTAdManagerHolder;
 import com.kayu.car_owner_pay.http.HttpConfig;
@@ -119,6 +120,8 @@ public class WebViewActivity extends BaseActivity {
             super.handleMessage(msg);
         }
     };
+    private String data;//需要用到的加密数据
+    private String gasId;
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -160,6 +163,8 @@ public class WebViewActivity extends BaseActivity {
 
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
+        data = intent.getStringExtra("data");
+        gasId = intent.getStringExtra("gasId");
 //        titleName = intent.getStringExtra("title");
 //        from = intent.getStringExtra("from");
 //        title = intent.getStringExtra("title");
@@ -266,6 +271,9 @@ public class WebViewActivity extends BaseActivity {
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
         wvWebView.addJavascriptInterface(new LocalJavascriptInterface(this,jsHandler),"androidMethod");
+        if (!StringUtil.isEmpty(data)) {
+            wvWebView.addJavascriptInterface(new SettingInterface(data,gasId), "app");
+        }
         wvWebView.requestFocus();
         wvWebView.clearCache(true);
         wvWebView.clearHistory();

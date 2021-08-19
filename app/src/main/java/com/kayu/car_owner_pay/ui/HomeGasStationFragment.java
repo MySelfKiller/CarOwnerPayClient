@@ -18,10 +18,13 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.activity.OilStationActivity;
+import com.kayu.car_owner_pay.activity.WebViewActivity;
+import com.kayu.car_owner_pay.http.parser.WebDataParse;
 import com.kayu.car_owner_pay.model.DistancesParam;
 import com.kayu.car_owner_pay.model.OilStationBean;
 import com.kayu.car_owner_pay.model.OilsParam;
@@ -29,9 +32,11 @@ import com.kayu.car_owner_pay.model.OilsTypeParam;
 import com.kayu.car_owner_pay.model.ParamOilBean;
 import com.kayu.car_owner_pay.model.ParamParent;
 import com.kayu.car_owner_pay.model.SortsParam;
+import com.kayu.car_owner_pay.model.WebBean;
 import com.kayu.car_owner_pay.ui.adapter.OilStationAdapter;
 import com.kayu.car_owner_pay.ui.adapter.ParamParentAdapter;
 import com.kayu.utils.ItemCallback;
+import com.kayu.utils.StringUtil;
 import com.kayu.utils.callback.Callback;
 import com.kayu.utils.view.AdaptiveHeightViewPager;
 import com.kongzue.dialog.v3.TipGifDialog;
@@ -95,15 +100,38 @@ public class HomeGasStationFragment extends Fragment {
         oilStationAdapter = new OilStationAdapter(requireContext(), null,true,true, new ItemCallback() {
             @Override
             public void onItemCallback(int position, Object obj) {
-                int userRole = KWApplication.getInstance().userRole;
-                int isPublic = KWApplication.getInstance().isGasPublic;
-                if ( userRole == -2 && isPublic == 0){
-                    KWApplication.getInstance().showRegDialog(getContext());
-                    return;
+                OilStationBean oilStationBean = (OilStationBean)obj;
+                if (oilStationBean.channel.equals("tyb")) {
+                    mainViewModel.getPayUrl(requireContext(),
+                            oilStationBean.gasId, -1,
+                            selectOilParam.oilNo,mLatitude,mLongitude)
+                            .observe(requireActivity(), new Observer<WebBean>() {
+                        @Override
+                        public void onChanged(WebBean webBean) {
+                            if (null == webBean){
+                                ToastUtils.show("未获取到支付信息");
+                                return;
+                            }
+                            Intent intent = new Intent(requireContext(), WebViewActivity.class);
+                            intent.putExtra("url",webBean.link);
+                            intent.putExtra("title", "订单");
+                            intent.putExtra("data",webBean.data);
+                            intent.putExtra("gasId",oilStationBean.gasId);
+//                                intent.putExtra("from", "首页");
+                            startActivityForResult(intent,111);
+                        }
+                    });
+                } else if (oilStationBean.channel.equals("ty")) {
+                    int userRole = KWApplication.getInstance().userRole;
+                    int isPublic = KWApplication.getInstance().isGasPublic;
+                    if ( userRole == -2 && isPublic == 0){
+                        KWApplication.getInstance().showRegDialog(getContext());
+                        return;
+                    }
+                    Intent intent = new Intent(getContext(),OilStationActivity.class);
+                    intent.putExtra("gasId",oilStationBean.gasId);
+                    startActivity(intent);
                 }
-                Intent intent = new Intent(getContext(),OilStationActivity.class);
-                intent.putExtra("gasId",((OilStationBean)obj).gasId);
-                startActivity(intent);
             }
 
             @Override

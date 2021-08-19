@@ -13,18 +13,21 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.amap.api.location.AMapLocation;
 import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.model.OilStationBean;
 import com.kayu.car_owner_pay.model.OilsParam;
 import com.kayu.car_owner_pay.model.OilsTypeParam;
+import com.kayu.car_owner_pay.model.WebBean;
 import com.kayu.car_owner_pay.ui.adapter.ProductTypeAdapter;
 import com.kayu.utils.DoubleUtils;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
+import com.kayu.utils.location.LocationManagerUtil;
 import com.kongzue.dialog.v3.TipGifDialog;
 
 import java.util.ArrayList;
@@ -222,16 +225,22 @@ public class OilStationActivity extends BaseActivity {
                             TipGifDialog.show(OilStationActivity.this,"请选择枪号", TipGifDialog.TYPE.WARNING);
                             return;
                         }
-                        mainViewModel.getPayUrl(OilStationActivity.this, gasId, Integer.parseInt(gunNo)).observe(OilStationActivity.this, new Observer<String>() {
+                        AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
+                        mainViewModel.getPayUrl(OilStationActivity.this, gasId,
+                                Integer.parseInt(gunNo),selectedOilNo,
+                                location.getLatitude(),location.getLongitude())
+                                .observe(OilStationActivity.this, new Observer<WebBean>() {
                             @Override
-                            public void onChanged(String s) {
-                                if (StringUtil.isEmpty(s)){
+                            public void onChanged(WebBean webBean) {
+                                if (null  == webBean){
                                     ToastUtils.show("未获取到支付信息");
                                     return;
                                 }
                                 Intent intent = new Intent(OilStationActivity.this, WebViewActivity.class);
-                                intent.putExtra("url", s);
+                                intent.putExtra("url", webBean.link);
                                 intent.putExtra("title", "订单");
+                                intent.putExtra("data",webBean.data);
+                                intent.putExtra("gasId",oilStationBean.gasId);
 //                                intent.putExtra("from", "首页");
                                 startActivityForResult(intent,111);
                             }
@@ -268,12 +277,13 @@ public class OilStationActivity extends BaseActivity {
 
         }
     }
-
+    int selectedOilNo = -1;
     class ParentParamItemCallback implements ItemCallback {
         @Override
         public void onItemCallback(int position, Object obj) {
 //            parentSelectedIndex = position;
             OilsParam param = (OilsParam) obj;
+            selectedOilNo = param.oilNo;
             oil_price.setText(String.valueOf(param.priceYfq));
             oil_price_sub1.setText("比国标价降" + DoubleUtils.sub(param.priceOfficial, param.priceYfq) + "元");
             oil_price_sub2.setText("比油站降" + DoubleUtils.sub(param.priceGun, param.priceYfq) + "元");

@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.location.AMapLocation;
+import com.hjq.toast.ToastUtils;
+import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.model.DistancesParam;
 import com.kayu.car_owner_pay.model.OilStationBean;
@@ -23,11 +25,13 @@ import com.kayu.car_owner_pay.model.OilsTypeParam;
 import com.kayu.car_owner_pay.model.ParamOilBean;
 import com.kayu.car_owner_pay.model.ParamParent;
 import com.kayu.car_owner_pay.model.SortsParam;
+import com.kayu.car_owner_pay.model.WebBean;
 import com.kayu.car_owner_pay.ui.adapter.OilStationAdapter;
 import com.kayu.car_owner_pay.ui.adapter.ParamParentAdapter;
 import com.kayu.utils.Constants;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.NoMoreClickListener;
+import com.kayu.utils.StringUtil;
 import com.kayu.utils.location.LocationCallback;
 import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.permission.EasyPermissions;
@@ -125,9 +129,40 @@ public class GasStationListActivity extends BaseActivity {
         oilStationAdapter = new OilStationAdapter(GasStationListActivity.this, null,true,true, new ItemCallback() {
             @Override
             public void onItemCallback(int position, Object obj) {
-                Intent intent = new Intent(GasStationListActivity.this,OilStationActivity.class);
-                intent.putExtra("gasId",((OilStationBean)obj).gasId);
-                startActivity(intent);
+                OilStationBean oilStationBean = (OilStationBean)obj;
+                if (oilStationBean.channel.equals("tyb")) {
+                    AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
+                    mainViewModel.getPayUrl(GasStationListActivity.this,
+                            oilStationBean.gasId, -1,selectOilParam.oilNo,
+                            location.getLatitude(),location.getLongitude())
+                            .observe(GasStationListActivity.this, new Observer<WebBean>() {
+                        @Override
+                        public void onChanged(WebBean webBean) {
+                            if (null == webBean){
+                                ToastUtils.show("未获取到支付信息");
+                                return;
+                            }
+                            Intent intent = new Intent(GasStationListActivity.this, WebViewActivity.class);
+                            intent.putExtra("url", webBean.link);
+                            intent.putExtra("title", "订单");
+                            intent.putExtra("data",webBean.data);
+                            intent.putExtra("gasId",oilStationBean.gasId);
+//                                intent.putExtra("from", "首页");
+                            startActivityForResult(intent,111);
+                        }
+                    });
+                } else if (oilStationBean.channel.equals("ty")) {
+                    int userRole = KWApplication.getInstance().userRole;
+                    int isPublic = KWApplication.getInstance().isGasPublic;
+                    if ( userRole == -2 && isPublic == 0){
+                        KWApplication.getInstance().showRegDialog(GasStationListActivity.this);
+                        return;
+                    }
+                    Intent intent = new Intent(GasStationListActivity.this,OilStationActivity.class);
+                    intent.putExtra("gasId",((OilStationBean)obj).gasId);
+                    startActivity(intent);
+                }
+
             }
 
             @Override

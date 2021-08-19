@@ -32,6 +32,7 @@ import com.kayu.car_owner_pay.http.parser.NormalIntParse;
 import com.kayu.car_owner_pay.http.parser.NormalStringListParse;
 import com.kayu.car_owner_pay.http.parser.NormalStringParse;
 import com.kayu.car_owner_pay.http.parser.UserDataParse;
+import com.kayu.car_owner_pay.http.parser.WebDataParse;
 import com.kayu.car_owner_pay.model.BannerBean;
 import com.kayu.car_owner_pay.model.CategoryBean;
 import com.kayu.car_owner_pay.model.OilStationBean;
@@ -43,6 +44,7 @@ import com.kayu.car_owner_pay.model.UserBean;
 import com.kayu.car_owner_pay.model.WashOrderDetailBean;
 import com.kayu.car_owner_pay.model.WashStationBean;
 import com.kayu.car_owner_pay.model.WashStationDetailBean;
+import com.kayu.car_owner_pay.model.WebBean;
 import com.kayu.utils.Constants;
 import com.kayu.utils.GsonHelper;
 import com.kayu.utils.ItemCallback;
@@ -61,7 +63,7 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<ParamOilBean> paramOilData;//加油站筛选参数
     private MutableLiveData<ParamWashBean> paramWashData;//洗车站筛选参数
     private MutableLiveData<OilStationBean> oilStationData;//加油站详情数据
-    private MutableLiveData<String> payUrlData;//加油站详情数据
+    private MutableLiveData<WebBean> payUrlData;//加油站H5支付信息
     private MutableLiveData<UserBean> userLiveData;//用户信息
 
 
@@ -108,30 +110,35 @@ public class MainViewModel extends ViewModel {
     }
 
 
-    public LiveData<String> getPayUrl(Context context, String id, int gunNo) {
+    public LiveData<WebBean> getPayUrl(Context context, String id, int gunNo,int oilNo,double latitude,double longitude) {
 //        if (null == payUrlData)
         payUrlData = new MutableLiveData<>();
-        loadPayInfo(context, id, gunNo);
+        loadPayInfo(context, id, gunNo, oilNo, latitude, longitude);
         return payUrlData;
     }
 
     @SuppressLint("HandlerLeak")
-    private void loadPayInfo(Context context, String id, int gunNo) {
+    private void loadPayInfo(Context context, String id, int gunNo,int oilNo,double latitude,double longitude) {
         RequestInfo request = new RequestInfo();
         request.context = context;
         request.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_GAS_PAY;
         HashMap<String,Object> dataMap = new HashMap<>();
         dataMap.put("gasId",id);
-        dataMap.put("gunNo",gunNo);
+        if (gunNo != -1) {
+            dataMap.put("gunNo",gunNo);
+        }
+        dataMap.put("oilNo",oilNo);
+        dataMap.put("latitude",latitude);
+        dataMap.put("longitude",longitude);
         request.reqDataMap = dataMap;
-        request.parser = new NormalStringParse();
+        request.parser = new WebDataParse();
         request.handler = new Handler(){
             @Override
             public void handleMessage(@NonNull Message msg) {
                 ResponseInfo response = (ResponseInfo)msg.obj;
-                String payUrl = null;
+                WebBean payUrl = null;
                 if (response.status == 1) {
-                    payUrl = (String) response.responseData;
+                    payUrl = (WebBean) response.responseData;
                 } else {
                     ToastUtils.show(response.msg);
                 }

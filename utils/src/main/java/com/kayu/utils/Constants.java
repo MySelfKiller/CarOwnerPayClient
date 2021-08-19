@@ -15,19 +15,9 @@ public class Constants {
   public static final String isSetPsd = "isSetPsd";
   public static final String isShowDialog = "isShowDialog";
   public static final String userInfo = "user_info";
-  public static final String creditCardInfo = "credit_card_info";
-//  public static final String recommender = "recommender_info";
 
   public static final String authority = "com.kayu.car_owner_pay.provider";
   public static final String PATH_ROOT = "com.kayu.car_owner_pay" ;
-//  public static final int SHARED_TYPE1 = 1;
-//  public static final int SHARED_TYPE2 = 2;
-
-//  public static final int startPage1 = 1;//空卡代还页面
-//  public static final int startPage2 = 2;//智能代还页面
-//  public static final int startPage3 = 3;//快捷刷卡页面
-//  public static final int startPage4 = 4;//推广- 提现
-//  public static final int startPage5 = 5;//个人中心-储蓄卡
 
 
     public static String PATH_IMG = "imag/"; // 图片

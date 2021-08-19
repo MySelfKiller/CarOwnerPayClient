@@ -30,5 +30,6 @@ public class OilStationBean {
     public double priceGun;     //枪价/元
     public String offDiscount;//国标折扣/百分比
     public String gunDiscount;//油站折扣/百分比
+    public String channel;	//渠道编码团油:ty,淘油宝:tyb,滴滴:dd
     public List<OilsTypeParam> oilsTypeList;
 }
