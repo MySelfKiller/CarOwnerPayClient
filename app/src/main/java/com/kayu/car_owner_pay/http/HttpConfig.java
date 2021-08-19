@@ -31,7 +31,8 @@ public class HttpConfig {
     public static final String INTERFACE_GAS_PAY = "api/v1/gas/buy"; //获取加油站支付信息
     public static final String INTERFACE_GAS_NOTIFIED = "api/v1/gasorder/notified"; //发起加油通知后台
 
-    public static final String INTERFACE_GAS_ORDER_LIST = "api/v1/gasorder/list"; //获取加油站订单列表
+//    public static final String INTERFACE_GAS_ORDER_LIST = "api/v1/gasorder/list"; //获取加油站订单列表
+    public static final String INTERFACE_GAS_ORDER_LIST = "api/v1/gasorder/queryList"; //获取加油站订单列表
 
     public static final String INTERFACE_GET_WASH_FILTER = "api/v1/carwash/getfilter"; //洗车条件
     public static final String INTERFACE_WASH_STATION_LIST = "api/v1/carwash/list"; //获取洗车站列表

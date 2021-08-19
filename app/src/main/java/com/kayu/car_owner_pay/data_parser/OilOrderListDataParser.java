@@ -22,18 +22,22 @@ public class OilOrderListDataParser extends BaseParse {
         JSONObject responseJson = new JSONObject(jsonStr);
         int state = responseJson.optInt("status");
         String message = responseJson.optString("message");
+        JSONObject dataJson = responseJson.optJSONObject("data");
         ResponseInfo responseInfo = new ResponseInfo(state,message);
-        if (state == 1) {
-            JSONArray dataJson = responseJson.optJSONArray("data");
-            if (null != dataJson && dataJson.length() > 0){
-                ArrayList<ItemOilOrderBean> listArray = new ArrayList<ItemOilOrderBean>();
-                for (int x = 0; x < dataJson.length(); x++) {
-                    ItemOilOrderBean stationBean = GsonHelper.fromJson(dataJson.get(x).toString(), ItemOilOrderBean.class);
-                    listArray.add(stationBean);
+        if (null != dataJson) {
+            if (state == 1) {
+                JSONArray jsonList = dataJson.optJSONArray("list");
+                if (null != jsonList && jsonList.length() > 0){
+                    ArrayList<ItemOilOrderBean> listArray = new ArrayList<ItemOilOrderBean>();
+                    for (int x = 0; x < jsonList.length(); x++) {
+                        ItemOilOrderBean stationBean = GsonHelper.fromJson(jsonList.get(x).toString(), ItemOilOrderBean.class);
+                        listArray.add(stationBean);
+                    }
+                    responseInfo.responseData = listArray;
                 }
-                responseInfo.responseData = listArray;
             }
         }
+
         return responseInfo;
     }
 }

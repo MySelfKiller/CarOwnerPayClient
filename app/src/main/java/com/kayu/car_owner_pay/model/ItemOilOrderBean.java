@@ -33,60 +33,33 @@ public class ItemOilOrderBean {
      * amountServiceCharge : 0.00
      */
 
-    @SerializedName("orderId")
-    public String orderId;
-    @SerializedName("paySn")
-    public String paySn;
-    @SerializedName("phone")
-    public String phone;
-    @SerializedName("orderTime")
-    public String orderTime;
-    @SerializedName("payTime")
-    public String payTime;
-    @SerializedName("refundTime")
-    public String refundTime;
+    @SerializedName("id")       //主键ID
+    public Long id;
     @SerializedName("gasName")
-    public String gasName;
-    @SerializedName("province")
-    public String province;
-    @SerializedName("city")
-    public String city;
-    @SerializedName("county")
-    public String county;
-    @SerializedName("gunNo")
-    public Integer gunNo;
-    @SerializedName("oilNo")
-    public String oilNo;
-    @SerializedName("amountPay")
-    public String amountPay;
-    @SerializedName("amountGun")
-    public String amountGun;
-    @SerializedName("amountDiscounts")
-    public String amountDiscounts;
-    @SerializedName("orderStatusName")
-    public String orderStatusName;
-    @SerializedName("couponMoney")
-    public String couponMoney;
-    @SerializedName("couponId")
-    public Integer couponId;
-    @SerializedName("couponCode")
-    public String couponCode;
-    @SerializedName("litre")
-    public String litre;
+    public String gasName;      //油站名称
+    @SerializedName("orderNo")
+    public String orderNo;      //订单号
     @SerializedName("payType")
-    public String payType;
-    @SerializedName("priceUnit")
-    public String priceUnit;
-    @SerializedName("priceOfficial")
-    public String priceOfficial;
-    @SerializedName("priceGun")
-    public String priceGun;
-    @SerializedName("orderSource")
-    public String orderSource;
-    @SerializedName("qrCode4PetroChina")
-    public String qrCode4PetroChina;
-    @SerializedName("amountServiceCharge")
-    public String amountServiceCharge;
-
+    public String payType;      //支付方式
+    @SerializedName("oilNo")
+    public String oilNo;        //油号
+    @SerializedName("gunNo")
+    public String gunNo;        //枪号
+    @SerializedName("totalAmt")
+    public Double totalAmt;     //订单总金额/元
+    @SerializedName("disAmt")
+    public Double disAmt;       //优惠金额/元
+    @SerializedName("payAmt")
+    public Double payAmt;       //支付金额/元
+    @SerializedName("couponAmt")
+    public Double couponAmt;    //优惠券金额/元
+    @SerializedName("createTime")
+    public String createTime;   //创建时间
+    @SerializedName("state")
+    public Integer state;       //订单状态 0:未支付、1:已支付、2:已取消 3:已退款、4:待退款、5:退款失败
+    @SerializedName("liter")
+    public Integer liter;       //加油量 单位（升）
+    @SerializedName("qrCode")
+    public String qrCode;       //订单二维码图片
 
 }

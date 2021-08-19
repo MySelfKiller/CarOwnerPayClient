@@ -136,9 +136,9 @@ public class OilOrderAllFragment extends Fragment {
         reques.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_GAS_ORDER_LIST;
         reques.parser = new OilOrderListDataParser();
         HashMap<String, Object> reqDateMap = new HashMap<>();
-        reqDateMap.put("pageIndex", pageIndex);
+        reqDateMap.put("pageNow", pageIndex);
         if (orderStatus > 0) {
-            reqDateMap.put("orderStatus", orderStatus);
+            reqDateMap.put("state", orderStatus);
         }
         reqDateMap.put("pageSize", 20);
         reques.reqDataMap = reqDateMap;

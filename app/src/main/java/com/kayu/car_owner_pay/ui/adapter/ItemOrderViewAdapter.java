@@ -1,5 +1,6 @@
 package com.kayu.car_owner_pay.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,26 +71,48 @@ public class ItemOrderViewAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         if (holder instanceof ViewHolder) {
             ViewHolder vh = (ViewHolder) holder;
             ItemOilOrderBean oilOrderData = dataList.get(position);
             //92#(2号枪)
             vh.order_name.setText(oilOrderData.gasName);
-            vh.order_number.setText(oilOrderData.orderId);
-            vh.oil_state.setText(oilOrderData.orderStatusName);
+            vh.order_number.setText(oilOrderData.orderNo);
+            String orderStatusName = "未知";
+            switch (oilOrderData.state) {   //订单状态 0:未支付、1:已支付、2:已取消 3:已退款、4:待退款、5:退款失败
+                case 0:
+                    orderStatusName = "未支付";
+                    break;
+                case 1:
+                    orderStatusName = "已支付";
+                    break;
+                case 2:
+                    orderStatusName = "已取消";
+                    break;
+                case 3:
+                    orderStatusName = "已退款";
+                    break;
+                case 4:
+                    orderStatusName = "待退款";
+                    break;
+                case 5:
+                    orderStatusName = "退款失败";
+                    break;
+
+            }
+            vh.oil_state.setText(orderStatusName);
             vh.pay_model.setText(oilOrderData.payType);
-            vh.pay_time.setText(oilOrderData.orderTime);
+            vh.pay_time.setText(oilOrderData.createTime);
             vh.oil_info.setText(oilOrderData.oilNo+"("+oilOrderData.gunNo+"号枪)");
-            vh.full_price.setText(oilOrderData.amountGun);
-            vh.rebate_price.setText(oilOrderData.amountDiscounts);
-            vh.sale_price.setText(oilOrderData.amountPay);
-            if (!StringUtil.isEmpty(oilOrderData.qrCode4PetroChina)) {
+            vh.full_price.setText(String.valueOf(oilOrderData.totalAmt));//订单总金额
+            vh.rebate_price.setText(String.valueOf(oilOrderData.disAmt));//优惠金额
+            vh.sale_price.setText(String.valueOf(oilOrderData.payAmt));//实际支付金额
+            if (!StringUtil.isEmpty(oilOrderData.qrCode)) {
                 vh.qr_btn.setVisibility(View.VISIBLE);
                 vh.qr_btn.setOnClickListener(new NoMoreClickListener() {
                     @Override
                     protected void OnMoreClick(View view) {
-                        itemCallback.onItemCallback(position,oilOrderData.qrCode4PetroChina);
+                        itemCallback.onItemCallback(position,oilOrderData.qrCode);
                     }
 
                     @Override

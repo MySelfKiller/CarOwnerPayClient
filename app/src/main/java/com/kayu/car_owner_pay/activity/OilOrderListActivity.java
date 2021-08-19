@@ -145,7 +145,7 @@ public class OilOrderListActivity extends BaseActivity {
         });
         mFragments.add(new OilOrderAllFragment(-1 ));
         mFragments.add(new OilOrderAllFragment(1) );
-        mFragments.add(new OilOrderAllFragment(5) );
+        mFragments.add(new OilOrderAllFragment(3) );
         PagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager(),mFragments);
         mViewPager.setAdapter(adapter);
 
