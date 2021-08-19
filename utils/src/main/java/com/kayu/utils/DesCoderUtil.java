@@ -11,7 +11,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class DesCoderUtil {
-    private static byte[] keys = { 1, -1, 1, -1, 1, -1, 1, -1 };
+    private static byte[] keys = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
     private static String key = "leagsoft";
 
@@ -81,7 +81,7 @@ public class DesCoderUtil {
      * @return byte[]
      * author: Heweipo
      */
-    private static byte[] decryptByte(byte[] byteS, byte password[]) {
+    public static byte[] decryptByte(byte[] byteS, byte password[]) {
         byte[] byteFina = null;
         try {// 初始化加密/解密工具
             Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
@@ -100,7 +100,14 @@ public class DesCoderUtil {
     public static String decryptDES(String decryptString, String decryptKey) throws Exception {
         byte[] sourceBytes = Base64.decode(decryptString,0);
         Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(decryptKey.getBytes(), "DES"));
+        if (decryptKey.getBytes().length > 8) {
+            for (int x = 0; x < keys.length; x++) {
+                keys[x] = decryptKey.getBytes()[x];
+            }
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(keys, "DES"));
+        } else {
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(decryptKey.getBytes(), "DES"));
+        }
         byte[] decoded = cipher.doFinal(sourceBytes);
         return new String(decoded, "UTF-8");
     }
