@@ -18,10 +18,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.gcssloop.widget.PagerGridLayoutManager;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.activity.CarWashListActivity;
 import com.kayu.car_owner_pay.activity.CustomerActivity;
+import com.kayu.car_owner_pay.activity.GasStationListActivity;
 import com.kayu.car_owner_pay.activity.MainActivity;
 import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.activity.OilOrderListActivity;
@@ -29,14 +33,20 @@ import com.kayu.car_owner_pay.activity.SettingsActivity;
 import com.kayu.car_owner_pay.activity.WashOrderListActivity;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
 import com.kayu.car_owner_pay.glide.GlideRoundTransform;
+import com.kayu.car_owner_pay.model.CategoryBean;
+import com.kayu.car_owner_pay.model.SysOrderBean;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.model.UserBean;
+import com.kayu.car_owner_pay.ui.adapter.CategoryRootAdapter;
+import com.kayu.car_owner_pay.ui.adapter.OrderCategoryAdapter;
 import com.kayu.car_owner_pay.ui.income.BalanceFragment;
+import com.kayu.utils.ItemCallback;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.view.RoundImageView;
+import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.TipGifDialog;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
@@ -44,6 +54,8 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class PersonalFragment extends Fragment {
     private SmartRefreshLayout refreshLayout;
@@ -54,11 +66,12 @@ public class PersonalFragment extends Fragment {
     private TextView user_name;
     private TextView user_balance,web_info_tv,card_num,user_tip;
     private TextView explain_content;
-    private ConstraintLayout oil_order_lay,wash_order_lay, all_order_lay;
-    private LinearLayout more_lay;
+//    private ConstraintLayout all_order_lay;
+//    private LinearLayout more_lay;
 //    private ImageView user_card_bg;
     private LinearLayout income_lay;
     private TextView user_expAmt,user_rewad;
+    private RecyclerView category_rv;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -172,32 +185,33 @@ public class PersonalFragment extends Fragment {
 
             }
         });
-        all_order_lay = view.findViewById(R.id.id_all_order_lay);
-        more_lay = view.findViewById(R.id.personal_more_lay);
-        oil_order_lay = view.findViewById(R.id.personal_oil_order_lay);
-        oil_order_lay.setOnClickListener(new NoMoreClickListener() {
-            @Override
-            protected void OnMoreClick(View view) {
-                startActivity(new Intent(getContext(),OilOrderListActivity.class));
-            }
-
-            @Override
-            protected void OnMoreErrorClick() {
-
-            }
-        });
-        wash_order_lay = view.findViewById(R.id.personal_shop_order_lay);
-        wash_order_lay.setOnClickListener(new NoMoreClickListener() {
-            @Override
-            protected void OnMoreClick(View view) {
-                startActivity(new Intent(getContext(),WashOrderListActivity.class));
-            }
-
-            @Override
-            protected void OnMoreErrorClick() {
-
-            }
-        });
+//        all_order_lay = view.findViewById(R.id.id_all_order_lay);
+//        more_lay = view.findViewById(R.id.personal_more_lay);
+        category_rv = view.findViewById(R.id.personal_category_rv);
+//        oil_order_lay = view.findViewById(R.id.personal_oil_order_lay);
+//        oil_order_lay.setOnClickListener(new NoMoreClickListener() {
+//            @Override
+//            protected void OnMoreClick(View view) {
+//                startActivity(new Intent(getContext(),OilOrderListActivity.class));
+//            }
+//
+//            @Override
+//            protected void OnMoreErrorClick() {
+//
+//            }
+//        });
+//        wash_order_lay = view.findViewById(R.id.personal_shop_order_lay);
+//        wash_order_lay.setOnClickListener(new NoMoreClickListener() {
+//            @Override
+//            protected void OnMoreClick(View view) {
+//                startActivity(new Intent(getContext(),WashOrderListActivity.class));
+//            }
+//
+//            @Override
+//            protected void OnMoreErrorClick() {
+//
+//            }
+//        });
 //        if (getUserVisibleHint()){
 //            refreshLayout.autoRefresh();
 //            mHasLoadedOnce = true;
@@ -341,51 +355,145 @@ public class PersonalFragment extends Fragment {
 
             }
         });
-        mainViewModel.getSysParameter(getContext(),10).observe(requireActivity(), new Observer<SystemParam>() {
+        mainViewModel.getSysOrderList(getContext()).observe(requireActivity(), new Observer<List<List<SysOrderBean>>>() {
             @Override
-            public void onChanged(SystemParam systemParam) {
-                if (null  == systemParam)
+            public void onChanged(List<List<SysOrderBean>> categoryBeans) {
+                if (null == categoryBeans)
                     return;
-                try {
-                    JSONObject jsonObject = new JSONObject(systemParam.content);
-                    int showGas = jsonObject.optInt("gas");
-                    int showCarWash = jsonObject.optInt("carwash");
-                    if (showGas == 1 && showCarWash ==1 ) {
-                        all_order_lay.setVisibility(View.VISIBLE);
-                        wash_order_lay.setVisibility(View.VISIBLE);
-                        oil_order_lay.setVisibility(View.VISIBLE);
-
-                    }else if(showGas == 0 && showCarWash == 0){
-                        all_order_lay.setVisibility(View.GONE);
-                        wash_order_lay.setVisibility(View.GONE);
-                        oil_order_lay.setVisibility(View.GONE);
-                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(more_lay.getLayoutParams());
-                        layoutParams.setMargins(getResources().getDimensionPixelSize(R.dimen.dp_15)
-                                ,getResources().getDimensionPixelSize(R.dimen.dp_90)
-                                ,getResources().getDimensionPixelSize(R.dimen.dp_15)
-                                ,getResources().getDimensionPixelSize(R.dimen.dp_20));
-                        more_lay.setLayoutParams(layoutParams);
-
-                    } else {
-
-                        if (showCarWash == 1) {
-                            wash_order_lay.setVisibility(View.VISIBLE);
-                        }else{
-                            wash_order_lay.setVisibility(View.GONE);
+                for (List<SysOrderBean> list : categoryBeans) {
+                    for (SysOrderBean categoryBean : list) {
+                        if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
+                            KWApplication.getInstance().isGasPublic = categoryBean.isPublic;
                         }
-                        if (showGas == 1) {
-                            oil_order_lay.setVisibility(View.VISIBLE);
-                        } else {
-                            oil_order_lay.setVisibility(View.GONE);
+                        if (StringUtil.equals(categoryBean.type, "KY_WASH")){
+                            KWApplication.getInstance().isWashPublic = categoryBean.isPublic;
                         }
-                        all_order_lay.setVisibility(View.VISIBLE);
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
+                int mColumns=1, mRows = categoryBeans.size();
+//                if (categoryBeans.size() <= 4) {
+//                    mColumns = 4;
+//                    mRows = 1;
+//
+//                } else {
+//                    mRows = categoryBeans.size() % 4 == 0 ? categoryBeans.size() / 4 : categoryBeans.size() / 4 + 1;
+//                    mColumns = 4;
+//                }
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.dp_84) * mRows);
+                layoutParams.topMargin = getResources().getDimensionPixelSize(R.dimen.dp_14);
+                category_rv.setLayoutParams(layoutParams);
 
+                PagerGridLayoutManager mLayoutManager = new PagerGridLayoutManager(mRows, mColumns, PagerGridLayoutManager
+                        .HORIZONTAL);
+                // 系统带的 RecyclerView，无需自定义
+
+
+                // 水平分页布局管理器
+                mLayoutManager.setPageListener(new PagerGridLayoutManager.PageListener() {
+                    @Override
+                    public void onPageSizeChanged(int pageSize) {
+                    }
+
+                    @Override
+                    public void onPageSelect(int pageIndex) {
+                    }
+                });    // 设置页面变化监听器
+                category_rv.setLayoutManager(mLayoutManager);
+                OrderCategoryAdapter categoryAdapter = new OrderCategoryAdapter(categoryBeans, new ItemCallback() {
+                    @Override
+                    public void onItemCallback(int position, Object obj) {
+                        SysOrderBean categoryBean = (SysOrderBean) obj;
+                        int userRole = KWApplication.getInstance().userRole;
+                        int isPublic = categoryBean.isPublic;
+                        if (userRole == -2 && isPublic == 0){
+                            KWApplication.getInstance().showRegDialog(getContext());
+                            return;
+                        }
+                        String target = categoryBean.href;
+                        if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
+
+                            startActivity(new Intent(getContext(),OilOrderListActivity.class));
+                        }else if (StringUtil.equals(categoryBean.type, "KY_WASH")){
+                            startActivity(new Intent(getContext(),WashOrderListActivity.class));
+                        }else {
+                            if (!StringUtil.isEmpty(target)) {
+                                Intent intent = new Intent(getContext(), WebViewActivity.class);
+                                StringBuilder sb = new StringBuilder();
+                                sb.append(target);
+//                                sb.append("https://www.ky808.cn/carfriend/static/cyt/text/index.html#/advertising"); 测试视屏广告链接
+                                if (StringUtil.equals(categoryBean.type, "KY_H5")) {
+                                    if (target.contains("?")) {
+                                        sb.append("&token=");
+                                    } else {
+                                        sb.append("?token=");
+                                    }
+//                                    sb.append(KWApplication.getInstance().token);
+                                }
+                                intent.putExtra("url", sb.toString());
+                                intent.putExtra("from", "首页");
+                                startActivity(intent);
+
+                            } else {
+                                MessageDialog.show((AppCompatActivity) requireContext(), "温馨提示", "功能未开启，敬请期待");
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onDetailCallBack(int position, Object obj) {
+
+                    }
+                });
+                category_rv.setAdapter(categoryAdapter);
             }
         });
+
+//        mainViewModel.getSysParameter(getContext(),10).observe(requireActivity(), new Observer<SystemParam>() {
+//            @Override
+//            public void onChanged(SystemParam systemParam) {
+//                if (null  == systemParam)
+//                    return;
+//                try {
+//                    JSONObject jsonObject = new JSONObject(systemParam.content);
+//                    int showGas = jsonObject.optInt("gas");
+//                    int showCarWash = jsonObject.optInt("carwash");
+//                    if (showGas == 1 && showCarWash ==1 ) {
+//                        all_order_lay.setVisibility(View.VISIBLE);
+//                        wash_order_lay.setVisibility(View.VISIBLE);
+//                        oil_order_lay.setVisibility(View.VISIBLE);
+//
+//                    }else if(showGas == 0 && showCarWash == 0){
+//                        all_order_lay.setVisibility(View.GONE);
+//                        wash_order_lay.setVisibility(View.GONE);
+//                        oil_order_lay.setVisibility(View.GONE);
+//                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(more_lay.getLayoutParams());
+//                        layoutParams.setMargins(getResources().getDimensionPixelSize(R.dimen.dp_15)
+//                                ,getResources().getDimensionPixelSize(R.dimen.dp_90)
+//                                ,getResources().getDimensionPixelSize(R.dimen.dp_15)
+//                                ,getResources().getDimensionPixelSize(R.dimen.dp_20));
+//                        more_lay.setLayoutParams(layoutParams);
+//
+//                    } else {
+//
+//                        if (showCarWash == 1) {
+//                            wash_order_lay.setVisibility(View.VISIBLE);
+//                        }else{
+//                            wash_order_lay.setVisibility(View.GONE);
+//                        }
+//                        if (showGas == 1) {
+//                            oil_order_lay.setVisibility(View.VISIBLE);
+//                        } else {
+//                            oil_order_lay.setVisibility(View.GONE);
+//                        }
+//                        all_order_lay.setVisibility(View.VISIBLE);
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        });
         if (isRefresh) {
             refreshLayout.finishRefresh();
             isRefresh = false;

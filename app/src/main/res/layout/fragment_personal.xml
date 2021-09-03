@@ -308,7 +308,7 @@
                             </androidx.constraintlayout.widget.ConstraintLayout>
                         </LinearLayout>
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
+                        <LinearLayout
                             android:id="@+id/id_all_order_lay"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -316,7 +316,7 @@
                             android:layout_marginTop="@dimen/dp_20"
                             android:background="@drawable/white_bg_shape_4"
                             android:orientation="vertical"
-                            android:visibility="gone">
+                            android:visibility="visible">
 
                             <TextView
                                 android:id="@+id/id_tag_order_tv"
@@ -327,91 +327,87 @@
                                 android:text="我的订单"
                                 android:textColor="@color/black1"
                                 android:textSize="@dimen/sp_16"
-                                android:textStyle="bold"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                android:textStyle="bold"/>
 
                             <View
                                 android:id="@+id/id_tag_divider_order"
-                                android:layout_width="@dimen/dp_0"
+                                android:layout_width="match_parent"
                                 android:layout_height="@dimen/dp_1"
                                 android:layout_marginHorizontal="@dimen/dp_15"
-                                android:background="@color/divider2"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintBottom_toBottomOf="@id/id_tag_order_tv"/>
+                                android:background="@color/divider2"/>
 
-                            <androidx.constraintlayout.widget.ConstraintLayout
-                                android:id="@+id/personal_oil_order_lay"
-                                android:layout_width="@dimen/dp_0"
-                                android:layout_height="wrap_content"
-                                android:paddingVertical="@dimen/dp_20"
-                                android:visibility="gone"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintEnd_toStartOf="@id/personal_shop_order_lay"
-                                app:layout_constraintTop_toBottomOf="@id/id_tag_divider_order">
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/personal_category_rv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+<!--                            <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                                android:id="@+id/personal_oil_order_lay"-->
+<!--                                android:layout_width="@dimen/dp_0"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:paddingVertical="@dimen/dp_20"-->
+<!--                                android:visibility="visible"-->
+<!--                                app:layout_constraintStart_toStartOf="parent"-->
+<!--                                app:layout_constraintEnd_toStartOf="@id/personal_shop_order_lay"-->
+<!--                                app:layout_constraintTop_toBottomOf="@id/id_tag_divider_order">-->
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="加油订单"
-                                    android:textColor="@color/black"
-                                    android:textSize="@dimen/sp_14"
-                                    android:layout_marginTop="@dimen/dp_6"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@id/id_tag_oil_order_iv" />
+<!--                                <TextView-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:text="加油订单"-->
+<!--                                    android:textColor="@color/black"-->
+<!--                                    android:textSize="@dimen/sp_14"-->
+<!--                                    android:layout_marginTop="@dimen/dp_6"-->
+<!--                                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                                    app:layout_constraintTop_toBottomOf="@id/id_tag_oil_order_iv" />-->
 
-                                <ImageView
-                                    android:id="@+id/id_tag_oil_order_iv"
-                                    android:layout_width="@dimen/dp_50"
-                                    android:layout_height="@dimen/dp_50"
-                                    android:background="@mipmap/ic_oil_bg"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
+<!--                                <ImageView-->
+<!--                                    android:id="@+id/id_tag_oil_order_iv"-->
+<!--                                    android:layout_width="@dimen/dp_50"-->
+<!--                                    android:layout_height="@dimen/dp_50"-->
+<!--                                    android:background="@mipmap/ic_oil_bg"-->
+<!--                                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                                    app:layout_constraintTop_toTopOf="parent" />-->
 
-                            </androidx.constraintlayout.widget.ConstraintLayout>
+<!--                            </androidx.constraintlayout.widget.ConstraintLayout>-->
 
-                            <androidx.constraintlayout.widget.ConstraintLayout
-                                android:id="@+id/personal_shop_order_lay"
-                                android:layout_width="@dimen/dp_0"
-                                android:layout_height="wrap_content"
-                                android:paddingHorizontal="@dimen/dp_20"
-                                android:paddingVertical="@dimen/dp_20"
-                                android:visibility="gone"
-                                app:layout_constraintStart_toEndOf="@id/personal_oil_order_lay"
-                                app:layout_constraintTop_toBottomOf="@id/id_tag_divider_order"
-                                app:layout_constraintEnd_toEndOf="parent">
+<!--                            <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                                android:id="@+id/personal_shop_order_lay"-->
+<!--                                android:layout_width="@dimen/dp_0"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:paddingHorizontal="@dimen/dp_20"-->
+<!--                                android:paddingVertical="@dimen/dp_20"-->
+<!--                                android:visibility="visible"-->
+<!--                                app:layout_constraintStart_toEndOf="@id/personal_oil_order_lay"-->
+<!--                                app:layout_constraintTop_toBottomOf="@id/id_tag_divider_order"-->
+<!--                                app:layout_constraintEnd_toEndOf="parent">-->
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="洗车订单"
-                                    android:textColor="@color/black"
-                                    android:textSize="@dimen/sp_14"
-                                    android:layout_marginTop="@dimen/dp_6"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@id/id_tag_wash_order_iv" />
+<!--                                <TextView-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:text="洗车订单"-->
+<!--                                    android:textColor="@color/black"-->
+<!--                                    android:textSize="@dimen/sp_14"-->
+<!--                                    android:layout_marginTop="@dimen/dp_6"-->
+<!--                                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                                    app:layout_constraintTop_toBottomOf="@id/id_tag_wash_order_iv" />-->
 
-                                <ImageView
-                                    android:id="@+id/id_tag_wash_order_iv"
-                                    android:layout_width="@dimen/dp_50"
-                                    android:layout_height="@dimen/dp_50"
-                                    android:background="@mipmap/ic_wash_car_bg"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
+<!--                                <ImageView-->
+<!--                                    android:id="@+id/id_tag_wash_order_iv"-->
+<!--                                    android:layout_width="@dimen/dp_50"-->
+<!--                                    android:layout_height="@dimen/dp_50"-->
+<!--                                    android:background="@mipmap/ic_wash_car_bg"-->
+<!--                                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                                    app:layout_constraintTop_toTopOf="parent" />-->
+<!--                                -->
+<!--                            </androidx.constraintlayout.widget.ConstraintLayout>-->
 
-
-
-
-                            </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
+                        </LinearLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/personal_customer_services_lay"

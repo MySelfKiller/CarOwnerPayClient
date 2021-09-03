@@ -20,6 +20,7 @@ import com.kayu.car_owner_pay.data_parser.ParameterDataParser;
 import com.kayu.car_owner_pay.data_parser.RefundInfoDataParser;
 import com.kayu.car_owner_pay.data_parser.StationDetailDataParser;
 import com.kayu.car_owner_pay.data_parser.StationListDataParser;
+import com.kayu.car_owner_pay.data_parser.SysOrderDataParse;
 import com.kayu.car_owner_pay.data_parser.WashOrderDetailDataParser;
 import com.kayu.car_owner_pay.data_parser.WashStationDetailDataParser;
 import com.kayu.car_owner_pay.data_parser.WashStationListDataParser;
@@ -39,6 +40,7 @@ import com.kayu.car_owner_pay.model.OilStationBean;
 import com.kayu.car_owner_pay.model.ParamOilBean;
 import com.kayu.car_owner_pay.model.ParamWashBean;
 import com.kayu.car_owner_pay.model.RefundInfo;
+import com.kayu.car_owner_pay.model.SysOrderBean;
 import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.model.UserBean;
 import com.kayu.car_owner_pay.model.WashOrderDetailBean;
@@ -776,6 +778,45 @@ public class MainViewModel extends ViewModel {
                     ToastUtils.show(resInfo.msg);
                 }
                 notifyNumLiveData.setValue(data);
+                super.handleMessage(msg);
+            }
+        };
+        ResponseCallback callback = new ResponseCallback(reques);
+        ReqUtil.getInstance().setReqInfo(reques);
+        ReqUtil.getInstance().requestGetJSON(callback);
+    }
+
+    private MutableLiveData<List<List<SysOrderBean>>> sysOrderListData;//个人中心订单类别列表数据
+
+    /**
+     * 获取系统订单类型列表数据
+     * @returnS
+     */
+    public LiveData<List<List<SysOrderBean>>> getSysOrderList(Context mContext) {
+//        if (null == categoryListData) {
+//        }
+        sysOrderListData = new MutableLiveData<>();
+        loadSysOrderList(mContext);
+        return sysOrderListData;
+    }
+
+    @SuppressLint("HandlerLeak")
+    private void loadSysOrderList(Context mContext) {
+        RequestInfo reques = new RequestInfo();
+        reques.context = mContext;
+        reques.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_SYS_ORDER_LIST;
+        reques.parser = new SysOrderDataParse();
+        reques.handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                ResponseInfo resInfo = (ResponseInfo) msg.obj;
+                List<List<SysOrderBean>> myTeamData = null;
+                if (resInfo.status ==1 ){
+                    myTeamData = (List<List<SysOrderBean>>) resInfo.responseData;
+                }else {
+                    ToastUtils.show(resInfo.msg);
+                }
+                sysOrderListData.setValue(myTeamData);
                 super.handleMessage(msg);
             }
         };
