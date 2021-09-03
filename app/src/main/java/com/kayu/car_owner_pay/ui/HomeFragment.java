@@ -120,7 +120,7 @@ public class HomeFragment extends Fragment {
     }
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-//        LogUtil.e("HomeFragment----","----onCreateView---");
+        LogUtil.e("HomeFragment----","----onCreateView---");
         mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
         return inflater.inflate(R.layout.fragment_home_new, container, false);
     }
@@ -128,7 +128,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        LogUtil.e("HomeFragment----","----onViewCreated---");
+        LogUtil.e("HomeFragment----","----onViewCreated---");
         banner = view.findViewById(R.id.home_smart_banner);
         location_tv = view.findViewById(R.id.home_location_tv);
         view.findViewById(R.id.home_exchange_code).setOnClickListener(new NoMoreClickListener() {

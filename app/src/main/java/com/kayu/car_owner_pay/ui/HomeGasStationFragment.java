@@ -11,8 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,7 +23,6 @@ import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.activity.MainViewModel;
 import com.kayu.car_owner_pay.activity.OilStationActivity;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
-import com.kayu.car_owner_pay.http.parser.WebDataParse;
 import com.kayu.car_owner_pay.model.DistancesParam;
 import com.kayu.car_owner_pay.model.OilStationBean;
 import com.kayu.car_owner_pay.model.OilsParam;
@@ -36,7 +34,8 @@ import com.kayu.car_owner_pay.model.WebBean;
 import com.kayu.car_owner_pay.ui.adapter.OilStationAdapter;
 import com.kayu.car_owner_pay.ui.adapter.ParamParentAdapter;
 import com.kayu.utils.ItemCallback;
-import com.kayu.utils.StringUtil;
+import com.kayu.utils.LogUtil;
+
 import com.kayu.utils.callback.Callback;
 import com.kayu.utils.view.AdaptiveHeightViewPager;
 import com.kongzue.dialog.v3.TipGifDialog;
@@ -81,6 +80,7 @@ public class HomeGasStationFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
+        LogUtil.e("-------HomeGasStationFragment----","----onCreateView---");
         return inflater.inflate(R.layout.fragment_home_gas_station, container, false);
     }
 
@@ -101,7 +101,7 @@ public class HomeGasStationFragment extends Fragment {
             @Override
             public void onItemCallback(int position, Object obj) {
                 OilStationBean oilStationBean = (OilStationBean)obj;
-                if (oilStationBean.channel.equals("tyb")) {
+                if (oilStationBean.nextIsBuy == 1) {
                     mainViewModel.getPayUrl(requireContext(),
                             oilStationBean.gasId, -1,
                             selectOilParam.oilNo,mLatitude,mLongitude)
@@ -112,16 +112,24 @@ public class HomeGasStationFragment extends Fragment {
                                 ToastUtils.show("未获取到支付信息");
                                 return;
                             }
-                            Intent intent = new Intent(requireContext(), WebViewActivity.class);
+                            Class jumpCls ;
+//                            if (oilStationBean.channel.equals("qj")) {
+//                                jumpCls = AgentWebViewActivity.class;
+//                            } else {
+//                                jumpCls = WebViewActivity.class;
+//                            }
+                            jumpCls = WebViewActivity.class;
+                            Intent intent = new Intent(requireContext(), jumpCls);
                             intent.putExtra("url",webBean.link);
                             intent.putExtra("title", "订单");
                             intent.putExtra("data",webBean.data);
+                            intent.putExtra("channel",oilStationBean.channel);
                             intent.putExtra("gasId",oilStationBean.gasId);
 //                                intent.putExtra("from", "首页");
                             startActivityForResult(intent,111);
                         }
                     });
-                } else if (oilStationBean.channel.equals("ty")) {
+                } else {
                     int userRole = KWApplication.getInstance().userRole;
                     int isPublic = KWApplication.getInstance().isGasPublic;
                     if ( userRole == -2 && isPublic == 0){
@@ -234,6 +242,7 @@ public class HomeGasStationFragment extends Fragment {
                 viewPager.setObjectForPosition(view,fragment_id);
             }
         });
+        LogUtil.e("-------HomeGasStationFragment----","----onViewCreated---");
     }
 
     private void showParamViewData(int flag, List<ParamParent> data) {
@@ -313,12 +322,18 @@ public class HomeGasStationFragment extends Fragment {
 
     public void reqData(RefreshLayout refreshLayout, int pageIndex, final boolean isRefresh, final boolean isLoadmore, double latitude, double longitude) {
         if (null == refreshLayout) {
-            TipGifDialog.show((AppCompatActivity) getContext(), "刷新数据,稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
+            if (isAdded()) {
+                TipGifDialog.show((AppCompatActivity) requireContext(), "刷新数据,稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
+            }
+
         }
 
         if (null == selectSortsParam || null == selectDistanceParam || null == selectOilParam) {
             mainViewModel.getParamSelect(requireContext());
-            TipGifDialog.show((AppCompatActivity) getContext(),"查询参数错误,请重试", TipGifDialog.TYPE.WARNING);
+//            if (isAdded()) {
+//                TipGifDialog.show((AppCompatActivity) requireContext(),"查询参数错误,请重试", TipGifDialog.TYPE.WARNING);
+//            }
+
             return;
         }
         mLatitude = latitude;

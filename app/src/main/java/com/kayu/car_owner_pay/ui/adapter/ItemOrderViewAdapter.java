@@ -105,7 +105,7 @@ public class ItemOrderViewAdapter extends RecyclerView.Adapter<RecyclerView.View
             vh.pay_time.setText(oilOrderData.createTime);
             vh.oil_info.setText(oilOrderData.oilNo+"("+oilOrderData.gunNo+"号枪)");
             vh.full_price.setText(String.valueOf(oilOrderData.totalAmt));//订单总金额
-            vh.rebate_price.setText(String.valueOf(oilOrderData.disAmt));//优惠金额
+            vh.rebate_price.setText(String.valueOf(oilOrderData.totalAmt-oilOrderData.payAmt));//优惠金额
             vh.sale_price.setText(String.valueOf(oilOrderData.payAmt));//实际支付金额
             if (!StringUtil.isEmpty(oilOrderData.qrCode)) {
                 vh.qr_btn.setVisibility(View.VISIBLE);

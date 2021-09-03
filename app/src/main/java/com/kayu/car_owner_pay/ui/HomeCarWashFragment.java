@@ -28,6 +28,7 @@ import com.kayu.car_owner_pay.model.WashStationBean;
 import com.kayu.car_owner_pay.ui.adapter.ParamParentAdapter;
 import com.kayu.car_owner_pay.ui.adapter.WashStationAdapter;
 import com.kayu.utils.ItemCallback;
+import com.kayu.utils.LogUtil;
 import com.kayu.utils.callback.Callback;
 import com.kayu.utils.view.AdaptiveHeightViewPager;
 import com.kongzue.dialog.v3.TipGifDialog;
@@ -74,13 +75,14 @@ public class HomeCarWashFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
-        return inflater.inflate(R.layout.fragment_home_car_wash, container, false);
+        LogUtil.e("-------HomeCarWashFragment----","----onCreateView---");
+        view = inflater.inflate(R.layout.fragment_home_car_wash, container, false);
+        initView(view);
+        return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        this.view = view;
+    public void initView(View view) {
+//        this.view = view;
         station_rv = view.findViewById(R.id.car_wash_rv);
         param_distance = view.findViewById(R.id.car_wash_param_distance);
         param_sort = view.findViewById(R.id.car_wash_param_sort);
@@ -168,6 +170,7 @@ public class HomeCarWashFragment extends Fragment {
                 viewPager.setObjectForPosition(view,fragment_id);
             }
         });
+        LogUtil.e("-------HomeCarWashFragment----","----onViewCreated---");
     }
 
     private void showParamViewData(int flag, List<ParamParent> data) {
@@ -228,7 +231,9 @@ public class HomeCarWashFragment extends Fragment {
 
     public void reqData(RefreshLayout refreshLayout, int pageIndex, final boolean isRefresh, final boolean isLoadmore, double latitude, double longitude, String cityName) {
         if (null == refreshLayout) {
-            TipGifDialog.show((AppCompatActivity) getContext(), "刷新数据,稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
+            if (isAdded()) {
+                TipGifDialog.show((AppCompatActivity) requireContext(), "刷新数据,稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
+            }
         }
 //        else {
 //            callback.onSuccess();
@@ -236,7 +241,10 @@ public class HomeCarWashFragment extends Fragment {
 
         if (null == selectSortsParam || null == selectDistanceParam) {
             mainViewModel.getParamWash(requireContext());
-            TipGifDialog.show((AppCompatActivity) getContext(),"查询参数错误,请重试", TipGifDialog.TYPE.WARNING);
+//            if (isAdded()) {
+//                TipGifDialog.show((AppCompatActivity) requireContext(),"查询参数错误,请重试", TipGifDialog.TYPE.WARNING);
+//            }
+
             return;
         }
 

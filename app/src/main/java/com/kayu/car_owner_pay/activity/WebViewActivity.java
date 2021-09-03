@@ -49,6 +49,7 @@ import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTRewardVideoAd;
 import com.google.gson.Gson;
 import com.hjq.toast.ToastUtils;
+import com.kayu.car_owner_pay.JsXiaojuappApi;
 import com.kayu.car_owner_pay.LocalJavascriptInterface;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.SettingInterface;
@@ -121,6 +122,7 @@ public class WebViewActivity extends BaseActivity {
         }
     };
     private String data;//需要用到的加密数据
+    private String channel;//加油平台渠道 团油:ty ，淘油宝:tyb 青桔:qj
     private String gasId;
 
     @Override
@@ -164,6 +166,7 @@ public class WebViewActivity extends BaseActivity {
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
         data = intent.getStringExtra("data");
+        channel = intent.getStringExtra("channel");
         gasId = intent.getStringExtra("gasId");
 //        titleName = intent.getStringExtra("title");
 //        from = intent.getStringExtra("from");
@@ -270,10 +273,17 @@ public class WebViewActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
-        wvWebView.addJavascriptInterface(new LocalJavascriptInterface(this,jsHandler),"androidMethod");
-        if (!StringUtil.isEmpty(data)) {
-            wvWebView.addJavascriptInterface(new SettingInterface(data,gasId), "app");
+        if (!StringUtil.isEmpty(channel)) {
+            if (channel.equals("tyb")) {
+                wvWebView.addJavascriptInterface(new SettingInterface(data, gasId), "app");
+            } else if (channel.equals("qj")) {
+//            wvWebView.addJavascriptInterface(new JsXiaojuappApi(WebViewActivity.this, wvWebView, new Handler()), "xiaojuapp");
+                wvWebView.addJavascriptInterface(new JsXiaojuappApi(WebViewActivity.this, new Handler()), "androidMethod");
+            }
+        } else {
+            wvWebView.addJavascriptInterface(new LocalJavascriptInterface(this, jsHandler), "androidMethod");
         }
+
         wvWebView.requestFocus();
         wvWebView.clearCache(true);
         wvWebView.clearHistory();

@@ -130,7 +130,7 @@ public class GasStationListActivity extends BaseActivity {
             @Override
             public void onItemCallback(int position, Object obj) {
                 OilStationBean oilStationBean = (OilStationBean)obj;
-                if (oilStationBean.channel.equals("tyb")) {
+                if (oilStationBean.nextIsBuy == 1) {
                     AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
                     mainViewModel.getPayUrl(GasStationListActivity.this,
                             oilStationBean.gasId, -1,selectOilParam.oilNo,
@@ -142,16 +142,25 @@ public class GasStationListActivity extends BaseActivity {
                                 ToastUtils.show("未获取到支付信息");
                                 return;
                             }
-                            Intent intent = new Intent(GasStationListActivity.this, WebViewActivity.class);
+
+                            Class jumpCls ;
+//                            if (oilStationBean.channel.equals("qj")) {
+//                                jumpCls = AgentWebViewActivity.class;
+//                            } else {
+//                                jumpCls = WebViewActivity.class;
+//                            }
+                            jumpCls = WebViewActivity.class;
+                            Intent intent = new Intent(GasStationListActivity.this, jumpCls);
                             intent.putExtra("url", webBean.link);
                             intent.putExtra("title", "订单");
                             intent.putExtra("data",webBean.data);
+                            intent.putExtra("channel",oilStationBean.channel);
                             intent.putExtra("gasId",oilStationBean.gasId);
 //                                intent.putExtra("from", "首页");
                             startActivityForResult(intent,111);
                         }
                     });
-                } else if (oilStationBean.channel.equals("ty")) {
+                } else {
                     int userRole = KWApplication.getInstance().userRole;
                     int isPublic = KWApplication.getInstance().isGasPublic;
                     if ( userRole == -2 && isPublic == 0){
