@@ -427,7 +427,7 @@ public class PersonalFragment extends Fragment {
                                     } else {
                                         sb.append("?token=");
                                     }
-//                                    sb.append(KWApplication.getInstance().token);
+                                    sb.append(KWApplication.getInstance().token);
                                 }
                                 intent.putExtra("url", sb.toString());
                                 intent.putExtra("from", "首页");
