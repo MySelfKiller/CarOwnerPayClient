@@ -33,42 +33,6 @@
             android:paddingHorizontal="@dimen/dp_15"
             android:background="@drawable/white_bg_shape_4">
             <TextView
-                android:id="@+id/id_tag_phone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="手机号"
-                android:textSize="@dimen/sp_12"
-                android:textColor="@color/deep_yellow4"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-            <EditText
-                android:id="@+id/activation_phone_et"
-                android:layout_width="@dimen/dp_0"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:textSize="@dimen/sp_12"
-                android:maxLength="15"
-                android:singleLine="true"
-                android:textColor="@color/colorAccent"
-                android:layout_marginStart="@dimen/dp_10"
-                android:paddingVertical="@dimen/dp_5"
-                android:paddingHorizontal="@dimen/dp_5"
-                android:hint="请输入您的手机号"
-                app:layout_constraintStart_toEndOf="@id/id_tag_phone"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_20"
-            android:paddingVertical="@dimen/dp_10"
-            android:paddingHorizontal="@dimen/dp_15"
-            android:background="@drawable/white_bg_shape_4">
-            <TextView
                 android:id="@+id/id_tag_card_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -136,6 +100,43 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.478" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            android:paddingVertical="@dimen/dp_10"
+            android:paddingHorizontal="@dimen/dp_15"
+            android:background="@drawable/white_bg_shape_4">
+            <TextView
+                android:id="@+id/id_tag_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="手机号"
+                android:textSize="@dimen/sp_12"
+                android:textColor="@color/deep_yellow4"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+            <EditText
+                android:id="@+id/activation_phone_et"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:textSize="@dimen/sp_12"
+                android:maxLength="15"
+                android:singleLine="true"
+                android:textColor="@color/colorAccent"
+                android:layout_marginStart="@dimen/dp_10"
+                android:paddingVertical="@dimen/dp_5"
+                android:paddingHorizontal="@dimen/dp_5"
+                android:hint="请输入您的手机号"
+                app:layout_constraintStart_toEndOf="@id/id_tag_phone"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
