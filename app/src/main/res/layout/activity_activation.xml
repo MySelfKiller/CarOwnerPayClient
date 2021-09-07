@@ -72,7 +72,7 @@
                 android:id="@+id/id_tag_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="卡密码"
+                android:text="密    码"
                 android:textSize="@dimen/sp_12"
                 android:textColor="@color/deep_yellow4"
                 android:textStyle="bold"
