@@ -132,6 +132,11 @@ public class RewardVideoActivity extends Activity {
 //                TToast.show(com.union_test.toutiao.activity.RewardVideoActivity.this, "Callback --> rewardVideoAd video cached");
             }
 
+            @Override
+            public void onRewardVideoCached(TTRewardVideoAd ttRewardVideoAd) {
+
+            }
+
             //视频广告的素材加载完毕，比如视频url等，在此回调后，可以播放在线视频，网络不好可能出现加载缓冲，影响体验。
             @Override
             public void onRewardVideoAdLoad(TTRewardVideoAd ad) {

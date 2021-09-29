@@ -64,7 +64,7 @@ public class WashOrderActivity extends BaseActivity {
     private WXShare wxShare;
     private WxPayBean mWxPayBean;
     private String shopCode;
-    private AliPayBean mAliPayBean;
+    private volatile AliPayBean mAliPayBean;
     private int payWay = 2;//支付方式 0:微信JSAPI 、1:微信APP 、2:支付宝
 
     //    private long vipId;

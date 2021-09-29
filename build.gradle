@@ -18,10 +18,9 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
+        maven { url 'http://repo.baichuan-android.taobao.com/content/groups/BaichuanRepositories/'}
+        maven { url 'https://artifact.bytedance.com/repository/pangle' }
         maven { url 'https://jitpack.io' }
-        maven {
-            url "http://repo.baichuan-android.taobao.com/content/groups/BaichuanRepositories/"
-        }
     }
 }
 

@@ -1,8 +1,11 @@
 package com.kayu.car_owner_pay.ui;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -47,6 +50,7 @@ import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.popupWindow.CustomPopupWindow;
 import com.kayu.car_owner_pay.text_banner.TextBannerView;
 import com.kayu.car_owner_pay.ui.adapter.CategoryRootAdapter;
+import com.kayu.utils.Constants;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
@@ -69,6 +73,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
     private MainViewModel mainViewModel;
@@ -318,6 +323,9 @@ public class HomeFragment extends Fragment {
             public void onChanged(SystemParam systemParam) {
                 if (null == systemParam)
                     return;
+                SharedPreferences.Editor editor = requireActivity().getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE).edit();
+                editor.putString(Constants.system_args, systemParam.content);
+                editor.apply();
                 try {
                     JSONObject jsonObject = new JSONObject(systemParam.content);
                     int showGas = jsonObject.optInt("gas");
@@ -474,12 +482,18 @@ public class HomeFragment extends Fragment {
                                 StringBuilder sb = new StringBuilder();
                                 sb.append(target);
                                 if (StringUtil.equals(bannerBeans.get(position).type, "KY_H5")) {
-                                    if (target.contains("?")) {
+                                    if (target.contains("?")) {//KYCityName KYLat KYLon
                                         sb.append("&token=");
                                     } else {
                                         sb.append("?token=");
                                     }
                                     sb.append(KWApplication.getInstance().token);
+                                    sb.append("&locationName=");
+                                    sb.append(cityName);
+                                    sb.append("&selectLocation=");
+                                    sb.append(longitude);
+                                    sb.append(",");
+                                    sb.append(latitude);
                                 }
                                 intent.putExtra("url", sb.toString());
                                 intent.putExtra("from", "首页");
@@ -558,7 +572,7 @@ public class HomeFragment extends Fragment {
                                 Intent intent = new Intent(getContext(), WebViewActivity.class);
                                 StringBuilder sb = new StringBuilder();
                                 sb.append(target);
-//                                sb.append("https://www.ky808.cn/carfriend/static/cyt/text/index.html#/advertising"); 测试视屏广告链接
+//                                sb.append("https://www.ky808.cn/carfriend/static/alone/demo.html"); //测试视屏广告链接
                                 if (StringUtil.equals(categoryBean.type, "KY_H5")) {
                                     if (target.contains("?")) {
                                         sb.append("&token=");
@@ -566,6 +580,12 @@ public class HomeFragment extends Fragment {
                                         sb.append("?token=");
                                     }
                                     sb.append(KWApplication.getInstance().token);
+                                    sb.append("&locationName=");
+                                    sb.append(cityName);
+                                    sb.append("&selectLocation=");
+                                    sb.append(longitude);
+                                    sb.append(",");
+                                    sb.append(latitude);
                                 }
                                 intent.putExtra("url", sb.toString());
                                 intent.putExtra("from", "首页");

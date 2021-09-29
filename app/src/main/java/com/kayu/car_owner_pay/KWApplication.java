@@ -2,7 +2,6 @@ package com.kayu.car_owner_pay;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +18,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.View;
@@ -35,6 +33,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.multidex.MultiDexApplication;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -53,9 +52,11 @@ import com.kayu.car_owner_pay.http.OkHttpManager;
 import com.kayu.car_owner_pay.http.cookie.PersistentCookieStore;
 import com.kayu.car_owner_pay.model.MapInfoModel;
 import com.kayu.car_owner_pay.model.SystemParam;
+import com.kayu.car_owner_pay.model.SystemParamContent;
 import com.kayu.car_owner_pay.ui.text_link.UrlClickableSpan;
 import com.kayu.utils.Constants;
 import com.kayu.utils.DeviceIdUtils;
+import com.kayu.utils.GsonHelper;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
@@ -72,6 +73,7 @@ import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.CustomDialog;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.TipGifDialog;
+import com.qq.e.comm.managers.GDTAdSdk;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -82,9 +84,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cn.jiguang.verifysdk.api.JVerificationInterface;
 import cn.jiguang.verifysdk.api.RequestCallback;
@@ -102,38 +102,45 @@ public class KWApplication extends MultiDexApplication {
     public int displayHeight = 0;
     private static KWApplication self;
     public String token_key;
-//    private Picasso picasso;
+    //    private Picasso picasso;
     private String photographName;
     private String fileName;
     public String token;//登录成功后返回的token
     private int downloadIndex;
     public String oid = null;
     public LocalBroadcastManager localBroadcastManager;
+    private SharedPreferences sp;
+    public SystemParamContent systemArgs = null;
 
     public static KWApplication getInstance() {
         return self;
     }
+
     public static RefWatcher sRefWatcher = null;
+
     @Override
     public void onCreate() {
         self = this;
+        sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
+        String sysArgs = sp.getString(Constants.system_args, "");
+        if (!StringUtil.isEmpty(sysArgs)) {
+            systemArgs = GsonHelper.fromJson(sysArgs, SystemParamContent.class);
+        }
         super.onCreate();
         if (!LeakCanary.isInAnalyzerProcess(this)) {
             sRefWatcher = LeakCanary.install(this);
         }
-        //穿山甲SDK初始化
-        //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
-        TTAdManagerHolder.init(this);
+        initAdSdk();
 //        setFornts();
         initDialogSetting();
         LocationManagerUtil.init(this);
         initJPushSetting();
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO );
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
 //        ZoomMediaLoader.getInstance().init(new TestImageLoader());
         SharedPreferences sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
-        token = sp.getString(Constants.token,"");
-        LogUtil.setIsDebug( BuildConfig.LOG_DEBUG);
+        token = sp.getString(Constants.token, "");
+        LogUtil.setIsDebug(BuildConfig.LOG_DEBUG);
 
         localBroadcastManager = LocalBroadcastManager.getInstance(this); // 获取实例
         IntentFilter intentFilter = new IntentFilter();
@@ -142,10 +149,30 @@ public class KWApplication extends MultiDexApplication {
         localBroadcastManager.registerReceiver(localReceiver, intentFilter); // 注册本地广播监听器
     }
 
+    //初始化广告SDK
+    public void initAdSdk() {
+        //是否弹出过隐私弹框
+
+        boolean isFirstShow = sp.getBoolean(Constants.isShowDialog, true);
+
+        if (!isFirstShow) {
+            //腾讯广告SDK
+            String appID = "1200140135";
+            if (null != systemArgs && !StringUtil.isEmpty(systemArgs.android.ylhAppid)) {
+                appID = systemArgs.android.ylhAppid;
+            }
+            GDTAdSdk.init(this, appID);
+            //穿山甲SDK初始化
+            //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
+            TTAdManagerHolder.init(this);
+        }
+    }
+
     //记录首次异常时间
     private long firstTime = 0;
     private int xxx = 1;
     private int yyy = 1;
+
     class LocalReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -155,7 +182,7 @@ public class KWApplication extends MultiDexApplication {
             long secondTime = System.currentTimeMillis();
             if (firstTime == 0 || secondTime - firstTime > 1000 * 10) {
 //                LogUtil.e("强制退出","退出次数"+xxx);
-                xxx = xxx+1;
+                xxx = xxx + 1;
                 firstTime = secondTime;
                 // 2020/6/8 判断用户登录信息失效跳转
                 SharedPreferences sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
@@ -200,15 +227,15 @@ public class KWApplication extends MultiDexApplication {
             @Override
             public void onResult(int i, String s) {
 
-                LogUtil.e("JPush", "code:"+i+",msg:"+s);
+                LogUtil.e("JPush", "code:" + i + ",msg:" + s);
             }
         });
 
     }
 
-    private void initDialogSetting(){
+    private void initDialogSetting() {
         ToastUtils.init(this);
-        ToastUtils.setGravity(Gravity.CENTER,0,0);
+        ToastUtils.setGravity(Gravity.CENTER, 0, 0);
         DialogSettings.isUseBlur = true;                   //是否开启模糊效果，默认关闭
         DialogSettings.modalDialog = false;                 //是否开启模态窗口模式，一次显示多个对话框将以队列形式一个一个显示，默认关闭
         DialogSettings.style = DialogSettings.STYLE.STYLE_IOS;          //全局主题风格，提供三种可选风格，STYLE_MATERIAL, STYLE_KONGZUE, STYLE_IOS
@@ -244,20 +271,15 @@ public class KWApplication extends MultiDexApplication {
 
     }
 
-    private void setFornts(){
+    private void setFornts() {
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/Quicksand-Medium.ttf");
-        try
-        {
+        try {
             Field field = Typeface.class.getDeclaredField("MONOSPACE");
             field.setAccessible(true);
             field.set(null, typeface);
-        }
-        catch (NoSuchFieldException e)
-        {
+        } catch (NoSuchFieldException e) {
             e.printStackTrace();
-        }
-        catch (IllegalAccessException e)
-        {
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
     }
@@ -265,7 +287,7 @@ public class KWApplication extends MultiDexApplication {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         //非默认值
-        if (newConfig.fontScale != 1){
+        if (newConfig.fontScale != 1) {
             getResources();
         }
         super.onConfigurationChanged(newConfig);
@@ -284,12 +306,12 @@ public class KWApplication extends MultiDexApplication {
     }
 
     @SuppressLint("CheckResult")
-    public void loadImg(final Activity activity, String url, SubsamplingScaleImageView view, final Callback callback){
+    public void loadImg(final Activity activity, String url, SubsamplingScaleImageView view, final Callback callback) {
         final String mUrl;
-        if (url.startsWith("http")){
+        if (url.startsWith("http")) {
             mUrl = url;
-        }else {
-            mUrl = HttpConfig.HOST+url;
+        } else {
+            mUrl = HttpConfig.HOST + url;
         }
 //        KWApplication.getInstance().getPicasso()
 //                .load(mUrl)
@@ -318,39 +340,42 @@ public class KWApplication extends MultiDexApplication {
 
     }
 
-    public void loadImg(String url, ImageView view){
+    public void loadImg(String url, ImageView view) {
         final String mUrl;
-        if (StringUtil.isEmpty(url)){
+        if (StringUtil.isEmpty(url)) {
             return;
         }
-        if (url.startsWith("http")){
+        if (url.startsWith("http")) {
             mUrl = url;
-        }else {
-            mUrl = HttpConfig.HOST+url;
+        } else {
+            mUrl = HttpConfig.HOST + url;
         }
 
         Glide.with(this).load(mUrl).into(view);
     }
+
     //加载本地资源，可裁剪
-    public void loadImg(int ids, ImageView view, BitmapTransformation transformation){
+    public void loadImg(int ids, ImageView view, BitmapTransformation transformation) {
 
         Glide.with(this).load(ids).transform(transformation).into(view);
     }
+
     //加载本地资源
-    public void loadImg(int ids, ImageView view){
+    public void loadImg(int ids, ImageView view) {
 
         Glide.with(this).load(ids).into(view);
     }
+
     //带回调的图片加载
-    public void loadImg(String url, ImageView view, ImageCallback callback){
+    public void loadImg(String url, ImageView view, ImageCallback callback) {
         final String mUrl;
-        if (StringUtil.isEmpty(url)){
+        if (StringUtil.isEmpty(url)) {
             return;
         }
-        if (url.startsWith("http")){
+        if (url.startsWith("http")) {
             mUrl = url;
-        }else {
-            mUrl = HttpConfig.HOST+url;
+        } else {
+            mUrl = HttpConfig.HOST + url;
         }
         Glide.with(this).asBitmap().load(mUrl).into(new CustomTarget<Bitmap>() {
 
@@ -386,12 +411,12 @@ public class KWApplication extends MultiDexApplication {
     }
 
 
-
     /**
      * 拨打电话（直接拨打电话）
+     *
      * @param phoneNum 电话号码
      */
-    public void callPhone(final Activity context, final String phoneNum){
+    public void callPhone(final Activity context, final String phoneNum) {
 
         MessageDialog.show((AppCompatActivity) context, "拨打电话", phoneNum, "呼叫", "取消").setOkButton(new OnDialogButtonClickListener() {
             @Override
@@ -405,7 +430,7 @@ public class KWApplication extends MultiDexApplication {
         });
     }
 
-    public void toNavi(Context context,String latitude, String longtitude, String address, String flag){
+    public void toNavi(Context context, String latitude, String longtitude, String address, String flag) {
 
         final List<MapInfoModel> mapList = getMapInfoModels(context);
         if (mapList == null) return;
@@ -418,20 +443,20 @@ public class KWApplication extends MultiDexApplication {
         double[] gcj02Coordinate;
         switch (flag) {
             case "WGS84":
-                bdCoordinate = CoordinateTransformUtil.wgs84tobd09(Double.parseDouble(longtitude),Double.parseDouble(latitude));
-                gcj02Coordinate = CoordinateTransformUtil.wgs84togcj02(Double.parseDouble(longtitude),Double.parseDouble(latitude));
+                bdCoordinate = CoordinateTransformUtil.wgs84tobd09(Double.parseDouble(longtitude), Double.parseDouble(latitude));
+                gcj02Coordinate = CoordinateTransformUtil.wgs84togcj02(Double.parseDouble(longtitude), Double.parseDouble(latitude));
                 break;
             case "GCJ02":
-                bdCoordinate = CoordinateTransformUtil.gcj02tobd09(Double.parseDouble(longtitude),Double.parseDouble(latitude));
-                gcj02Coordinate = new double[]{Double.parseDouble(longtitude),Double.parseDouble(latitude)};
+                bdCoordinate = CoordinateTransformUtil.gcj02tobd09(Double.parseDouble(longtitude), Double.parseDouble(latitude));
+                gcj02Coordinate = new double[]{Double.parseDouble(longtitude), Double.parseDouble(latitude)};
                 break;
             case "BD09":
-                gcj02Coordinate = CoordinateTransformUtil.bd09togcj02(Double.parseDouble(longtitude),Double.parseDouble(latitude));
-                bdCoordinate = new double[]{Double.parseDouble(longtitude),Double.parseDouble(latitude)};
+                gcj02Coordinate = CoordinateTransformUtil.bd09togcj02(Double.parseDouble(longtitude), Double.parseDouble(latitude));
+                bdCoordinate = new double[]{Double.parseDouble(longtitude), Double.parseDouble(latitude)};
                 break;
             default:
-                gcj02Coordinate = new double[]{Double.parseDouble(longtitude),Double.parseDouble(latitude)};
-                bdCoordinate = new double[]{Double.parseDouble(longtitude),Double.parseDouble(latitude)};
+                gcj02Coordinate = new double[]{Double.parseDouble(longtitude), Double.parseDouble(latitude)};
+                bdCoordinate = new double[]{Double.parseDouble(longtitude), Double.parseDouble(latitude)};
                 break;
         }
         BottomMenu.show((AppCompatActivity) context, menuArr, new OnMenuItemClickListener() {
@@ -467,13 +492,13 @@ public class KWApplication extends MultiDexApplication {
         if (isNavigationApk(context, "com.google.android.apps.maps")) {
             MapInfoModel model = new MapInfoModel();
             model.mapId = "1";
-            model.mapName = "谷歌地图" ;
+            model.mapName = "谷歌地图";
             mapList.add(model);
         }
         if (isNavigationApk(context, "com.baidu.BaiduMap")) {
             MapInfoModel model = new MapInfoModel();
             model.mapId = "2";
-            model.mapName = "百度地图" ;
+            model.mapName = "百度地图";
             mapList.add(model);
         }
         if (isNavigationApk(context, "com.tencent.map")) {
@@ -483,7 +508,7 @@ public class KWApplication extends MultiDexApplication {
             mapList.add(model);
         }
         if (mapList.size() == 0) {
-            TipGifDialog.show((AppCompatActivity) context,"您尚未安装导航APP", TipGifDialog.TYPE.WARNING);
+            TipGifDialog.show((AppCompatActivity) context, "您尚未安装导航APP", TipGifDialog.TYPE.WARNING);
             return null;
 
         }
@@ -492,6 +517,7 @@ public class KWApplication extends MultiDexApplication {
 
     /**
      * 判断手机中是否有导航app
+     *
      * @param context
      * @param packagename 包名
      */
@@ -511,12 +537,13 @@ public class KWApplication extends MultiDexApplication {
 
     /**
      * 跳转到百度地图
+     *
      * @param activity
-     * @param latitude 纬度
+     * @param latitude   纬度
      * @param longtitude 经度
-     * @param address 终点
-     * */
-    private void goBaiduMap(Context activity,String latitude, String longtitude, String address) {
+     * @param address    终点
+     */
+    private void goBaiduMap(Context activity, String latitude, String longtitude, String address) {
         if (isNavigationApk(activity, "com.baidu.BaiduMap")) {
             try {
                 Intent intent = Intent.getIntent("intent://map/direction?destination=latlng:"
@@ -530,19 +557,20 @@ public class KWApplication extends MultiDexApplication {
                 LogUtil.e("goError", e.getMessage());
             }
         } else {
-            ToastUtils.show( "您尚未安装百度地图");
+            ToastUtils.show("您尚未安装百度地图");
 
         }
     }
 
     /**
      * 跳转到高德地图
+     *
      * @param activity
-     * @param latitude 纬度
+     * @param latitude   纬度
      * @param longtitude 经度
-     * @param address 终点
-     * */
-    private void goGaodeMap(Context activity,String latitude, String longtitude, String address) {
+     * @param address    终点
+     */
+    private void goGaodeMap(Context activity, String latitude, String longtitude, String address) {
         if (isNavigationApk(activity, "com.autonavi.minimap")) {
             try {
                 Intent intent = Intent.getIntent("androidamap://navi?sourceApplication=&poiname=" + address + "&lat=" + latitude
@@ -555,14 +583,16 @@ public class KWApplication extends MultiDexApplication {
             ToastUtils.show("您尚未安装高德地图");
         }
     }
+
     /**
      * 跳转到谷歌地图
+     *
      * @param activity
-     * @param latitude 纬度
+     * @param latitude   纬度
      * @param longtitude 经度
-     * @param address 终点
-     * */
-    private void goGoogleMap(Context activity,String latitude, String longtitude, String address) {
+     * @param address    终点
+     */
+    private void goGoogleMap(Context activity, String latitude, String longtitude, String address) {
         if (isNavigationApk(activity, "com.autonavi.minimap")) {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://ditu" +
@@ -580,12 +610,13 @@ public class KWApplication extends MultiDexApplication {
 
     /**
      * 跳转到腾讯地图
+     *
      * @param activity
-     * @param latitude 纬度
+     * @param latitude   纬度
      * @param longtitude 经度
-     * @param address 终点
-     * */
-    private void goTencentMap(Context activity,String latitude, String longtitude, String address) {
+     * @param address    终点
+     */
+    private void goTencentMap(Context activity, String latitude, String longtitude, String address) {
         if (isNavigationApk(activity, "com.autonavi.minimap")) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse("qqmap://map/routeplan?type=bus&from=我的位置&fromcoord=0,0"
@@ -601,49 +632,52 @@ public class KWApplication extends MultiDexApplication {
 
     /**
      * 获取可点击的SpannableString
+     *
      * @return
      */
     public SpannableString getClickableSpan(Context context, String[] titles, String[] urls) {
         StringBuilder messSB = new StringBuilder();
         messSB.append("请您务必谨慎阅读、充分理解\"");
         messSB.append(titles[1]);
-        messSB.append( "\"与\"");
+        messSB.append("\"与\"");
         messSB.append(titles[0]);
         messSB.append("\"各条款，包括但不限于：为了向你提供及时通讯，内容分享等服务，我们需要收集你的定位信息，操作日志信息等。你可以在\"设置\"中查看、变更、删除个人信息并管理你的授权。\n你可阅读《");
-        int title1Index = messSB.length()-1;
+        int title1Index = messSB.length() - 1;
         messSB.append(titles[1]);
-        int title1End = messSB.length()+1;
+        int title1End = messSB.length() + 1;
         messSB.append("》与《");
-        int title2Index = messSB.length()-1;
+        int title2Index = messSB.length() - 1;
         messSB.append(titles[0]);
-        int title2End = messSB.length()+1;
+        int title2End = messSB.length() + 1;
         messSB.append("》了解详细信息。如您同意，请点击确定接受我们的服务");
         SpannableString spannableString = new SpannableString(messSB.toString());
 
         //设置下划线文字
 //        spannableString.setSpan(new NoUnderlineSpan(), title1Index, title1End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         //设置文字的单击事件
-        spannableString.setSpan(new UrlClickableSpan(context,urls[1]), title1Index, title1End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new UrlClickableSpan(context, urls[1]), title1Index, title1End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         //设置文字的前景色
         spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), title1Index, title1End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         //设置下划线文字
 //        spannableString.setSpan(new NoUnderlineSpan(), title2Index, title2End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         //设置文字的单击事件
-        spannableString.setSpan(new UrlClickableSpan(context,urls[0]), title2Index, title2End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new UrlClickableSpan(context, urls[0]), title2Index, title2End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         //设置文字的前景色
         spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), title2Index, title2End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannableString;
     }
+
     private String title = null;
     private String desc = null;
     private String regBtn = null;
     private String pastTitle = null;
     private String pastBtn = null;
-//    private String url = null;
+
+    //    private String url = null;
     public void showRegDialog(Context context) {
 
-        if (null == regDialogTip || StringUtil.isEmpty(regDialogTip.content)){
+        if (null == regDialogTip || StringUtil.isEmpty(regDialogTip.content)) {
 
         }
         try {
@@ -669,15 +703,15 @@ public class KWApplication extends MultiDexApplication {
             @Override
             public void onBind(final CustomDialog dialog, View v) {
                 TextView dia_title = v.findViewById(R.id.dia_act_title);
-                if (!StringUtil.isEmpty(title)){
+                if (!StringUtil.isEmpty(title)) {
                     dia_title.setText(title);
                 }
                 TextView dia_content = v.findViewById(R.id.dia_act_context);
-                if (!StringUtil.isEmpty(desc)){
+                if (!StringUtil.isEmpty(desc)) {
                     dia_content.setText(desc);
                 }
                 AppCompatButton dia_btn_handle = v.findViewById(R.id.dia_act_btn_handle);
-                if (!StringUtil.isEmpty(regBtn)){
+                if (!StringUtil.isEmpty(regBtn)) {
                     dia_btn_handle.setText(regBtn);
                 }
                 dia_btn_handle.setOnClickListener(new NoMoreClickListener() {
@@ -697,11 +731,11 @@ public class KWApplication extends MultiDexApplication {
                     }
                 });
                 TextView dia_title_sub = v.findViewById(R.id.dia_act_title_sub);
-                if (!StringUtil.isEmpty(pastTitle)){
+                if (!StringUtil.isEmpty(pastTitle)) {
                     dia_title_sub.setText(pastTitle);
                 }
                 AppCompatButton dia_btn_activ = v.findViewById(R.id.dia_act_btn_activ);
-                if (!StringUtil.isEmpty(pastBtn)){
+                if (!StringUtil.isEmpty(pastBtn)) {
                     dia_btn_activ.setText(pastBtn);
                 }
                 dia_btn_activ.setOnClickListener(new NoMoreClickListener() {
@@ -726,9 +760,9 @@ public class KWApplication extends MultiDexApplication {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (!StringUtil.isEmpty(oid)) {
 //                    aid = Md5Util.getStringMD5(aid);
-                imei = "oid#"+oid;
+                imei = "oid#" + oid;
             }
-        }else {
+        } else {
             imei = DeviceIdUtils.getIMEI(this);
 
         }

@@ -178,7 +178,6 @@ public class LoginAutoActivity extends BaseActivity {
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.putBoolean(Constants.isShowDialog, isFirstShow);
                                 editor.apply();
-                                editor.commit();
                                 return false;
                             }
                         }).setCancelButton(new OnDialogButtonClickListener() {
@@ -551,7 +550,7 @@ public class LoginAutoActivity extends BaseActivity {
 //        uiConfigBuilder.setPrivacyTextCenterGravity(true);
         uiConfigBuilder.setPrivacyTextCenterGravity(true);
         uiConfigBuilder.setPrivacyTextSize(12);
-        uiConfigBuilder.setPrivacyText("登录即同意《","》《","》《","》并授权"+getResources().getString(R.string.app_name)+"获取本机号码");
+        uiConfigBuilder.setPrivacyText("登录即同意 "," 并授权"+getResources().getString(R.string.app_name)+"获取本机号码");
 //        uiConfigBuilder.setPrivacyOffsetX(52-15);
 
         // 手机登录按钮

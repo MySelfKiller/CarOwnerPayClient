@@ -14,6 +14,7 @@ public class Constants {
   public static final String token = "token";
   public static final String isSetPsd = "isSetPsd";
   public static final String isShowDialog = "isShowDialog";
+  public static final String system_args = "system_args";
   public static final String userInfo = "user_info";
 
   public static final String authority = "com.kayu.car_owner_pay.provider";

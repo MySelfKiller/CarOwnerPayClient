@@ -70,7 +70,11 @@ import com.kayu.utils.LogUtil;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
+import com.kongzue.dialog.interfaces.OnBackClickListener;
+import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
+import com.kongzue.dialog.interfaces.OnDismissListener;
 import com.kongzue.dialog.interfaces.OnMenuItemClickListener;
+import com.kongzue.dialog.util.BaseDialog;
 import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.TipGifDialog;
 
@@ -572,6 +576,21 @@ public class WebViewActivity extends BaseActivity {
 //                    requestCode = FILE_CHOOSER_RESULT_CODE;
                     // 2018/12/10 从相册选择
                     takePhoto();
+                }else {
+//                    mUploadCallbackAboveL = null;
+//                    mUploadMessage = null;
+                }
+            }
+        }).setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                if (mUploadCallbackAboveL != null) {
+                    mUploadCallbackAboveL.onReceiveValue(null);
+                    mUploadCallbackAboveL = null;
+                }
+                if (mUploadMessage != null) {
+                    mUploadMessage.onReceiveValue(null);
+                    mUploadMessage = null;
                 }
             }
         });
@@ -746,6 +765,11 @@ public class WebViewActivity extends BaseActivity {
                 mIsLoaded = true;
                 jsHandler.sendMessage(jsHandler.obtainMessage(2));
 //                TToast.show(com.union_test.toutiao.activity.RewardVideoActivity.this, "Callback --> rewardVideoAd video cached");
+            }
+
+            @Override
+            public void onRewardVideoCached(TTRewardVideoAd ttRewardVideoAd) {
+
             }
 
             //视频广告的素材加载完毕，比如视频url等，在此回调后，可以播放在线视频，网络不好可能出现加载缓冲，影响体验。

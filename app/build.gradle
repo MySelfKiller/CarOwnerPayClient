@@ -21,12 +21,12 @@ android {
         applicationId "com.kayu.car_owner_pay"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 7
-        versionName "1.0.6"
+        versionCode 8
+        versionName "1.0.7"
 
         ndk {
             //选择要添加的对应 cpu 类型的 .so 库。
-            abiFilters 'armeabi-v7a', 'arm64-v8a' ,'x86'
+            abiFilters  'armeabi-v8a', 'armeabi', 'armeabi-v7a'
         }
 
         manifestPlaceholders = [
@@ -102,8 +102,8 @@ android {
             jniDebuggable true
 //            applicationIdSuffix ".release"
             buildConfigField("boolean", "LOG_DEBUG", "true")//配置Log日志
-//            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/cyt/carfriend/"'  //正式环境
-            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/test/carfriend/"'  //正式环境
+            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/cyt/carfriend/"'  //正式环境
+//            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/test/carfriend/"'  //正式环境
         }
         debug {
             signingConfig signingConfigs.debug
@@ -114,8 +114,8 @@ android {
 //            applicationIdSuffix ".debug"
             buildConfigField("boolean", "LOG_DEBUG", "true")//配置Log日志
 //            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/"'  //测试环境
-//            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/cyt/carfriend/"'  //测试环境
-            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/test/carfriend/"'  //测试环境
+            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/cyt/carfriend/"'  //测试环境
+//            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/test/carfriend/"'  //测试环境
 
         }
     }
@@ -138,7 +138,10 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'com.hjq:toast:8.8'
-    implementation 'com.just.agentweb:agentweb-androidx:4.1.4' // (必选)
+    implementation 'com.just.agentweb:agentweb-androidx:4.1.4'
+
+    implementation 'com.pangle.cn:ads-sdk-pro:4.0.0.6'// 穿山甲广告
+    implementation 'com.qq.e.union:union:4.410.1280' // 普通版本  腾讯广告
 
 //    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
 //    implementation 'com.kongzue.dialog_v3x:dialog:3.2.4'
@@ -148,7 +151,6 @@ dependencies {
 
     implementation "com.squareup.leakcanary:leakcanary-android-no-op:1.5.4"
 
-    implementation 'cn.jiguang.sdk:jcore:2.6.0'  // 此处以JCore 2.1.2 版本为例。
 //    implementation 'cn.jiguang.sdk:jverification:2.6.7'  // 此处以JCore 2.1.2 版本为例。
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.5.8'

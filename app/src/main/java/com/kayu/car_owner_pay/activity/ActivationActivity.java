@@ -182,7 +182,7 @@ public class ActivationActivity extends BaseActivity {
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = ActivationActivity.this;
 //        reqInfo.reqUrl = HttpConfig.HOST+HttpConfig.INTERFACE_VERIFICATION_CODE;
-        reqInfo.reqUrl = "https://www.ws101.cn/cyt/api/sys/getCaptSms/";
+        reqInfo.reqUrl = "https://www.kakayuy.com/cyt/api/sys/getCaptSms/";
         reqInfo.parser = new NormalParse();
         HashMap<String,Object> reqDateMap = new HashMap<>();
         reqDateMap.put("",phone_et.getText().toString().trim());

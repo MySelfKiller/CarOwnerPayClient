@@ -1,12 +1,15 @@
 package com.kayu.car_owner_pay.config_ad;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.bytedance.sdk.openadsdk.TTAdConfig;
 import com.bytedance.sdk.openadsdk.TTAdConstant;
 import com.bytedance.sdk.openadsdk.TTAdManager;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
+import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.http.OkHttpManager;
+import com.kayu.utils.StringUtil;
 
 
 /**
@@ -19,7 +22,7 @@ public class TTAdManagerHolder {
 //    public static final String videoID = "945853775";//激励视屏ID
 //    public static final String splashID = "887428694";//闪屏广告ID
 
-    private static final String appID = "5144457";//应用ID
+    private static String appID = "5144457";//应用ID
     public static final String videoID = "945900466";//激励视屏ID
     public static final String splashID = "887446448";//闪屏广告ID
 
@@ -40,12 +43,27 @@ public class TTAdManagerHolder {
     //step1:接入网盟广告sdk的初始化操作，详情见接入文档和穿山甲平台说明
     private static void doInit(Context context) {
         if (!sInit) {
-            TTAdSdk.init(context, buildConfig(context));
+            TTAdSdk.init(context, buildConfig(context), new TTAdSdk.InitCallback() {
+                @Override
+                public void success() {
+
+                    Log.i(TAG, "success: "+TTAdSdk.isInitSuccess());
+                }
+
+                @Override
+                public void fail(int code, String msg) {
+                    Log.i(TAG, "fail:  code = " + code + " msg = " + msg);
+                }
+            });
             sInit = true;
         }
     }
 
     private static TTAdConfig buildConfig(Context context) {
+
+        if (null != KWApplication.getInstance().systemArgs && !StringUtil.isEmpty(KWApplication.getInstance().systemArgs.android.csjAppid)) {
+            appID = KWApplication.getInstance().systemArgs.android.csjAppid;
+        }
         return new TTAdConfig.Builder()
                 .appId(appID)
                 .useTextureView(true) //使用TextureView控件播放视频,默认为SurfaceView,当有SurfaceView冲突的场景，可以使用TextureView
@@ -54,11 +72,9 @@ public class TTAdManagerHolder {
                 .debug(true) //测试阶段打开，可以通过日志排查问题，上线时去除该调用
                 .directDownloadNetworkType(
                         TTAdConstant.NETWORK_STATE_WIFI,
-                        TTAdConstant.NETWORK_STATE_4G,
-                        TTAdConstant.NETWORK_STATE_3G) //允许直接下载的网络状态集合
+                        TTAdConstant.NETWORK_STATE_4G) //允许直接下载的网络状态集合
                 .supportMultiProcess(true)//是否支持多进程
                 .needClearTaskReset()
-                .httpStack(new MyOkStack3(OkHttpManager.getInstance().getHttpClient()))//自定义网络库，demo中给出了okhttp3版本的样例，其余请自行开发或者咨询工作人员。
                 .build();
     }
 }
