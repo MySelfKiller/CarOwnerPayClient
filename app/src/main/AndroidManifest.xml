@@ -16,9 +16,17 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 用于访问网络，网络定位需要上网 -->
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <!--用于读取手机当前的状态-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE"
         tools:node="merge"/>
+    <!--用于申请调用A-GPS模块-->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <!--如果设置了target >= 28 如果需要启动后台定位则必须声明这个权限-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <!--如果您的应用需要后台定位权限，且有可能运行在Android Q设备上,并且设置了target>28，必须增加这个权限声明-->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+
+
     <uses-permission android:name="android.permission.WRITE_SETTINGS"
         tools:node="merge"
         tools:ignore="ProtectedPermissions" />
@@ -75,11 +83,6 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-        <!-- 声明SDK所需要的组件 -->
-        <service
-            android:name="com.qq.e.comm.DownloadService"
-            android:exported="false" />
-
         <activity android:name=".activity.login.LogOffActivity"/>
         <activity
             android:name=".activity.OrderDetailsActivity"
@@ -112,8 +115,6 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="01f0dfaa3e036078db77e619e5abc6ae" />
-
-        <service android:name="com.amap.api.location.APSService" />
 
         <activity android:name=".activity.WebViewActivity" />
         <activity android:name=".activity.AgentWebViewActivity" />
@@ -249,6 +250,10 @@
         <meta-data
             android:name="JPUSH_CHANNEL"
             android:value="${JPUSH_CHANNEL}" />
+
+        <service
+            android:name="com.amap.api.location.APSService"
+            android:foregroundServiceType="location" />
 
         <service
             android:name="com.qq.e.comm.DownloadService"

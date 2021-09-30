@@ -196,7 +196,9 @@ public class KWApplication extends MultiDexApplication {
                 AppManager.getAppManager().finishAllActivity();
                 LocationManagerUtil.getSelf().stopLocation();
 //                    LocationManager.getSelf().destroyLocation();
-                startActivity(new Intent(getApplicationContext(), LoginAutoActivity.class));
+                Intent intent1 = new Intent(getApplicationContext(), LoginAutoActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent1);
             }
         }
     }

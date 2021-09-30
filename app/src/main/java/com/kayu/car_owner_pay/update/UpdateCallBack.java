@@ -37,7 +37,7 @@ public class UpdateCallBack implements Callback {
     public void onResponse(Call call, Response response) throws IOException {
         String result = response.body().string();
         LogUtil.e("network req","errorcode:"+response.code());
-//        LogUtil.e("network req","返回的数据: "+result);
+        LogUtil.e("network req","返回的数据: "+result);
 
         ResponseInfo obj = null;
         if (null == result){
