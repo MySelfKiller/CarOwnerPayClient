@@ -4,6 +4,7 @@ import android.webkit.JavascriptInterface;
 
 import com.kayu.utils.DesCoderUtil;
 import com.kayu.utils.LogUtil;
+import com.kayu.utils.StringUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,16 +17,17 @@ import java.nio.charset.StandardCharsets;
 public class SettingInterface {
     private String data;
     private String gasId;
-    private String jsonData = null;
+    private String jsonData = "";
     public SettingInterface(String data,String gasId) {
         this.data = data;
         this.gasId = gasId;
-        try {
-            jsonData = DesCoderUtil.decryptDES(data,gasId);
-        } catch (Exception e) {
-            e.printStackTrace();//https://tyb-qa-api.nucarf.cn/pay/#/toPay?order_sn=2021082017440048559749&amount=3
+        if (!StringUtil.isEmpty(data)) {
+            try {
+                jsonData = DesCoderUtil.decryptDES(data,gasId);
+            } catch (Exception e) {
+                e.printStackTrace();//https://tyb-qa-api.nucarf.cn/pay/#/toPay?order_sn=2021082017440048559749&amount=3
+            }
         }
-
     }
 //    String json = "{\"app_id\": \"2a10fa39e3546d256bf993f546b6d73b\", \"secret\":\"fdbab8561f7138914179b773a732e1aa\"}";
     @JavascriptInterface

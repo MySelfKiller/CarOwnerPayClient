@@ -70,7 +70,7 @@ public class OrderCategorySubAdapter extends RecyclerView.Adapter<OrderCategoryS
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //    Log.i("GCS", "onCreateViewHolder");
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.item_category_lay, parent, false);
+        View view = inflater.inflate(R.layout.item_order_category_lay, parent, false);
         return new MyViewHolder(view);
     }
 
