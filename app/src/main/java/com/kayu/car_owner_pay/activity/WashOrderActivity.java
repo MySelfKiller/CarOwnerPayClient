@@ -64,9 +64,9 @@ public class WashOrderActivity extends BaseActivity {
     private WXShare wxShare;
     private WxPayBean mWxPayBean;
     private String shopCode;
-    private volatile AliPayBean mAliPayBean;
+    private AliPayBean mAliPayBean;
     private int payWay = 2;//支付方式 0:微信JSAPI 、1:微信APP 、2:支付宝
-
+    private boolean isPaying = false; //是否正在发起支付
     //    private long vipId;
     private static final int SDK_PAY_FLAG = 1;
 
@@ -81,7 +81,7 @@ public class WashOrderActivity extends BaseActivity {
                     /**
                      * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
                      */
-                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+//                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
                     String resultStatus = payResult.getResultStatus();
                     // 判断resultStatus 为9000则代表支付成功
                     if (TextUtils.equals(resultStatus, "9000")) {
@@ -108,9 +108,8 @@ public class WashOrderActivity extends BaseActivity {
                             }
                         });
                     } else {
-                        LogUtil.e("支付宝取消支付返回结果",resultInfo);
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                        if (null != mAliPayBean) {
+                        if (null != mAliPayBean && !TextUtils.equals(resultStatus, "5000")) {
                             payOrderViewModel.cancelPay(WashOrderActivity.this,mAliPayBean.orderId);
                         }
                         TipGifDialog.show(WashOrderActivity.this, "支付已取消", TipGifDialog.TYPE.WARNING).setOnDismissListener(new OnDismissListener() {
@@ -120,6 +119,7 @@ public class WashOrderActivity extends BaseActivity {
                             }
                         });
                     }
+                    isPaying = false;
                     break;
                 }
                 default:
@@ -224,6 +224,10 @@ public class WashOrderActivity extends BaseActivity {
         order_pay_btn.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
+                if (isPaying) {
+                    return;
+                }
+                isPaying = true;
                 if (payWay == 1) {
                     wechatPayOrder();
                 } else {
@@ -366,6 +370,7 @@ public class WashOrderActivity extends BaseActivity {
                         }
                     }
                 });
+                isPaying = false;
             }
 
             @Override
@@ -380,6 +385,7 @@ public class WashOrderActivity extends BaseActivity {
 
                     }
                 });
+                isPaying = false;
             }
 
             @Override
@@ -400,7 +406,7 @@ public class WashOrderActivity extends BaseActivity {
                     }
 
                 });
-
+                isPaying = false;
             }
         });
         payOrderViewModel.getWeChatPayInfo(WashOrderActivity.this,shopCode,selectedListDTO.serviceCode).observe(this, new Observer<WxPayBean>() {
@@ -422,7 +428,7 @@ public class WashOrderActivity extends BaseActivity {
                     public void run() {
                         PayTask alipay = new PayTask(WashOrderActivity.this);
                         Map<String, String> result = alipay.payV2(aliPayBean.body, true);
-                        Log.i("msp", result.toString());
+                        LogUtil.e("alipay", result.toString());
 
                         Message msg = new Message();
                         msg.what = SDK_PAY_FLAG;
