@@ -111,28 +111,26 @@ public class SplashActivity extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
         isLogin = sp.getBoolean(Constants.isLogin, false);
         isSetPsd = sp.getBoolean(Constants.isSetPsd, false);
-        boolean isFirstShow = sp.getBoolean(Constants.isShowDialog, true);
-        if (!isFirstShow) {
+//        boolean isFirstShow = sp.getBoolean(Constants.isShowDialog, true);
+        if (isLogin) {
             //step2:创建TTAdNative对象
             mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
-            if (isLogin) {
-                if (null != KWApplication.getInstance().systemArgs) {
-                    if (StringUtil.isEmpty(KWApplication.getInstance().systemArgs.android.showAd)) {
-                        goToMainActivity();
-                    } else {
-                        boolean isCsjAD;
-                        if (KWApplication.getInstance().systemArgs.android.showAd.equals("csj")) {
-                            isCsjAD = true;
-                        } else {
-                            isCsjAD = false;
-                        }
-                        loadSplashAd(isCsjAD);
-                    }
+            if (null != KWApplication.getInstance().systemArgs) {
+                if (StringUtil.isEmpty(KWApplication.getInstance().systemArgs.android.showAd)) {
+                    goToMainActivity();
                 } else {
-                    loadSplashAd(true);
+                    boolean isCsjAD;
+                    if (KWApplication.getInstance().systemArgs.android.showAd.equals("csj")) {
+                        isCsjAD = true;
+                    } else {
+                        isCsjAD = false;
+                    }
+                    loadSplashAd(isCsjAD);
                 }
-
+            } else {
+                loadSplashAd(true);
             }
+
         }
         new Handler().postDelayed(runnable,1500*1);
 //        permissionsCheck();
@@ -491,6 +489,7 @@ public class SplashActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE).edit();
                 editor.putString(Constants.system_args, systemParam.content);
                 editor.apply();
+                editor.commit();
                 KWApplication.getInstance().systemArgs = GsonHelper.fromJson(systemParam.content, SystemParamContent.class);
 //                try {
 //                    JSONObject jsonObject = new JSONObject(systemParam.content);

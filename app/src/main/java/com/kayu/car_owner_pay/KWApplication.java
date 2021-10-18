@@ -153,9 +153,9 @@ public class KWApplication extends MultiDexApplication {
     public void initAdSdk() {
         //是否弹出过隐私弹框
 
-        boolean isFirstShow = sp.getBoolean(Constants.isShowDialog, true);
+        boolean isLogin = sp.getBoolean(Constants.isLogin, false);
 
-        if (!isFirstShow) {
+        if (isLogin) {
             //腾讯广告SDK
             String appID = "1200140135";
             if (null != systemArgs && !StringUtil.isEmpty(systemArgs.android.ylhAppid)) {
@@ -196,9 +196,9 @@ public class KWApplication extends MultiDexApplication {
                 AppManager.getAppManager().finishAllActivity();
                 LocationManagerUtil.getSelf().stopLocation();
 //                    LocationManager.getSelf().destroyLocation();
-                Intent intent1 = new Intent(getApplicationContext(), LoginAutoActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent1);
+                Intent inx = new Intent(context, LoginAutoActivity.class);
+                inx.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(inx);
             }
         }
     }

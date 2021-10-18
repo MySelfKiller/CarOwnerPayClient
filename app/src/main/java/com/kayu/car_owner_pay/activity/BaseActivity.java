@@ -109,13 +109,13 @@ public class BaseActivity extends AppCompatActivity implements EasyPermissions.P
      * 需要进行检测的权限数组
      */
     public String[] needPermissions = {
-            Manifest.permission.CALL_PHONE,
-            Manifest.permission.READ_PHONE_STATE,
+//            Manifest.permission.CALL_PHONE,
+//            Manifest.permission.READ_PHONE_STATE,
 //            Manifest.permission.READ_CALL_LOG,
 //            Manifest.permission.WRITE_CALL_LOG,
 //            Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//            Manifest.permission.WRITE_EXTERNAL_STORAGE,
 //            Manifest.permission.READ_EXTERNAL_STORAGE,
 //            Manifest.permission.CAMERA
 

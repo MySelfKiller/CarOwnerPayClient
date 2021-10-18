@@ -326,6 +326,7 @@ public class HomeFragment extends Fragment {
                 SharedPreferences.Editor editor = requireActivity().getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE).edit();
                 editor.putString(Constants.system_args, systemParam.content);
                 editor.apply();
+                editor.commit();
                 try {
                     JSONObject jsonObject = new JSONObject(systemParam.content);
                     int showGas = jsonObject.optInt("gas");

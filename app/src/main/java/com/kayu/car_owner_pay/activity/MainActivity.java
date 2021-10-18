@@ -175,7 +175,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             public void hasPermission(List<String> allPerms) {
                 mViewModel.sendOilPayInfo(MainActivity.this);
                 if (!LocationManagerUtil.getSelf().isLocServiceEnable()){
-                    MessageDialog.show(MainActivity.this, "定位服务未开启", "请打开定位服务", "开启定位服务","取消").setCancelable(false)
+                    MessageDialog.show(MainActivity.this, "定位服务未开启", getString(R.string.permiss_location), "开启定位服务","取消").setCancelable(false)
                             .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
                                 @Override
                                 public boolean onClick(BaseDialog baseDialog, View v) {
@@ -329,7 +329,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                     SharedPreferences.Editor editor = userSettings.edit();
                     editor.putString("update_md5", md5);
                     editor.apply();
-
+                    editor.commit();
                     initCallBack();
                     showProgressDialog(isMustUpdate);
                     InstallUtils.with(MainActivity.this)

@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -65,6 +66,7 @@ import com.kongzue.dialog.util.DialogSettings;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.TipGifDialog;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -73,6 +75,7 @@ import cn.jiguang.verifysdk.api.JVerificationInterface;
 import cn.jiguang.verifysdk.api.JVerifyUIClickCallback;
 import cn.jiguang.verifysdk.api.JVerifyUIConfig;
 
+import cn.jiguang.verifysdk.api.PrivacyBean;
 import cn.jiguang.verifysdk.api.VerifyListener;
 
 public class LoginAutoActivity extends BaseActivity {
@@ -169,7 +172,7 @@ public class LoginAutoActivity extends BaseActivity {
 //                                "如您同意，请点击确定接收我们的服务";
                         MessageDialog.show(LoginAutoActivity.this,
                                 titles[1] + "与" + titles[0], KWApplication.getInstance().getClickableSpan(LoginAutoActivity.this,titles,urls)
-                                , "同意", "暂不使用")
+                                , "同意并继续", "拒绝并退出")
                                 .setCancelable(false).setOkButton(new OnDialogButtonClickListener() {
                             @Override
                             public boolean onClick(BaseDialog baseDialog, View v) {
@@ -178,6 +181,7 @@ public class LoginAutoActivity extends BaseActivity {
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.putBoolean(Constants.isShowDialog, isFirstShow);
                                 editor.apply();
+                                editor.commit();
                                 return false;
                             }
                         }).setCancelButton(new OnDialogButtonClickListener() {
@@ -338,7 +342,12 @@ public class LoginAutoActivity extends BaseActivity {
                             }
                         }
                     });
-                    helper.getDeviceIds(LoginAutoActivity.this);
+
+                    try {//fixme 获取不到是的时候 需要查明
+                        helper.getDeviceIds(LoginAutoActivity.this);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 // 检查当前是否初始化成功极光 SDK
                 if (JVerificationInterface.isInitSuccess()) {
@@ -380,6 +389,65 @@ public class LoginAutoActivity extends BaseActivity {
             @Override
             public void noPermission(List<String> deniedPerms, List<String> grantedPerms, Boolean hasPermanentlyDenied) {
 //                EasyPermissions.goSettingsPermissions(LoginAutoActivity.this, 1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, Constants.RC_PERMISSION_BASE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                    OaidHelper helper = new OaidHelper(new OaidHelper.AppIdsUpdater() {
+                        @Override
+                        public void OnIdsAvalid(boolean isSupport, String oaid, String vaid, String aaid) {
+                            if (!isSupport|| StringUtil.isEmpty(oaid)) {
+                                return;
+                            }
+                            if (!oaid.startsWith("0000")) {
+                                KWApplication.getInstance().oid = oaid;
+                            }
+                        }
+                    });
+
+                    try {//fixme 获取不到是的时候 需要查明
+                        helper.getDeviceIds(LoginAutoActivity.this);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                // 检查当前是否初始化成功极光 SDK
+                if (JVerificationInterface.isInitSuccess()) {
+                    // 判断当前的手机网络环境是否可以使用认证。
+                    if (!JVerificationInterface.checkVerifyEnable(LoginAutoActivity.this)) {
+                        jumpDialog("一键登录验证失败");
+                        return;
+                    }
+                    TipGifDialog.show(LoginAutoActivity.this, "请稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
+                    JVerificationInterface.setCustomUIWithConfig(getFullScreenPortraitConfig());
+                    JVerificationInterface.loginAuth(LoginAutoActivity.this,true, new VerifyListener() {
+                        @Override
+                        public void onResult(int code, String content, String operator) {
+                            TipGifDialog.dismiss();
+                            LogUtil.e("JPush", "code=" + code + ", token=" + content + " ,operator=" + operator);
+                            if (code == 6000) {
+//                                JVerificationInterface.dismissLoginAuthActivity();
+                                sendSubRequest(content);
+                            } else if (code == 6002){
+                                //取消登录
+                            } else {
+                                jumpDialog("一键登录验证失败");
+                            }
+                        }
+                    },new AuthPageEventListener(){
+
+                        @Override
+                        public void onEvent(int i, String s) {
+                            LogUtil.e("JPush", "onEvent---code=" + i + ", msg=" + s);
+                            if (i == 6) {//选中隐私复选框
+
+                            } else if (i==7){//未选中隐私复选框
+
+                            }
+                        }
+                    });
+
+                } else {
+                    jumpDialog("一键登录验证失败");
+//                    ToastUtils.show("尚未初始化成功～！");
+                }
             }
 
             @Override
@@ -387,7 +455,7 @@ public class LoginAutoActivity extends BaseActivity {
                 MessageDialog dialog = MessageDialog.build((AppCompatActivity) LoginAutoActivity.this);
                 dialog.setTitle(getString(R.string.app_name));
                 dialog.setMessage(getString(R.string.permiss_read_phone));
-                dialog.setOkButton("确定", new OnDialogButtonClickListener() {
+                dialog.setOkButton("允许", new OnDialogButtonClickListener() {
 
                     @Override
                     public boolean onClick(BaseDialog baseDialog, View v) {
@@ -546,12 +614,27 @@ public class LoginAutoActivity extends BaseActivity {
         uiConfigBuilder.setSloganOffsetY(235);
         uiConfigBuilder.setLogBtnOffsetY(260);
         uiConfigBuilder.setNumberSize(22);
-        uiConfigBuilder.setPrivacyState(true);
+//        uiConfigBuilder.setPrivacyState(true);
 //        uiConfigBuilder.setPrivacyTextCenterGravity(true);
         uiConfigBuilder.setPrivacyTextCenterGravity(true);
+        uiConfigBuilder.setPrivacyState(false);
         uiConfigBuilder.setPrivacyTextSize(12);
-        uiConfigBuilder.setPrivacyText("登录即同意 "," 并授权"+getResources().getString(R.string.app_name)+"获取本机号码");
-//        uiConfigBuilder.setPrivacyOffsetX(52-15);
+        uiConfigBuilder.setPrivacyCheckboxHidden(false);
+        uiConfigBuilder.setPrivacyCheckboxSize(14);
+        uiConfigBuilder.setPrivacyWithBookTitleMark(true);
+        uiConfigBuilder.enableHintToast(true,
+                Toast.makeText(LoginAutoActivity.this,
+                        "请先阅读并同意《中国移动认证服务条款》和《用户协议》、《隐私协议》",Toast.LENGTH_SHORT));
+        List<PrivacyBean> listp = new ArrayList<>();
+        PrivacyBean privacy1 = new PrivacyBean("用户协议","https://www.ky808.cn/carfriend/static/user_agree.html","和《","》、");
+        PrivacyBean privacy2 = new PrivacyBean("隐私政策","https://www.ky808.cn/carfriend/static/privacy_agree.html","《","》");
+        listp.add(privacy1);
+        listp.add(privacy2);
+        uiConfigBuilder.setPrivacyNameAndUrlBeanList(listp);
+//        uiConfigBuilder.setAppPrivacyOne("用户协议asdfasdfasdf","https://www.ky808.cn/carfriend/static/user_agree.html");
+//        uiConfigBuilder.setAppPrivacyTwo("隐私政策asdfasdfasd","https://www.ky808.cn/carfriend/static/privacy_agree.html");
+        uiConfigBuilder.setPrivacyText("我已阅读并同意 ","");
+        uiConfigBuilder.setPrivacyOffsetX(52-15);
 
         // 手机登录按钮
         RelativeLayout.LayoutParams layoutParamPhoneLogin = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
