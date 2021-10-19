@@ -114,22 +114,27 @@ public class SplashActivity extends AppCompatActivity {
 //        boolean isFirstShow = sp.getBoolean(Constants.isShowDialog, true);
         if (isLogin) {
             //step2:创建TTAdNative对象
-            mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
-            if (null != KWApplication.getInstance().systemArgs) {
-                if (StringUtil.isEmpty(KWApplication.getInstance().systemArgs.android.showAd)) {
-                    goToMainActivity();
-                } else {
-                    boolean isCsjAD;
-                    if (KWApplication.getInstance().systemArgs.android.showAd.equals("csj")) {
-                        isCsjAD = true;
-                    } else {
-                        isCsjAD = false;
-                    }
-                    loadSplashAd(isCsjAD);
-                }
+            if (null == mTTAdNative) {
+                KWApplication.getInstance().initAdSdk();
             } else {
-                loadSplashAd(true);
+                mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
+                if (null != KWApplication.getInstance().systemArgs) {
+                    if (StringUtil.isEmpty(KWApplication.getInstance().systemArgs.android.showAd)) {
+                        goToMainActivity();
+                    } else {
+                        boolean isCsjAD;
+                        if (KWApplication.getInstance().systemArgs.android.showAd.equals("csj")) {
+                            isCsjAD = true;
+                        } else {
+                            isCsjAD = false;
+                        }
+                        loadSplashAd(isCsjAD);
+                    }
+                } else {
+                    loadSplashAd(true);
+                }
             }
+
 
         }
         new Handler().postDelayed(runnable,1500*1);
