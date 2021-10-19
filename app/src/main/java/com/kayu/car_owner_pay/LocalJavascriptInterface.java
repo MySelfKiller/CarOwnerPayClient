@@ -180,19 +180,13 @@ public class LocalJavascriptInterface {
             @Override
             public void showDialog(int dialogType, final EasyPermissions.DialogCallback callback) {
                 MessageDialog dialog = MessageDialog.build((AppCompatActivity) baseActivity);
-                dialog.setTitle(baseActivity.getString(R.string.app_name));
+                dialog.setTitle("需要获取以下权限");
                 dialog.setMessage(baseActivity.getString(resId));
-                dialog.setOkButton("确定", new OnDialogButtonClickListener() {
+                dialog.setOkButton("下一步", new OnDialogButtonClickListener() {
 
                     @Override
                     public boolean onClick(BaseDialog baseDialog, View v) {
                         callback.onGranted();
-                        return false;
-                    }
-                });
-                dialog.setCancelButton("取消",new OnDialogButtonClickListener() {
-                    @Override
-                    public boolean onClick(BaseDialog baseDialog, View v) {
                         return false;
                     }
                 });

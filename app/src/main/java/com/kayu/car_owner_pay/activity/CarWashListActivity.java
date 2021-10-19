@@ -190,19 +190,13 @@ public class CarWashListActivity extends BaseActivity {
             @Override
             public void showDialog(int dialogType, final EasyPermissions.DialogCallback callback) {
                 MessageDialog dialog = MessageDialog.build((AppCompatActivity) CarWashListActivity.this);
-                dialog.setTitle(getString(R.string.app_name));
+                dialog.setTitle("需要获取以下权限");
                 dialog.setMessage(getString(R.string.permiss_location));
-                dialog.setOkButton("确定", new OnDialogButtonClickListener() {
+                dialog.setOkButton("下一步", new OnDialogButtonClickListener() {
 
                     @Override
                     public boolean onClick(BaseDialog baseDialog, View v) {
                         callback.onGranted();
-                        return false;
-                    }
-                }).setCancelButton("取消", new OnDialogButtonClickListener() {
-                    @Override
-                    public boolean onClick(BaseDialog baseDialog, View v) {
-                        onBackPressed();
                         return false;
                     }
                 });
@@ -270,13 +264,16 @@ public class CarWashListActivity extends BaseActivity {
                         param_distance.setSelected(true);
                     }
                 });
-                AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
+
                 pageIndex = 1;
                 if (null != stationAdapter){
                     stationAdapter.removeAllData(true);
                 }
-                double[] bddfsdfs = CoordinateTransformUtil.gcj02tobd09(location.getLongitude(), location.getLatitude());
-                reqData(null, pageIndex,bddfsdfs[1],bddfsdfs[0],location.getCity());
+                AMapLocation location = LocationManagerUtil.getSelf().getLoccation();
+                if (null != location) {
+                    double[] bddfsdfs = CoordinateTransformUtil.gcj02tobd09(location.getLongitude(), location.getLatitude());
+                    reqData(null, pageIndex,bddfsdfs[1],bddfsdfs[0],location.getCity());
+                }
             }
         });
     }

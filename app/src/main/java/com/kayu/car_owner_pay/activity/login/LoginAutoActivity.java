@@ -453,22 +453,13 @@ public class LoginAutoActivity extends BaseActivity {
             @Override
             public void showDialog(int dialogType, final EasyPermissions.DialogCallback callback) {
                 MessageDialog dialog = MessageDialog.build((AppCompatActivity) LoginAutoActivity.this);
-                dialog.setTitle(getString(R.string.app_name));
+                dialog.setTitle("需要获取以下权限");
                 dialog.setMessage(getString(R.string.permiss_read_phone));
-                dialog.setOkButton("允许", new OnDialogButtonClickListener() {
+                dialog.setOkButton("下一步", new OnDialogButtonClickListener() {
 
                     @Override
                     public boolean onClick(BaseDialog baseDialog, View v) {
                         callback.onGranted();
-                        return false;
-                    }
-                });
-                dialog.setCancelButton("取消",new OnDialogButtonClickListener() {
-                    @Override
-                    public boolean onClick(BaseDialog baseDialog, View v) {
-                        Intent intent = new Intent(LoginAutoActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
                         return false;
                     }
                 });
@@ -624,7 +615,7 @@ public class LoginAutoActivity extends BaseActivity {
         uiConfigBuilder.setPrivacyWithBookTitleMark(true);
         uiConfigBuilder.enableHintToast(true,
                 Toast.makeText(LoginAutoActivity.this,
-                        "请先阅读并同意《中国移动认证服务条款》和《用户协议》、《隐私协议》",Toast.LENGTH_SHORT));
+                        "请先阅读并同意《中国移动认证服务条款》和《用户协议》、《隐私政策》",Toast.LENGTH_SHORT));
         List<PrivacyBean> listp = new ArrayList<>();
         PrivacyBean privacy1 = new PrivacyBean("用户协议","https://www.ky808.cn/carfriend/static/user_agree.html","和《","》、");
         PrivacyBean privacy2 = new PrivacyBean("隐私政策","https://www.ky808.cn/carfriend/static/privacy_agree.html","《","》");

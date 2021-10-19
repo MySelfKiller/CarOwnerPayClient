@@ -14,9 +14,11 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.lifecycle.Observer;
@@ -76,6 +78,7 @@ public class LoginActivity extends BaseActivity {
     private SharedPreferences sp;
     private boolean isFirstShow;
     private LinearLayout auto_progress;
+    private CheckBox login_checkbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +105,7 @@ public class LoginActivity extends BaseActivity {
         password_target_lay = findViewById(R.id.login_password_target_lay);
         password_target = findViewById(R.id.login_password_target);
         login_sms_target = findViewById(R.id.login_sms_target);
+        login_checkbox = findViewById(R.id.login_checkbox);
         auto_progress = findViewById(R.id.login_auto_progress);
         auto_progress.setClickable(false);
         auto_progress.setFocusable(false);
@@ -152,7 +156,7 @@ public class LoginActivity extends BaseActivity {
                 login_send_sms_lay.setVisibility(View.GONE);
                 password_target_lay.setVisibility(View.GONE);
                 login_sms_target_lay.setVisibility(View.VISIBLE);
-                sms_code.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD|InputType.TYPE_CLASS_TEXT);
+                sms_code.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
                 sms_code.setTypeface(Typeface.DEFAULT);
                 sms_code.setTransformationMethod(new PasswordTransformationMethod());
                 sms_code.setText("");
@@ -186,35 +190,35 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                Pattern pattern= Pattern.compile("^1[0-9]{10}$");
-                if (pattern.matcher(s).matches()){
+                Pattern pattern = Pattern.compile("^1[0-9]{10}$");
+                if (pattern.matcher(s).matches()) {
                     send_sms.setClickable(true);
                     send_sms.setTextColor(getResources().getColor(R.color.colorAccent));
-                }else {
+                } else {
                     send_sms.setClickable(false);
                     send_sms.setTextColor(getResources().getColor(R.color.grayText));
                 }
 
-                if (isSMSLogin){
-                    Pattern pasPattern= Pattern.compile("[0-9]{4}$");
-                    if (pattern.matcher(s).matches() && pasPattern.matcher(sms_code.getText().toString().trim()).matches()){
+                if (isSMSLogin) {
+                    Pattern pasPattern = Pattern.compile("[0-9]{4}$");
+                    if (pattern.matcher(s).matches() && pasPattern.matcher(sms_code.getText().toString().trim()).matches()) {
                         ask_btn.setClickable(true);
                         ask_btn.setEnabled(true);
                         ask_btn.setBackground(getResources().getDrawable(R.drawable.blue_bg_shape));
                         ask_btn.setTextColor(getResources().getColor(R.color.slight_yellow));
-                    }else {
+                    } else {
                         ask_btn.setEnabled(false);
                         ask_btn.setClickable(false);
                         ask_btn.setBackground(getResources().getDrawable(R.drawable.gray_bg_shape));
                         ask_btn.setTextColor(getResources().getColor(R.color.white));
                     }
-                }else {
-                    if (pattern.matcher(s).matches() && !StringUtil.isEmpty(sms_code.getText().toString().trim())){
+                } else {
+                    if (pattern.matcher(s).matches() && !StringUtil.isEmpty(sms_code.getText().toString().trim())) {
                         ask_btn.setClickable(true);
                         ask_btn.setEnabled(true);
                         ask_btn.setBackground(getResources().getDrawable(R.drawable.blue_bg_shape));
                         ask_btn.setTextColor(getResources().getColor(R.color.slight_yellow));
-                    }else {
+                    } else {
                         ask_btn.setEnabled(false);
                         ask_btn.setClickable(false);
                         ask_btn.setBackground(getResources().getDrawable(R.drawable.gray_bg_shape));
@@ -239,24 +243,24 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                Pattern pattern= Pattern.compile("^1[0-9]{10}$");
-                if (isSMSLogin){
-                    Pattern pasPattern= Pattern.compile("[0-9]{4}$");
-                    if (pattern.matcher(phone_number.getText().toString().trim()).matches() && pasPattern.matcher(s).matches()){
+                Pattern pattern = Pattern.compile("^1[0-9]{10}$");
+                if (isSMSLogin) {
+                    Pattern pasPattern = Pattern.compile("[0-9]{4}$");
+                    if (pattern.matcher(phone_number.getText().toString().trim()).matches() && pasPattern.matcher(s).matches()) {
                         ask_btn.setClickable(true);
                         ask_btn.setEnabled(true);
                         ask_btn.setBackground(getResources().getDrawable(R.drawable.blue_bg_shape));
-                    }else {
+                    } else {
                         ask_btn.setEnabled(false);
                         ask_btn.setClickable(false);
                         ask_btn.setBackground(getResources().getDrawable(R.drawable.gray_bg_shape));
                     }
-                }else {
-                    if (pattern.matcher(phone_number.getText().toString().trim()).matches() && !StringUtil.isEmpty(sms_code.getText().toString().trim())){
+                } else {
+                    if (pattern.matcher(phone_number.getText().toString().trim()).matches() && !StringUtil.isEmpty(sms_code.getText().toString().trim())) {
                         ask_btn.setClickable(true);
                         ask_btn.setEnabled(true);
                         ask_btn.setBackground(getResources().getDrawable(R.drawable.blue_bg_shape));
-                    }else {
+                    } else {
                         ask_btn.setEnabled(false);
                         ask_btn.setClickable(false);
                         ask_btn.setBackground(getResources().getDrawable(R.drawable.gray_bg_shape));
@@ -275,7 +279,7 @@ public class LoginActivity extends BaseActivity {
         });
 
 
-        timer = new SMSCountDownTimer(send_sms,60*1000*2,1000);
+        timer = new SMSCountDownTimer(send_sms, 60 * 1000 * 2, 1000);
         send_sms.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
@@ -284,7 +288,7 @@ public class LoginActivity extends BaseActivity {
                 phoneValiv.addValidator(new PhoneValidator(LoginActivity.this));
                 form.addValidates(phoneValiv);
                 boolean isOk = form.validate();
-                if (isOk){
+                if (isOk) {
                     timer.start();
                     sendSmsRequest();
                 }
@@ -307,8 +311,13 @@ public class LoginActivity extends BaseActivity {
                 form.addValidates(smsValiv);
 
                 boolean isOk = form.validate();
-                if (isOk){
-                    sendSubRequest();
+                if (isOk) {
+                    if (login_checkbox.isChecked()) {
+                        sendSubRequest();
+                    } else {
+                        Toast.makeText(LoginActivity.this,
+                                "请先阅读并同意《用户协议》、《隐私政策》",Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
@@ -319,19 +328,19 @@ public class LoginActivity extends BaseActivity {
         });
         user_agreement = findViewById(R.id.login_user_agreement_tv);
         user_privacy = findViewById(R.id.login_user_privacy_tv);
-        TipGifDialog.show(LoginActivity.this, "稍等...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
-        mViewModel.getParameter(this,3).observe(this, new Observer<SystemParam>() {
+        TipGifDialog.show(LoginActivity.this, "稍等...", TipGifDialog.TYPE.OTHER, R.drawable.loading_gif);
+        mViewModel.getParameter(this, 3).observe(this, new Observer<SystemParam>() {
             @Override
             public void onChanged(SystemParam systemParam) {
                 TipGifDialog.dismiss();
-                if (null != systemParam && systemParam.type ==3){
+                if (null != systemParam && systemParam.type == 3) {
                     String[] titles = systemParam.title.split("@@");
                     String[] urls = systemParam.url.split("@@");
-                    isFirstShow = sp.getBoolean(Constants.isShowDialog,true);
+                    isFirstShow = sp.getBoolean(Constants.isShowDialog, true);
                     if (isFirstShow) {
                         MessageDialog.show(LoginActivity.this,
-                                titles[0]+"和"+titles[1], KWApplication.getInstance().getClickableSpan(LoginActivity.this,titles,urls)
-                                ,"同意","暂不使用")
+                                titles[0] + "和" + titles[1], KWApplication.getInstance().getClickableSpan(LoginActivity.this, titles, urls)
+                                , "同意", "暂不使用")
                                 .setCancelable(false).setOkButton(new OnDialogButtonClickListener() {
                             @Override
                             public boolean onClick(BaseDialog baseDialog, View v) {
@@ -360,7 +369,7 @@ public class LoginActivity extends BaseActivity {
                     user_agreement.setOnClickListener(new NoMoreClickListener() {
                         @Override
                         protected void OnMoreClick(View view) {
-                            jumpWeb(titles[1],urls[1]);
+                            jumpWeb(titles[1], urls[1]);
                         }
 
                         @Override
@@ -371,7 +380,7 @@ public class LoginActivity extends BaseActivity {
                     user_privacy.setOnClickListener(new NoMoreClickListener() {
                         @Override
                         protected void OnMoreClick(View view) {
-                            jumpWeb(titles[0],urls[0]);
+                            jumpWeb(titles[0], urls[0]);
                         }
 
                         @Override
@@ -386,39 +395,39 @@ public class LoginActivity extends BaseActivity {
 
     }
 
-    private void jumpWeb(String title, String url){
+    private void jumpWeb(String title, String url) {
         Intent intent = new Intent(LoginActivity.this, WebViewActivity.class);
-        intent.putExtra("url",url);
-        intent.putExtra("from",title);
+        intent.putExtra("url", url);
+        intent.putExtra("from", title);
         startActivity(intent);
     }
 
     @SuppressLint("HandlerLeak")
     private void sendSubRequest() {
-        TipGifDialog.show(LoginActivity.this, "确认中...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
+        TipGifDialog.show(LoginActivity.this, "确认中...", TipGifDialog.TYPE.OTHER, R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = LoginActivity.this;
-        reqInfo.reqUrl = HttpConfig.HOST +HttpConfig.INTERFACE_LOGIN;
+        reqInfo.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_LOGIN;
         reqInfo.parser = new LoginDataParse();
-        HashMap<String,Object> reqDateMap = new HashMap<>();
-        reqDateMap.put("phone",phone_number.getText().toString().trim());
+        HashMap<String, Object> reqDateMap = new HashMap<>();
+        reqDateMap.put("phone", phone_number.getText().toString().trim());
         String imei = KWApplication.getInstance().getOidImei();
         if (!StringUtil.isEmpty(imei))
             reqDateMap.put("imei", imei);
-        if (isSMSLogin){
-            reqDateMap.put("code",sms_code.getText().toString().trim());
-        }else {
+        if (isSMSLogin) {
+            reqDateMap.put("code", sms_code.getText().toString().trim());
+        } else {
 
-            reqDateMap.put("password",sms_code.getText().toString().trim());
+            reqDateMap.put("password", sms_code.getText().toString().trim());
         }
 //        reqDateMap.put("code",sms_code.getText().toString().trim());
         reqInfo.reqDataMap = reqDateMap;
-        reqInfo.handler = new Handler(){
+        reqInfo.handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 TipGifDialog.dismiss();
-                ResponseInfo resInfo = (ResponseInfo)msg.obj;
-                if (resInfo.status ==1 ){
+                ResponseInfo resInfo = (ResponseInfo) msg.obj;
+                if (resInfo.status == 1) {
                     LoginInfo user = (LoginInfo) resInfo.responseData;
                     if (StringUtil.isEmpty(user.lastLoginTime)) {
                         auto_progress.setVisibility(View.VISIBLE);
@@ -428,12 +437,12 @@ public class LoginActivity extends BaseActivity {
                                 auto_progress.setVisibility(View.GONE);
                                 saveLogin(user);
                             }
-                        },1000*2);
+                        }, 1000 * 2);
 
-                    }else {
+                    } else {
                         saveLogin(user);
                     }
-                }else {
+                } else {
                     ToastUtils.show(resInfo.msg);
                 }
                 super.handleMessage(msg);
@@ -446,7 +455,7 @@ public class LoginActivity extends BaseActivity {
 
     }
 
-    private void saveLogin(LoginInfo user){
+    private void saveLogin(LoginInfo user) {
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(Constants.isLogin, true);
         editor.putString(Constants.token, user.token);
@@ -462,22 +471,22 @@ public class LoginActivity extends BaseActivity {
 
     @SuppressLint("HandlerLeak")
     private void sendSmsRequest() {
-        TipGifDialog.show(LoginActivity.this, "发送验证码...", TipGifDialog.TYPE.OTHER,R.drawable.loading_gif);
+        TipGifDialog.show(LoginActivity.this, "发送验证码...", TipGifDialog.TYPE.OTHER, R.drawable.loading_gif);
         final RequestInfo reqInfo = new RequestInfo();
         reqInfo.context = LoginActivity.this;
-        reqInfo.reqUrl = HttpConfig.HOST+HttpConfig.INTERFACE_VERIFICATION_CODE;
+        reqInfo.reqUrl = HttpConfig.HOST + HttpConfig.INTERFACE_VERIFICATION_CODE;
         reqInfo.parser = new NormalParse();
-        HashMap<String,Object> reqDateMap = new HashMap<>();
-        reqDateMap.put("",phone_number.getText().toString().trim());
+        HashMap<String, Object> reqDateMap = new HashMap<>();
+        reqDateMap.put("", phone_number.getText().toString().trim());
         reqInfo.reqDataMap = reqDateMap;
-        reqInfo.handler = new Handler(){
+        reqInfo.handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 TipGifDialog.dismiss();
-                ResponseInfo resInfo = (ResponseInfo)msg.obj;
-                if (resInfo.status ==1 ){
+                ResponseInfo resInfo = (ResponseInfo) msg.obj;
+                if (resInfo.status == 1) {
                     ToastUtils.show("验证码发送成功");
-                }else {
+                } else {
                     timer.clear();
                     ToastUtils.show(resInfo.msg);
                 }

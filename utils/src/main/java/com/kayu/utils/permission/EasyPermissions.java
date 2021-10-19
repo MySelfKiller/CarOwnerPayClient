@@ -130,10 +130,22 @@ public class EasyPermissions {
                 }
             } else {
                 // 调用easypermission自带的dialog
+
             }
 
         } else {
-            executePermissionsRequest(object, perms, requestCode);
+            if (isAppDialog == true) {
+                if (object instanceof PermissionWithDialogCallbacks) {
+                    ((PermissionWithDialogCallbacks) object).onDialog(requestCode, dialogType, new DialogCallback() {
+
+                        @Override
+                        public void onGranted() {
+                            executePermissionsRequest(object, perms, requestCode);
+                        }
+                    });
+                }
+            }
+//            executePermissionsRequest(object, perms, requestCode);
         }
     }
 

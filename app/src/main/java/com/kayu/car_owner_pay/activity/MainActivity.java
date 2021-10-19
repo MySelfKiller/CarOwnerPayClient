@@ -166,6 +166,18 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     }
 
+
+    private void showPermissTipsDialog(){
+        MessageDialog.show(MainActivity.this, "需要开启定位服务", getString(R.string.permiss_location), "下一步","").setCancelable(false)
+                .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
+                    @Override
+                    public boolean onClick(BaseDialog baseDialog, View v) {
+                        baseDialog.doDismiss();
+//                        permissionsCheck();
+                        return true;
+                    }
+                });
+    }
     public void permissionsCheck() {
 //        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
         String[] perms = needPermissions;
@@ -174,29 +186,29 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             @Override
             public void hasPermission(List<String> allPerms) {
                 mViewModel.sendOilPayInfo(MainActivity.this);
-                if (!LocationManagerUtil.getSelf().isLocServiceEnable()){
-                    MessageDialog.show(MainActivity.this, "定位服务未开启", getString(R.string.permiss_location), "开启定位服务","取消").setCancelable(false)
-                            .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
-                                @Override
-                                public boolean onClick(BaseDialog baseDialog, View v) {
-                                    baseDialog.doDismiss();
-                                    Intent intent = new Intent();
-                                    intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-//                                    appManager.finishAllActivity();
-//                                    LocationManagerUtil.getSelf().stopLocation();
-//                                    finish();
-                                    return true;
-                                }
-                            }).setCancelButton(new OnDialogButtonClickListener() {
-                        @Override
-                        public boolean onClick(BaseDialog baseDialog, View v) {
-
-                            return false;
-                        }
-                    });
-                }
+//                if (!LocationManagerUtil.getSelf().isLocServiceEnable()){
+//                    MessageDialog.show(MainActivity.this, "定位服务未开启", getString(R.string.permiss_location), "开启定位服务","取消").setCancelable(false)
+//                            .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
+//                                @Override
+//                                public boolean onClick(BaseDialog baseDialog, View v) {
+//                                    baseDialog.doDismiss();
+//                                    Intent intent = new Intent();
+//                                    intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                    startActivity(intent);
+////                                    appManager.finishAllActivity();
+////                                    LocationManagerUtil.getSelf().stopLocation();
+////                                    finish();
+//                                    return true;
+//                                }
+//                            }).setCancelButton(new OnDialogButtonClickListener() {
+//                        @Override
+//                        public boolean onClick(BaseDialog baseDialog, View v) {
+//
+//                            return false;
+//                        }
+//                    });
+//                }
                 reqUpdate();
                 if (!mHasShowOnce1)
                     reqActivityData(38);
@@ -214,24 +226,41 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
             @Override
             public void noPermission(List<String> deniedPerms, List<String> grantedPerms, Boolean hasPermanentlyDenied) {
-                EasyPermissions.goSettingsPermissions(MainActivity.this, 1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, Constants.RC_PERMISSION_BASE);
+                reqUpdate();
+                if (!mHasShowOnce1)
+                    reqActivityData(38);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                NavigationAdapter navigationAdapter = new NavigationAdapter(fragmentManager,getFragments());
+                view_pager.addOnPageChangeListener(MainActivity.this);
+                view_pager.setOffscreenPageLimit(2);
+                view_pager.setAdapter(navigationAdapter);
+                BottomNavigationViewHelper.disableShiftMode(navigation);
+                navigation.setItemIconTintList(null);//设置item图标颜色为null，当menu里icon设置selector的时候，
+                navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+//                EasyPermissions.goSettingsPermissions(MainActivity.this, 1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, Constants.RC_PERMISSION_BASE);
+//                showPermissTipsDialog();
+//                MessageDialog.show(MainActivity.this, "需要开启定位服务", getString(R.string.permiss_location), "下一步","").setCancelable(false)
+//                        .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
+//                            @Override
+//                            public boolean onClick(BaseDialog baseDialog, View v) {
+//                                baseDialog.doDismiss();
+//                                EasyPermissions.goSettingsPermissions(MainActivity.this, 1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, Constants.RC_PERMISSION_BASE);
+////                        permissionsCheck();
+//                                return true;
+//                            }
+//                        });
             }
 
             @Override
             public void showDialog(int dialogType, final EasyPermissions.DialogCallback callback) {
                 MessageDialog dialog = MessageDialog.build((AppCompatActivity) MainActivity.this);
-                dialog.setTitle(getString(R.string.app_name));
+                dialog.setTitle("需要获取以下权限");
                 dialog.setMessage(getString(R.string.permiss_location));
-                dialog.setOkButton("确定", new OnDialogButtonClickListener() {
+                dialog.setOkButton("下一步", new OnDialogButtonClickListener() {
 
                     @Override
                     public boolean onClick(BaseDialog baseDialog, View v) {
                         callback.onGranted();
-                        return false;
-                    }
-                }).setCancelButton("取消", new OnDialogButtonClickListener() {
-                    @Override
-                    public boolean onClick(BaseDialog baseDialog, View v) {
                         return false;
                     }
                 });

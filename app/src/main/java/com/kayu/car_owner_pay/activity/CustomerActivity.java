@@ -175,9 +175,9 @@ public class CustomerActivity extends BaseActivity {
             @Override
             public void showDialog(int dialogType, final EasyPermissions.DialogCallback callback) {
                 MessageDialog dialog = MessageDialog.build((AppCompatActivity) CustomerActivity.this);
-                dialog.setTitle(getString(R.string.app_name));
+                dialog.setTitle("需要获取以下权限");
                 dialog.setMessage(getString(resId));
-                dialog.setOkButton("确定", new OnDialogButtonClickListener() {
+                dialog.setOkButton("下一步", new OnDialogButtonClickListener() {
 
                     @Override
                     public boolean onClick(BaseDialog baseDialog, View v) {
@@ -185,14 +185,7 @@ public class CustomerActivity extends BaseActivity {
                         return false;
                     }
                 });
-                dialog.setCancelButton("取消",new OnDialogButtonClickListener() {
-                    @Override
-                    public boolean onClick(BaseDialog baseDialog, View v) {
-                        return false;
-                    }
-                });
                 dialog.setCancelable(false);
-
                 dialog.show();
             }
         });
