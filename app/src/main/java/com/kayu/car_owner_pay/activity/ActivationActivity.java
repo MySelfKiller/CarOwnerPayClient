@@ -233,7 +233,7 @@ public class ActivationActivity extends BaseActivity {
                 TipGifDialog.dismiss();
                 ResponseInfo resInfo = (ResponseInfo)msg.obj;
                 if (resInfo.status ==1 ){
-                    Toast.makeText(ActivationActivity.this,"激活成功，请登录！",Toast.LENGTH_SHORT).show();
+                    ToastUtils.show("激活成功，请登录！");
                     ActivationActivity.this.finish();
 //                    LoginInfo user = (LoginInfo) resInfo.responseData;
 //                    if (null != user){
@@ -252,7 +252,7 @@ public class ActivationActivity extends BaseActivity {
 //                        startActivity(intent);
 //                    }
                 }else {
-                    Toast.makeText(ActivationActivity.this,resInfo.msg,Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(resInfo.msg);
                 }
                 super.handleMessage(msg);
             }

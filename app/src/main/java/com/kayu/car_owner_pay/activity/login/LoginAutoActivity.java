@@ -594,7 +594,6 @@ public class LoginAutoActivity extends BaseActivity {
 //        uiConfigBuilder.setAppPrivacyTwo(titles[1], urls[1]);
 
         uiConfigBuilder.setAppPrivacyColor(0xFFBBBCC5, 0xFF8998FF);
-        uiConfigBuilder.setPrivacyCheckboxHidden(true);
         uiConfigBuilder.setPrivacyState(true);
         uiConfigBuilder.setSloganTextColor(getResources().getColor(R.color.grayText2));
         uiConfigBuilder.setSloganTextSize(12);
@@ -610,11 +609,11 @@ public class LoginAutoActivity extends BaseActivity {
         uiConfigBuilder.setPrivacyState(false);
         uiConfigBuilder.setPrivacyTextSize(12);
         uiConfigBuilder.setPrivacyCheckboxHidden(false);
-        uiConfigBuilder.setPrivacyCheckboxSize(14);
+        uiConfigBuilder.setPrivacyCheckboxSize(13);
         uiConfigBuilder.setPrivacyWithBookTitleMark(true);
-        uiConfigBuilder.enableHintToast(true,
-                Toast.makeText(LoginAutoActivity.this,
-                        "请先阅读并同意《中国移动认证服务条款》和《用户协议》、《隐私政策》",Toast.LENGTH_SHORT));
+        Toast ddd = ToastUtils.getToast();
+        ddd.setText("请先阅读并同意《中国移动认证服务条款》和《用户协议》、《隐私政策》");
+        uiConfigBuilder.enableHintToast(true,ddd);
         List<PrivacyBean> listp = new ArrayList<>();
         PrivacyBean privacy1 = new PrivacyBean("用户协议","https://www.ky808.cn/carfriend/static/user_agree.html","和《","》、");
         PrivacyBean privacy2 = new PrivacyBean("隐私政策","https://www.ky808.cn/carfriend/static/privacy_agree.html","《","》");
@@ -625,16 +624,17 @@ public class LoginAutoActivity extends BaseActivity {
 //        uiConfigBuilder.setAppPrivacyTwo("隐私政策asdfasdfasd","https://www.ky808.cn/carfriend/static/privacy_agree.html");
         uiConfigBuilder.setPrivacyText("我已阅读并同意 ","");
         uiConfigBuilder.setPrivacyOffsetX(52-15);
+        uiConfigBuilder.setPrivacyOffsetY(getResources().getDimensionPixelSize(R.dimen.dp_60));
 
         // 手机登录按钮
         RelativeLayout.LayoutParams layoutParamPhoneLogin = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParamPhoneLogin.setMargins(0, getResources().getDimensionPixelSize(R.dimen.dp_300),0,0);
+        layoutParamPhoneLogin.setMargins(0, getResources().getDimensionPixelSize(R.dimen.dp_310),0,0);
         layoutParamPhoneLogin.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE);
         layoutParamPhoneLogin.addRule(RelativeLayout.CENTER_HORIZONTAL,RelativeLayout.TRUE);
         TextView tvPhoneLogin = new TextView(this);
         tvPhoneLogin.setText("手机号码登录");
         tvPhoneLogin.setTextColor(getResources().getColor(R.color.grayText));
-//        tvPhoneLogin.setTextSize(getResources().getDimensionPixelSize(R.dimen.sp_14));
+        tvPhoneLogin.setTextSize(16);
         tvPhoneLogin.setLayoutParams(layoutParamPhoneLogin);
         uiConfigBuilder.addCustomView(tvPhoneLogin, false, new JVerifyUIClickCallback() {
             @Override
@@ -647,7 +647,7 @@ public class LoginAutoActivity extends BaseActivity {
 
         LinearLayout linearLayout = new LinearLayout(this);
         RelativeLayout.LayoutParams layoutLoginGroupParam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutLoginGroupParam.setMargins(0, getResources().getDimensionPixelSize(R.dimen.dp_472), 0, 0);
+        layoutLoginGroupParam.setMargins(0, getResources().getDimensionPixelSize(R.dimen.dp_370), 0, 0);
         layoutLoginGroupParam.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
         layoutLoginGroupParam.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         layoutLoginGroupParam.setLayoutDirection(LinearLayout.VERTICAL);
@@ -663,7 +663,7 @@ public class LoginAutoActivity extends BaseActivity {
         texParam.setMargins(0,padding,0,0);
         textView.setLayoutParams(texParam);
         textView.setText("微信登录");
-//        textView.setTextSize(getResources().getDimensionPixelSize(R.dimen.sp_14));
+        textView.setTextSize(14);
         textView.setTextColor(getResources().getColor(R.color.grayText));
 
         linearLayout.setOnClickListener(new View.OnClickListener() {

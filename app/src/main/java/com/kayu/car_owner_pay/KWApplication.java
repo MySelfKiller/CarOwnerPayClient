@@ -42,6 +42,9 @@ import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.hjq.toast.ToastUtils;
+import com.hjq.toast.style.ToastBlackStyle;
+import com.hjq.toast.style.ToastQQStyle;
+import com.hjq.toast.style.ToastWhiteStyle;
 import com.kayu.car_owner_pay.activity.ActivationActivity;
 import com.kayu.car_owner_pay.activity.AppManager;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
@@ -236,7 +239,7 @@ public class KWApplication extends MultiDexApplication {
     }
 
     private void initDialogSetting() {
-        ToastUtils.init(this);
+        ToastUtils.init(this,new ToastWhiteStyle(this));
         ToastUtils.setGravity(Gravity.CENTER, 0, 0);
         DialogSettings.isUseBlur = true;                   //是否开启模糊效果，默认关闭
         DialogSettings.modalDialog = false;                 //是否开启模态窗口模式，一次显示多个对话框将以队列形式一个一个显示，默认关闭

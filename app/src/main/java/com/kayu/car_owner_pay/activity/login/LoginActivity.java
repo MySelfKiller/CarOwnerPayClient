@@ -314,8 +314,7 @@ public class LoginActivity extends BaseActivity {
                     if (login_checkbox.isChecked()) {
                         sendSubRequest();
                     } else {
-                        Toast.makeText(LoginActivity.this,
-                                "请先阅读并同意《用户协议》、《隐私政策》",Toast.LENGTH_SHORT).show();
+                        ToastUtils.show("请先阅读并同意《用户协议》、《隐私政策》");
                     }
                 }
             }
