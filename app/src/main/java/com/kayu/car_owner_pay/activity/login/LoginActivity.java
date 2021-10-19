@@ -46,14 +46,13 @@ import com.kayu.form_verify.Validate;
 import com.kayu.form_verify.validator.NotEmptyValidator;
 import com.kayu.form_verify.validator.PhoneValidator;
 import com.kayu.utils.Constants;
-import com.kayu.utils.DeviceIdUtils;
 import com.kayu.utils.GsonHelper;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.SMSCountDownTimer;
 import com.kayu.utils.StringUtil;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
-import com.kongzue.dialog.v3.MessageDialog;
+import com.kongzue.dialog.v3.AgreementDialog;
 import com.kongzue.dialog.v3.TipGifDialog;
 
 import java.util.HashMap;
@@ -338,8 +337,8 @@ public class LoginActivity extends BaseActivity {
                     String[] urls = systemParam.url.split("@@");
                     isFirstShow = sp.getBoolean(Constants.isShowDialog, true);
                     if (isFirstShow) {
-                        MessageDialog.show(LoginActivity.this,
-                                titles[0] + "和" + titles[1], KWApplication.getInstance().getClickableSpan(LoginActivity.this, titles, urls)
+                        AgreementDialog.show(LoginActivity.this,
+                                titles[0] + "与" + titles[1], KWApplication.getInstance().getClickableSpan(LoginActivity.this, titles, urls)
                                 , "同意", "暂不使用")
                                 .setCancelable(false).setOkButton(new OnDialogButtonClickListener() {
                             @Override

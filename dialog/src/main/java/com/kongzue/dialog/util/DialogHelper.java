@@ -26,9 +26,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.kongzue.dialog.R;
+import com.kongzue.dialog.v3.AgreementDialog;
 import com.kongzue.dialog.v3.FullScreenDialog;
 import com.kongzue.dialog.v3.BottomMenu;
 import com.kongzue.dialog.v3.CustomDialog;
+import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.ShareDialog;
 import com.kongzue.dialog.v3.TipDialog;
 
@@ -188,6 +190,12 @@ public class DialogHelper extends DialogFragment {
                 lp.width = WindowManager.LayoutParams.MATCH_PARENT;
                 lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
                 dialogWindow.getDecorView().setPadding(0, 0, 0, 0);
+                dialogWindow.setAttributes(lp);
+            }
+            if (parent.get() instanceof AgreementDialog) {
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                dialogWindow.getDecorView().setPadding(40, 0, 40, 0);
                 dialogWindow.setAttributes(lp);
             }
             if (parent.get() instanceof FullScreenDialog) {

@@ -52,7 +52,6 @@ import com.kayu.car_owner_pay.model.SystemParam;
 import com.kayu.car_owner_pay.ui.text_link.UrlClickableSpan;
 import com.kayu.car_owner_pay.wxapi.WXShare;
 import com.kayu.utils.Constants;
-import com.kayu.utils.DeviceIdUtils;
 import com.kayu.utils.GsonHelper;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.LogUtil;
@@ -62,7 +61,7 @@ import com.kayu.utils.permission.EasyPermissions;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
 import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
 import com.kongzue.dialog.util.BaseDialog;
-import com.kongzue.dialog.util.DialogSettings;
+import com.kongzue.dialog.v3.AgreementDialog;
 import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.TipGifDialog;
 
@@ -170,7 +169,7 @@ public class LoginAutoActivity extends BaseActivity {
 //                                "等。你可以在\"设置\"中查看、变更、删除个人信息并管理你的授权。" +
 //                                "<br>你可阅读<font color=\"#007aff\"><a href=\"" + urls[0] + "\" style=\"text-decoration:none;\">《" + titles[0] + "》</a></font>与<font color=\"#007aff\"><a href=\"" + urls[1] + "\" style=\"text-decoration:none;\">《" + titles[1] + "》</a></font>了解详细信息。" +
 //                                "如您同意，请点击确定接收我们的服务";
-                        MessageDialog.show(LoginAutoActivity.this,
+                        AgreementDialog.show(LoginAutoActivity.this,
                                 titles[1] + "与" + titles[0], KWApplication.getInstance().getClickableSpan(LoginAutoActivity.this,titles,urls)
                                 , "同意并继续", "拒绝并退出")
                                 .setCancelable(false).setOkButton(new OnDialogButtonClickListener() {

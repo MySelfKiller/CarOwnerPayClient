@@ -639,11 +639,7 @@ public class KWApplication extends MultiDexApplication {
      */
     public SpannableString getClickableSpan(Context context, String[] titles, String[] urls) {
         StringBuilder messSB = new StringBuilder();
-        messSB.append("请您务必谨慎阅读、充分理解\"");
-        messSB.append(titles[1]);
-        messSB.append("\"与\"");
-        messSB.append(titles[0]);
-        messSB.append("\"各条款，包括但不限于：为了向你提供及时通讯，内容分享等服务，我们需要收集你的定位信息，操作日志信息等。你可以在\"设置\"中查看、变更、删除个人信息并管理你的授权。\n你可阅读《");
+        messSB.append("感谢您选择车友团特权APP！\n我们非常重视您的个信息和隐私安全。为了更好的保障您的个人权益，在您使用我们的产品前，请务必审慎阅读《");
         int title1Index = messSB.length() - 1;
         messSB.append(titles[1]);
         int title1End = messSB.length() + 1;
@@ -651,7 +647,12 @@ public class KWApplication extends MultiDexApplication {
         int title2Index = messSB.length() - 1;
         messSB.append(titles[0]);
         int title2End = messSB.length() + 1;
-        messSB.append("》了解详细信息。如您同意，请点击确定接受我们的服务");
+        messSB.append("》内的全部内容，同意并接受全部条款后开始使用我们的产品和服务。我们深知个人信息对您的重要性，我们将严格遵守相关法律法规，并采取相应的重要保护技术措施，" +
+                "尽力保护您的个人信息安全。在使用APP过程中，我们会基于您的授权获取您的以下权限，您有权拒绝和取消授权：\n");
+        messSB.append("1、定位权限：用于获取周边的特权信息，如优惠加油站，洗车门店等；\n" +
+                "2、设备信息权限：用于账号信息的验证，以保障交易安全；\n" +
+                "3、存储权限：以实现保存联系客服二维码图片功能；\n" +
+                "4、拨打电话权限：用于一键拨打客服电话功能。");
         SpannableString spannableString = new SpannableString(messSB.toString());
 
         //设置下划线文字
