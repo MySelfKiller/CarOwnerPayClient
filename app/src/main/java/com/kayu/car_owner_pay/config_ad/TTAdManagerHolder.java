@@ -70,9 +70,10 @@ public class TTAdManagerHolder {
                 .allowShowNotify(true) //是否允许sdk展示通知栏提示
                 .allowShowPageWhenScreenLock(true) // 锁屏下穿山甲SDK不会再出落地页，此API已废弃，调用没有任何效果
                 .debug(true) //测试阶段打开，可以通过日志排查问题，上线时去除该调用
-                .directDownloadNetworkType(
-                        TTAdConstant.NETWORK_STATE_WIFI,
-                        TTAdConstant.NETWORK_STATE_4G) //允许直接下载的网络状态集合
+//                .directDownloadNetworkType(
+//                        TTAdConstant.NETWORK_STATE_WIFI,
+//                        TTAdConstant.NETWORK_STATE_4G) //允许直接下载的网络状态集合
+                .directDownloadNetworkType()
                 .supportMultiProcess(true)//是否支持多进程
                 .needClearTaskReset()
                 .build();

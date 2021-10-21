@@ -39,8 +39,13 @@ import com.kayu.utils.GsonHelper;
 import com.kayu.utils.ScreenUtils;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
+import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
+import com.kongzue.dialog.util.BaseDialog;
+import com.kongzue.dialog.v3.MessageDialog;
 import com.qq.e.ads.splash.SplashAD;
 import com.qq.e.ads.splash.SplashADListener;
+import com.qq.e.comm.compliance.DownloadConfirmCallBack;
+import com.qq.e.comm.compliance.DownloadConfirmListener;
 import com.qq.e.comm.managers.GDTAdSdk;
 import com.qq.e.comm.util.AdError;
 
@@ -64,6 +69,7 @@ public class SplashActivity extends AppCompatActivity {
     private boolean isLogin;
     private boolean isSetPsd;
     private MainViewModel mainViewModel;
+    private SplashAD splashAD;
 
 
     @Override
@@ -179,7 +185,7 @@ public class SplashActivity extends AppCompatActivity {
     private void fetchSplashAD(Activity activity, ViewGroup adContainer, String posId, SplashADListener adListener, int fetchDelay) {
 //        fetchSplashADTime = System.currentTimeMillis();
         // skipContainer 此时必须是 VISIBLE 状态，否则将不能正常曝光计费
-        SplashAD splashAD = new SplashAD(activity, posId, adListener, fetchDelay);
+        splashAD = new SplashAD(activity, posId, adListener, fetchDelay);
         splashAD.fetchAndShowIn(adContainer);
 //        splashAD.fetchAdOnly();
     }
@@ -265,6 +271,7 @@ public class SplashActivity extends AppCompatActivity {
                 public void onAdClicked(View view, int type) {
                     Log.d(TAG, "onAdClicked");
 //                        ToastUtils.show("开屏广告点击");
+//                    MessageDialog.show(SplashActivity.this,"提示","即将跳转到广告详情页面或第三方应用，是否允许","允许","取消");
                 }
 
                 @Override
@@ -363,6 +370,28 @@ public class SplashActivity extends AppCompatActivity {
 
         @Override
         public void onADLoaded(long l) {
+            splashAD.setDownloadConfirmListener(new DownloadConfirmListener() {
+                @Override
+                public void onDownloadConfirm(Activity activity, int i, String s, DownloadConfirmCallBack downloadConfirmCallBack) {
+                    MessageDialog.show(SplashActivity.this,"提示","即将跳转到广告详情页面或第三方应用，是否允许","允许","取消")
+                            .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
+                                @Override
+                                public boolean onClick(BaseDialog baseDialog, View v) {
+                                    baseDialog.doDismiss();
+                                    downloadConfirmCallBack.onConfirm();
+                                    return false;
+                                }
+                            })
+                            .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
+                                @Override
+                                public boolean onClick(BaseDialog baseDialog, View v) {
+                                    baseDialog.doDismiss();
+                                    downloadConfirmCallBack.onCancel();
+                                    return false;
+                                }
+                            });
+                }
+            });
 
         }
 
