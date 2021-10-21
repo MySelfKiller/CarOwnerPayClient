@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,12 +45,7 @@ import com.qq.e.ads.splash.SplashAD;
 import com.qq.e.ads.splash.SplashADListener;
 import com.qq.e.comm.compliance.DownloadConfirmCallBack;
 import com.qq.e.comm.compliance.DownloadConfirmListener;
-import com.qq.e.comm.managers.GDTAdSdk;
 import com.qq.e.comm.util.AdError;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 
 public class SplashActivity extends AppCompatActivity {
 
