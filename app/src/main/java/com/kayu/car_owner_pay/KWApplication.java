@@ -709,17 +709,8 @@ public class KWApplication extends MultiDexApplication {
             @Override
             public void onBind(final CustomDialog dialog, View v) {
                 TextView dia_title = v.findViewById(R.id.dia_act_title);
-                if (!StringUtil.isEmpty(title)) {
-                    dia_title.setText(title);
-                }
                 TextView dia_content = v.findViewById(R.id.dia_act_context);
-                if (!StringUtil.isEmpty(desc)) {
-                    dia_content.setText(desc);
-                }
                 AppCompatButton dia_btn_handle = v.findViewById(R.id.dia_act_btn_handle);
-                if (!StringUtil.isEmpty(regBtn)) {
-                    dia_btn_handle.setText(regBtn);
-                }
                 dia_btn_handle.setOnClickListener(new NoMoreClickListener() {
                     @Override
                     protected void OnMoreClick(View view) {
@@ -737,12 +728,25 @@ public class KWApplication extends MultiDexApplication {
                     }
                 });
                 TextView dia_title_sub = v.findViewById(R.id.dia_act_title_sub);
-                if (!StringUtil.isEmpty(pastTitle)) {
-                    dia_title_sub.setText(pastTitle);
-                }
+
                 AppCompatButton dia_btn_activ = v.findViewById(R.id.dia_act_btn_activ);
-                if (!StringUtil.isEmpty(pastBtn)) {
-                    dia_btn_activ.setText(pastBtn);
+
+                if (KWApplication.getInstance().userRole != -2) {
+                    if (!StringUtil.isEmpty(title)) {
+                        dia_title.setText(title);
+                    }
+                    if (!StringUtil.isEmpty(desc)) {
+                        dia_content.setText(desc);
+                    }
+                    if (!StringUtil.isEmpty(regBtn)) {
+                        dia_btn_handle.setText(regBtn);
+                    }
+                    if (!StringUtil.isEmpty(pastTitle)) {
+                        dia_title_sub.setText(pastTitle);
+                    }
+                    if (!StringUtil.isEmpty(pastBtn)) {
+                        dia_btn_activ.setText(pastBtn);
+                    }
                 }
                 dia_btn_activ.setOnClickListener(new NoMoreClickListener() {
                     @Override

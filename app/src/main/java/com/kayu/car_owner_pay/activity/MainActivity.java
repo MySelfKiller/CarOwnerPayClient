@@ -107,6 +107,15 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         navigation = findViewById(R.id.nav_view);
         view_pager = (ViewPager) findViewById(R.id.view_pager);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
+        //提前获取首页部分数据
+        //查询用户角色保存
+        mViewModel.getUserRole(MainActivity.this).observe(MainActivity.this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                KWApplication.getInstance().userRole = integer;
+            }
+        });
         permissionsCheck();
     }
 

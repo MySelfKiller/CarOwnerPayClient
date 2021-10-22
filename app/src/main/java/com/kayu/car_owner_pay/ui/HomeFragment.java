@@ -384,18 +384,6 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        mainViewModel.getUserRole(getActivity()).observe(getActivity(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                KWApplication.getInstance().userRole = integer;
-                if (integer == -2 && null != KWApplication.getInstance().regDialogTip && !hasShow) {
-                    showApplyCardDialog(getActivity(),getContext(),navigation);
-                    hasShow = true;
-                }
-//                if (integer == -2) {
-//                }
-            }
-        });
         mainViewModel.getParamSelect(requireContext());
         mainViewModel.getParamWash(requireContext());
         mainViewModel.getNotifyNum(getContext()).observe(requireActivity(), new Observer<Integer>() {
@@ -508,14 +496,21 @@ public class HomeFragment extends Fragment {
                 });
             }
         });
-
         mainViewModel.getCategoryList(getContext()).observe(requireActivity(), new Observer<List<List<CategoryBean>>>() {
             @Override
             public void onChanged(List<List<CategoryBean>> categoryBeans) {
                 if (null == categoryBeans)
                     return;
+                List<List<CategoryBean>> newCategoryList = new ArrayList<>();
+                List<CategoryBean> categoryBeanList = new ArrayList<>();
+                newCategoryList.add(categoryBeanList);
                 for (List<CategoryBean> list : categoryBeans) {
                     for (CategoryBean categoryBean : list) {
+                        if (KWApplication.getInstance().userRole == -2) {
+                            if (categoryBean.id == 1 || categoryBean.id == 4 || categoryBean.id == 5 || categoryBean.id == 45) {
+                                categoryBeanList.add(categoryBean);
+                            }
+                        }
                         if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
                             KWApplication.getInstance().isGasPublic = categoryBean.isPublic;
                         }
@@ -524,7 +519,10 @@ public class HomeFragment extends Fragment {
                         }
                     }
                 }
-                int mColumns=1, mRows = categoryBeans.size();
+                if (KWApplication.getInstance().userRole != -2) {
+                    newCategoryList = categoryBeans;
+                }
+                int mColumns=1, mRows = newCategoryList.size();
 //                if (categoryBeans.size() <= 4) {
 //                    mColumns = 4;
 //                    mRows = 1;
@@ -553,7 +551,7 @@ public class HomeFragment extends Fragment {
                     }
                 });    // 设置页面变化监听器
                 category_rv.setLayoutManager(mLayoutManager);
-                CategoryRootAdapter categoryAdapter = new CategoryRootAdapter(categoryBeans, new ItemCallback() {
+                CategoryRootAdapter categoryAdapter = new CategoryRootAdapter(newCategoryList, new ItemCallback() {
                     @Override
                     public void onItemCallback(int position, Object obj) {
                         CategoryBean categoryBean = (CategoryBean) obj;
@@ -661,7 +659,9 @@ public class HomeFragment extends Fragment {
         }
         try {
             //{
-            // "content": "{\"title\":\"免费办理会员\",\"desc\":\"成为会员，立享全球超百项特权\",\"regBtn\":\"立即免费办理\",\"pastTitle\":\"已办理车友团特权卡\",\"pastBtn\":\"激活车友团特权卡\",\"regTips\":\"成为特权卡会员,每年立省1000元#去办卡\"}",
+            // "content": "{\"title\":\"免费办理会员\",\"desc\":\"成为会员，立享全球超百项特权\",
+            // \"regBtn\":\"立即免费办理\",\"pastTitle\":\"已办理车友团特权卡\",\"pastBtn\":\"激活车友团特权卡\",
+            // \"regTips\":\"成为特权卡会员,每年立省1000元#去办卡\"}",
             //}
             JSONObject contentJSon = new JSONObject(regDialogTip.content);
             regTips = contentJSon.getString("regTips");
@@ -691,9 +691,15 @@ public class HomeFragment extends Fragment {
             }
         });
         TextView dia_content = view.findViewById(R.id.dia_act_context);
-        dia_content.setText(tips[0]);
         AppCompatButton dia_btn_handle = view.findViewById(R.id.dia_act_btn_handle);
-        dia_btn_handle.setText(tips[1]);
+        if (KWApplication.getInstance().userRole != -2) {
+            dia_content.setText(tips[0]);
+            dia_btn_handle.setText(tips[1]);
+        } else {
+            dia_content.setText("成为车友团会员,每年立省1000元");
+            dia_btn_handle.setText("立即办理");
+        }
+
         dia_btn_handle.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
