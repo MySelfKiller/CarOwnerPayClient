@@ -1,11 +1,8 @@
 package com.kayu.car_owner_pay.activity;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +15,6 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.MainThread;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.TTAdConstant;
@@ -27,10 +23,7 @@ import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTSplashAd;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
-import com.kayu.car_owner_pay.activity.login.LoginAutoActivity;
-import com.kayu.car_owner_pay.activity.login.SetPasswordActivity;
 import com.kayu.car_owner_pay.config_ad.TTAdManagerHolder;
-import com.kayu.utils.Constants;
 import com.kayu.utils.ScreenUtils;
 import com.kayu.utils.StringUtil;
 import com.kayu.utils.status_bar_set.StatusBarUtil;
@@ -43,7 +36,7 @@ import com.qq.e.comm.compliance.DownloadConfirmCallBack;
 import com.qq.e.comm.compliance.DownloadConfirmListener;
 import com.qq.e.comm.util.AdError;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashHotActivity extends AppCompatActivity {
 
     private static final String TAG = "SplashActivity";
     private TTAdNative mTTAdNative;
@@ -56,9 +49,9 @@ public class SplashActivity extends AppCompatActivity {
     private String mCodeId = TTAdManagerHolder.splashID;
 //    private boolean mIsExpress = false; //是否请求模板广告
     private LinearLayout splash_img;
-    private boolean isLogin;
-    private boolean isSetPsd;
-    private MainViewModel mainViewModel;
+//    private boolean isLogin;
+//    private boolean isSetPsd;
+//    private MainViewModel mainViewModel;
     private SplashAD splashAD;
 
 
@@ -86,7 +79,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainViewModel = ViewModelProviders.of(SplashActivity.this).get(MainViewModel.class);
+//        mainViewModel = ViewModelProviders.of(SplashHotActivity.this).get(MainViewModel.class);
         KWApplication.getInstance().displayWidth = ScreenUtils.getDisplayWidth(this);
         KWApplication.getInstance().displayHeight = ScreenUtils.getDisplayHeight(this);
 //        StatusBarUtil.setStatusBarColor(this, getResources().getColor(R.color.dark));
@@ -103,66 +96,31 @@ public class SplashActivity extends AppCompatActivity {
 //        getExtraInfo();
         //在合适的时机申请权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题
         //在开屏时候申请不太合适，因为该页面倒计时结束或者请求超时会跳转，在该页面申请权限，体验不好
-//         TTAdManagerHolder.get().requestPermissionIfNecessary(this);
-        SharedPreferences sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
-        isLogin = sp.getBoolean(Constants.isLogin, false);
-        isSetPsd = sp.getBoolean(Constants.isSetPsd, false);
-//        boolean isFirstShow = sp.getBoolean(Constants.isShowDialog, true);
-        if (isLogin) {
-            //step2:创建TTAdNative对象
+
+        //step2:创建TTAdNative对象
+        mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
+        if (null == mTTAdNative) {
+            KWApplication.getInstance().initAdSdk();
             mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
-            if (null == mTTAdNative) {
-                KWApplication.getInstance().initAdSdk();
-                mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
-            }
-            if (null != KWApplication.getInstance().systemArgs) {
-                if (StringUtil.isEmpty(KWApplication.getInstance().systemArgs.android.showAd)) {
-                    goToMainActivity();
-                } else {
-                    boolean isCsjAD;
-                    if (KWApplication.getInstance().systemArgs.android.showAd.equals("csj")) {
-                        isCsjAD = true;
-                    } else {
-                        isCsjAD = false;
-                    }
-                    loadSplashAd(isCsjAD);
-                }
+        }
+        if (null != KWApplication.getInstance().systemArgs) {
+            if (StringUtil.isEmpty(KWApplication.getInstance().systemArgs.android.showAd)) {
+                goToMainActivity();
             } else {
-                loadSplashAd(true);
+                boolean isCsjAD;
+                if (KWApplication.getInstance().systemArgs.android.showAd.equals("csj")) {
+                    isCsjAD = true;
+                } else {
+                    isCsjAD = false;
+                }
+                loadSplashAd(isCsjAD);
             }
-
+        } else {
+            loadSplashAd(true);
         }
-        new Handler().postDelayed(runnable,1500*1);
-//        permissionsCheck();
+        new Handler().postDelayed(runnable,1200*1);
     }
 
-
-//    private void getExtraInfo() {
-//        Intent intent = getIntent();
-//        if(intent == null) {
-//            return;
-//        }
-//        String codeId = intent.getStringExtra("splash_rit");
-//        if (!TextUtils.isEmpty(codeId)){
-//            mCodeId = codeId;
-//        }
-//        mIsExpress = intent.getBooleanExtra("is_express", false);
-//    }
-
-    @Override
-    protected void onResume() {
-        //判断是否该跳转到主页面
-        if (mForceGoMain) {
-            goToMainActivity();
-        }
-        super.onResume();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mForceGoMain = true;
-    }
     /**
      * 拉取开屏广告，开屏广告的构造方法有3种，详细说明请参考开发者文档。
      *
@@ -187,32 +145,17 @@ public class SplashActivity extends AppCompatActivity {
             String posid = "5042238596128420";
             if (null != KWApplication.getInstance().systemArgs && !StringUtil.isEmpty(KWApplication.getInstance().systemArgs.android.ylhSplashid))
                 posid = KWApplication.getInstance().systemArgs.android.ylhSplashid;
-            fetchSplashAD(SplashActivity.this, mSplashContainer, posid, adListener,AD_TIME_OUT);
+            fetchSplashAD(SplashHotActivity.this, mSplashContainer, posid, adListener,AD_TIME_OUT);
         } else {
             //穿山甲广告
             //step3:创建开屏广告请求参数AdSlot,具体参数含义参考文档
             AdSlot adSlot = null;
-//            if (mIsExpress) {
-//                //个性化模板广告需要传入期望广告view的宽、高，单位dp，请传入实际需要的大小，
-//                //比如：广告下方拼接logo、适配刘海屏等，需要考虑实际广告大小
-//                //float expressViewWidth = UIUtils.getScreenWidthDp(this);
-//                //float expressViewHeight = UIUtils.getHeight(this);
-//                adSlot = new AdSlot.Builder()
-//                        .setCodeId(mCodeId)
-//                        //模板广告需要设置期望个性化模板广告的大小,单位dp,代码位是否属于个性化模板广告，请在穿山甲平台查看
-//                        //view宽高等于图片的宽高
-////                    .setExpressViewAcceptedSize(KWApplication.getInstance().displayWidth, KWApplication.getInstance().displayHeight)
-//                        .setExpressViewAcceptedSize(KWApplication.getInstance().displayWidth,KWApplication.getInstance().displayHeight)
-//                        .build();
-//            } else {
             if (null != KWApplication.getInstance().systemArgs && !StringUtil.isEmpty(KWApplication.getInstance().systemArgs.android.csjPlacementid))
                 mCodeId = KWApplication.getInstance().systemArgs.android.csjPlacementid;
                 adSlot = new AdSlot.Builder()
                         .setCodeId(mCodeId)
-//                    .setImageAcceptedSize(KWApplication.getInstance().displayWidth, KWApplication.getInstance().displayHeight)
                         .setImageAcceptedSize(KWApplication.getInstance().displayWidth,KWApplication.getInstance().displayHeight)
                         .build();
-//            }
             //step4:请求广告，调用开屏广告异步请求接口，对请求回调的广告作渲染处理
             mTTAdNative.loadSplashAd(adSlot, splashAdListener, AD_TIME_OUT);
         }
@@ -245,7 +188,7 @@ public class SplashActivity extends AppCompatActivity {
             }
             //获取SplashView
             View view = ad.getSplashView();
-            if (view != null && mSplashContainer != null && !SplashActivity.this.isFinishing()) {
+            if (view != null && mSplashContainer != null && !SplashHotActivity.this.isFinishing()) {
 //                    mSplashContainer.removeAllViews();
                 //把SplashView 添加到ViewGroup中,注意开屏广告view：width >=70%屏幕宽；height >=50%屏幕高
                 mSplashContainer.addView(view);
@@ -363,7 +306,7 @@ public class SplashActivity extends AppCompatActivity {
             splashAD.setDownloadConfirmListener(new DownloadConfirmListener() {
                 @Override
                 public void onDownloadConfirm(Activity activity, int i, String s, DownloadConfirmCallBack downloadConfirmCallBack) {
-                    MessageDialog.show(SplashActivity.this,"提示","即将跳转到广告详情页面或第三方应用，是否允许","允许","取消")
+                    MessageDialog.show(SplashHotActivity.this,"提示","即将跳转到广告详情页面或第三方应用，是否允许","允许","取消")
                             .setOnOkButtonClickListener(new OnDialogButtonClickListener() {
                                 @Override
                                 public boolean onClick(BaseDialog baseDialog, View v) {
@@ -397,31 +340,11 @@ public class SplashActivity extends AppCompatActivity {
         }
     };
 
+
     /**
      * 跳转到主页面
      */
     private void goToMainActivity() {
-
-        Intent intent;
-        if (isLogin) {
-            if (isSetPsd){
-                intent = new Intent(SplashActivity.this, MainActivity.class);
-            }else {
-                intent = new Intent(SplashActivity.this, SetPasswordActivity.class);
-                intent.putExtra("title","设置密码");
-                intent.putExtra("back","");
-                intent.putExtra("isSetPwd",true);
-            }
-        } else {
-            intent = new Intent(SplashActivity.this, LoginAutoActivity.class);
-        }
-        Uri data = getIntent().getData();
-        if (data != null) {
-            intent.setData(data);
-        }
-//            intent.putExtra("from", "splash");
-        startActivity(intent);
-//        mSplashContainer.removeAllViews();
         this.finish();
     }
 
@@ -429,10 +352,6 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         public void run() {
             splash_img.setVisibility(View.GONE);
-            if (!isLogin) {
-//                loadSplashAd();
-                goToMainActivity();
-            }
         }
     };
 
