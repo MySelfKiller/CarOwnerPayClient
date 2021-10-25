@@ -117,6 +117,16 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             }
         });
         permissionsCheck();
+
+        //预加载首页数据
+        mViewModel.getUserRole(MainActivity.this).observe(MainActivity.this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                KWApplication.getInstance().userRole = integer;
+            }
+        });
+        mViewModel.getParamSelect(MainActivity.this);
+        mViewModel.getParamWash(MainActivity.this);
     }
 
     private List<Fragment> getFragments(){

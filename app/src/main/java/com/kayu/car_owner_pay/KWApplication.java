@@ -16,6 +16,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -42,11 +43,11 @@ import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.hjq.toast.ToastUtils;
-import com.hjq.toast.style.ToastBlackStyle;
-import com.hjq.toast.style.ToastQQStyle;
 import com.hjq.toast.style.ToastWhiteStyle;
 import com.kayu.car_owner_pay.activity.ActivationActivity;
 import com.kayu.car_owner_pay.activity.AppManager;
+import com.kayu.car_owner_pay.activity.SplashActivity;
+import com.kayu.car_owner_pay.activity.SplashHotActivity;
 import com.kayu.car_owner_pay.activity.WebViewActivity;
 import com.kayu.car_owner_pay.activity.login.LoginAutoActivity;
 import com.kayu.car_owner_pay.config_ad.TTAdManagerHolder;
@@ -88,6 +89,7 @@ import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import cn.jiguang.verifysdk.api.JVerificationInterface;
 import cn.jiguang.verifysdk.api.RequestCallback;
@@ -104,12 +106,12 @@ public class KWApplication extends MultiDexApplication {
     public int displayWidth = 0;
     public int displayHeight = 0;
     private static KWApplication self;
-    public String token_key;
+//    public String token_key;
     //    private Picasso picasso;
-    private String photographName;
-    private String fileName;
+//    private String photographName;
+//    private String fileName;
     public String token;//登录成功后返回的token
-    private int downloadIndex;
+//    private int downloadIndex;
     public String oid = null;
     public LocalBroadcastManager localBroadcastManager;
     private SharedPreferences sp;
@@ -120,6 +122,8 @@ public class KWApplication extends MultiDexApplication {
     }
 
     public static RefWatcher sRefWatcher = null;
+    private AtomicInteger mActivityCount = new AtomicInteger(0);
+    private long mAppStopTimeMillis = 0L;
 
     @Override
     public void onCreate() {
@@ -150,6 +154,60 @@ public class KWApplication extends MultiDexApplication {
         intentFilter.addAction("com.kayu.broadcasttest.JUMP");
         LocalReceiver localReceiver = new LocalReceiver();
         localBroadcastManager.registerReceiver(localReceiver, intentFilter); // 注册本地广播监听器
+
+        //监听是所有activity生命周期
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
+
+            }
+
+            @Override
+            public void onActivityStarted(@NonNull Activity activity) {
+                boolean isLogin = sp.getBoolean(Constants.isLogin, false);//判断用户是否登录
+                //热启动 && 应用退到后台时间超过10s
+                if (mActivityCount.get() == 0 && isLogin
+                        && System.currentTimeMillis() - mAppStopTimeMillis > 10 * 1000
+                        && !(activity instanceof SplashActivity) ) {
+
+                    activity.startActivity(new Intent(activity,SplashHotActivity.class));
+                }
+
+                //+1
+                mActivityCount.getAndAdd(1);
+            }
+
+            @Override
+            public void onActivityResumed(@NonNull Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityPaused(@NonNull Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityStopped(@NonNull Activity activity) {
+//-1
+                mActivityCount.getAndDecrement();
+
+                //退到后台，记录时间
+                if (mActivityCount.get() == 0) {
+                    mAppStopTimeMillis = System.currentTimeMillis();
+                }
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(@NonNull Activity activity) {
+
+            }
+        });
     }
 
     //初始化广告SDK

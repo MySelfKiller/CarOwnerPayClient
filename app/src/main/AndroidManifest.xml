@@ -217,6 +217,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.SplashHotActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/LaudnchTheme"
+            tools:ignore="LockedOrientationActivity">
+        </activity>
+        <activity
             android:name=".activity.login.LoginActivity"
             android:launchMode="singleTask"
             android:screenOrientation="unspecified"
