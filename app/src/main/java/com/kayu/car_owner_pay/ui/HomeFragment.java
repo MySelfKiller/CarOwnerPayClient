@@ -384,20 +384,6 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        mainViewModel.getUserRole(getActivity()).observe(getActivity(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                KWApplication.getInstance().userRole = integer;
-                if (integer == -2 && null != KWApplication.getInstance().regDialogTip && !hasShow) {
-                    showApplyCardDialog(getActivity(),getContext(),navigation);
-                    hasShow = true;
-                }
-//                if (integer == -2) {
-//                }
-            }
-        });
-        mainViewModel.getParamSelect(requireContext());
-        mainViewModel.getParamWash(requireContext());
         mainViewModel.getNotifyNum(getContext()).observe(requireActivity(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {

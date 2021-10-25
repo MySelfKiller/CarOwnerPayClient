@@ -118,7 +118,7 @@ public class SplashHotActivity extends AppCompatActivity {
         } else {
             loadSplashAd(true);
         }
-        new Handler().postDelayed(runnable,1200*1);
+//        new Handler().postDelayed(runnable,1200*1);
     }
 
     /**
@@ -186,6 +186,7 @@ public class SplashHotActivity extends AppCompatActivity {
             if (ad == null) {
                 return;
             }
+            splash_img.setVisibility(View.GONE);
             //获取SplashView
             View view = ad.getSplashView();
             if (view != null && mSplashContainer != null && !SplashHotActivity.this.isFinishing()) {
@@ -303,6 +304,7 @@ public class SplashHotActivity extends AppCompatActivity {
 
         @Override
         public void onADLoaded(long l) {
+            splash_img.setVisibility(View.GONE);
             splashAD.setDownloadConfirmListener(new DownloadConfirmListener() {
                 @Override
                 public void onDownloadConfirm(Activity activity, int i, String s, DownloadConfirmCallBack downloadConfirmCallBack) {
@@ -336,7 +338,7 @@ public class SplashHotActivity extends AppCompatActivity {
 
         @Override
         public void onNoAD(AdError error) {
-//            goToMainActivity();
+            goToMainActivity();
         }
     };
 
@@ -348,12 +350,12 @@ public class SplashHotActivity extends AppCompatActivity {
         this.finish();
     }
 
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            splash_img.setVisibility(View.GONE);
-        }
-    };
+//    private Runnable runnable = new Runnable() {
+//        @Override
+//        public void run() {
+//
+//        }
+//    };
 
     @Override
     public void onBackPressed() {

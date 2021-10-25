@@ -131,8 +131,10 @@ public class SplashActivity extends AppCompatActivity {
                 loadSplashAd(true);
             }
 
+        } else {
+            goToMainActivity();
         }
-        new Handler().postDelayed(runnable,1500*1);
+//        new Handler().postDelayed(runnable,1500*1);
 //        permissionsCheck();
     }
 
@@ -243,6 +245,7 @@ public class SplashActivity extends AppCompatActivity {
             if (ad == null) {
                 return;
             }
+            splash_img.setVisibility(View.GONE);
             //获取SplashView
             View view = ad.getSplashView();
             if (view != null && mSplashContainer != null && !SplashActivity.this.isFinishing()) {
@@ -360,6 +363,7 @@ public class SplashActivity extends AppCompatActivity {
 
         @Override
         public void onADLoaded(long l) {
+            splash_img.setVisibility(View.GONE);
             splashAD.setDownloadConfirmListener(new DownloadConfirmListener() {
                 @Override
                 public void onDownloadConfirm(Activity activity, int i, String s, DownloadConfirmCallBack downloadConfirmCallBack) {
@@ -393,7 +397,7 @@ public class SplashActivity extends AppCompatActivity {
 
         @Override
         public void onNoAD(AdError error) {
-//            goToMainActivity();
+            goToMainActivity();
         }
     };
 
@@ -425,16 +429,15 @@ public class SplashActivity extends AppCompatActivity {
         this.finish();
     }
 
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            splash_img.setVisibility(View.GONE);
-            if (!isLogin) {
-//                loadSplashAd();
-                goToMainActivity();
-            }
-        }
-    };
+//    private Runnable runnable = new Runnable() {
+//        @Override
+//        public void run() {
+//            if (!isLogin) {
+////                loadSplashAd();
+//                goToMainActivity();
+//            }
+//        }
+//    };
 
     @Override
     public void onBackPressed() {
