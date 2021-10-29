@@ -1,5 +1,6 @@
 package com.kayu.car_owner_pay.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -9,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -18,9 +21,15 @@ import com.amap.api.location.AMapLocation;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
 import com.kayu.car_owner_pay.model.WashStationDetailBean;
+import com.kayu.utils.Constants;
 import com.kayu.utils.GetJuLiUtils;
 import com.kayu.utils.NoMoreClickListener;
+import com.kayu.utils.callback.Callback;
 import com.kayu.utils.location.LocationManagerUtil;
+import com.kayu.utils.permission.EasyPermissions;
+import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
+import com.kongzue.dialog.util.BaseDialog;
+import com.kongzue.dialog.v3.MessageDialog;
 import com.kongzue.dialog.v3.TipGifDialog;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
@@ -339,7 +348,17 @@ public class WashStationActivity extends BaseActivity {
         phone_lay.setOnClickListener(new NoMoreClickListener() {
             @Override
             protected void OnMoreClick(View view) {
-                KWApplication.getInstance().callPhone(WashStationActivity.this, washStation.telephone);
+                permissionsCheck(new String[]{Manifest.permission.CALL_PHONE}, R.string.permiss_call_phone,new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        KWApplication.getInstance().callPhone(WashStationActivity.this, washStation.telephone);
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
             }
 
             @Override
@@ -434,7 +453,37 @@ public class WashStationActivity extends BaseActivity {
             }
 
         }
+    }
 
+    public void permissionsCheck(String[] perms, int resId, @NonNull Callback callback) {
+//        String[] perms = {Manifest.permission.CAMERA};
+        performCodeWithPermission(1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, perms, new PermissionCallback() {
+            @Override
+            public void hasPermission(List<String> allPerms) {
+                callback.onSuccess();
+            }
 
+            @Override
+            public void noPermission(List<String> deniedPerms, List<String> grantedPerms, Boolean hasPermanentlyDenied) {
+                EasyPermissions.goSettingsPermissions(WashStationActivity.this, 1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, Constants.RC_PERMISSION_BASE);
+            }
+
+            @Override
+            public void showDialog(int dialogType, final EasyPermissions.DialogCallback callback) {
+                MessageDialog dialog = MessageDialog.build((AppCompatActivity) WashStationActivity.this);
+                dialog.setTitle("需要获取以下权限");
+                dialog.setMessage(getString(resId));
+                dialog.setOkButton("下一步", new OnDialogButtonClickListener() {
+
+                    @Override
+                    public boolean onClick(BaseDialog baseDialog, View v) {
+                        callback.onGranted();
+                        return false;
+                    }
+                });
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+        });
     }
 }

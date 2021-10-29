@@ -19,11 +19,13 @@
         <entry key="app/src/main/res/layout/fragment_order_all.xml" value="0.3645833333333333" />
         <entry key="app/src/main/res/layout/fragment_personal.xml" value="0.3645833333333333" />
         <entry key="app/src/main/res/layout/fragment_personal_new.xml" value="0.3645833333333333" />
+        <entry key="app/src/main/res/layout/fragment_wash_order_all.xml" value="0.2046875" />
         <entry key="app/src/main/res/layout/item_category_lay.xml" value="0.3645833333333333" />
         <entry key="app/src/main/res/layout/item_category_root_lay.xml" value="0.3645833333333333" />
         <entry key="app/src/main/res/layout/item_detailed_lay.xml" value="0.3645833333333333" />
         <entry key="app/src/main/res/layout/item_oil_order_list.xml" value="0.3645833333333333" />
         <entry key="app/src/main/res/layout/item_order_category_lay.xml" value="0.3645833333333333" />
+        <entry key="app/src/main/res/layout/item_wash_order_list.xml" value="0.375" />
         <entry key="app/src/main/res/layout/qrcode_lay.xml" value="0.18385416666666668" />
         <entry key="dialog/src/main/res/drawable/rect_selectdialog_ios_bkg_light.xml" value="0.3807291666666667" />
         <entry key="dialog/src/main/res/layout/dialog_select.xml" value="0.3645833333333333" />
