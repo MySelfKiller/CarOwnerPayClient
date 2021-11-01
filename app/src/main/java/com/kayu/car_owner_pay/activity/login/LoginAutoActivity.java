@@ -615,8 +615,10 @@ public class LoginAutoActivity extends BaseActivity {
         ddd.setText("请先阅读并同意《中国移动认证服务条款》和《用户协议》、《隐私政策》");
         uiConfigBuilder.enableHintToast(true,ddd);
         List<PrivacyBean> listp = new ArrayList<>();
-        PrivacyBean privacy1 = new PrivacyBean("用户协议","https://www.ky808.cn/carfriend/static/user_agree.html","和《","》、");
-        PrivacyBean privacy2 = new PrivacyBean("隐私政策","https://www.ky808.cn/carfriend/static/privacy_agree.html","《","》");
+//        PrivacyBean privacy1 = new PrivacyBean("用户协议","https://www.ky808.cn/carfriend/static/user_agree.html","和《","》、");
+//        PrivacyBean privacy2 = new PrivacyBean("隐私政策","https://www.ky808.cn/carfriend/static/privacy_agree.html","《","》");
+        PrivacyBean privacy1 = new PrivacyBean("《用户协议》","https://www.ky808.cn/carfriend/static/user_agree.html","和");
+        PrivacyBean privacy2 = new PrivacyBean("《隐私政策》","https://www.ky808.cn/carfriend/static/privacy_agree.html","、");
         listp.add(privacy1);
         listp.add(privacy2);
         uiConfigBuilder.setPrivacyNameAndUrlBeanList(listp);
