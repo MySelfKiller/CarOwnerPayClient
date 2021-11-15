@@ -110,11 +110,15 @@ public class SplashActivity extends AppCompatActivity {
 //        boolean isFirstShow = sp.getBoolean(Constants.isShowDialog, true);
         if (isLogin) {
             //step2:创建TTAdNative对象
-            mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
+            try {
+                mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
+            } catch (Exception e) {
+                KWApplication.getInstance().initAdSdk();
+            }
             if (null == mTTAdNative) {
                 KWApplication.getInstance().initAdSdk();
-                mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
             }
+            mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
             if (null != KWApplication.getInstance().systemArgs) {
                 if (StringUtil.isEmpty(KWApplication.getInstance().systemArgs.android.showAd)) {
                     goToMainActivity();
