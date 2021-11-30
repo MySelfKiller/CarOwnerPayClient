@@ -113,7 +113,7 @@ android {
             shrinkResources false
 //            applicationIdSuffix ".debug"
             buildConfigField("boolean", "LOG_DEBUG", "true")//配置Log日志
-//            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/"'  //测试环境
+//            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/test/carfriend/"'  //测试环境
             buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/cyt/carfriend/"'  //正式环境
 //            buildConfigField "String", "BASE_URL", '"http://192.168.0.112:8080/"'  //测试环境
 

@@ -593,7 +593,7 @@ public class LoginAutoActivity extends BaseActivity {
 //        uiConfigBuilder.setAppPrivacyOne(titles[0], urls[0]);
 //        uiConfigBuilder.setAppPrivacyTwo(titles[1], urls[1]);
 
-        uiConfigBuilder.setAppPrivacyColor(0xFFBBBCC5, 0xFF8998FF);
+        uiConfigBuilder.setAppPrivacyColor(getResources().getColor(R.color.grayText4), getResources().getColor(R.color.endColor_btn));
         uiConfigBuilder.setPrivacyState(true);
         uiConfigBuilder.setSloganTextColor(getResources().getColor(R.color.grayText2));
         uiConfigBuilder.setSloganTextSize(12);
@@ -603,13 +603,13 @@ public class LoginAutoActivity extends BaseActivity {
         uiConfigBuilder.setSloganOffsetY(235);
         uiConfigBuilder.setLogBtnOffsetY(260);
         uiConfigBuilder.setNumberSize(22);
-//        uiConfigBuilder.setPrivacyState(true);
-//        uiConfigBuilder.setPrivacyTextCenterGravity(true);
-        uiConfigBuilder.setPrivacyTextCenterGravity(true);
+        uiConfigBuilder.setPrivacyTextCenterGravity(false);
         uiConfigBuilder.setPrivacyState(false);
         uiConfigBuilder.setPrivacyTextSize(12);
         uiConfigBuilder.setPrivacyCheckboxHidden(false);
-        uiConfigBuilder.setPrivacyCheckboxSize(13);
+        uiConfigBuilder.setCheckedImgPath("ic_check_box_24dp");
+        uiConfigBuilder.setUncheckedImgPath("ic_uncheck_box_24dp");
+        uiConfigBuilder.setPrivacyCheckboxSize(20);
         uiConfigBuilder.setPrivacyWithBookTitleMark(true);
         Toast ddd = ToastUtils.getToast();
         ddd.setText("请先阅读并同意《中国移动认证服务条款》和《用户协议》、《隐私政策》");
@@ -635,7 +635,7 @@ public class LoginAutoActivity extends BaseActivity {
         layoutParamPhoneLogin.addRule(RelativeLayout.CENTER_HORIZONTAL,RelativeLayout.TRUE);
         TextView tvPhoneLogin = new TextView(this);
         tvPhoneLogin.setText("手机号码登录");
-        tvPhoneLogin.setTextColor(getResources().getColor(R.color.grayText));
+        tvPhoneLogin.setTextColor(getResources().getColor(R.color.grayText4));
         tvPhoneLogin.setTextSize(16);
         tvPhoneLogin.setLayoutParams(layoutParamPhoneLogin);
         uiConfigBuilder.addCustomView(tvPhoneLogin, false, new JVerifyUIClickCallback() {
@@ -666,7 +666,7 @@ public class LoginAutoActivity extends BaseActivity {
         textView.setLayoutParams(texParam);
         textView.setText("微信登录");
         textView.setTextSize(14);
-        textView.setTextColor(getResources().getColor(R.color.grayText));
+        textView.setTextColor(getResources().getColor(R.color.grayText4));
 
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
