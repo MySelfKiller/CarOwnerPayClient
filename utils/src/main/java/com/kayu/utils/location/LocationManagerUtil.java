@@ -66,7 +66,13 @@ public class LocationManagerUtil {
      */
     private void initLocation(Context context){
         //初始化client
-        locationClient = new AMapLocationClient(context);
+        AMapLocationClient.updatePrivacyShow(context,true,true);
+        AMapLocationClient.updatePrivacyAgree(context,true);
+        try {
+            locationClient = new AMapLocationClient(context);
+        } catch (Exception e) {
+
+        }
         locationOption = getDefaultOption();
         //设置定位参数
         locationClient.setLocationOption(locationOption);

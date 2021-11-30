@@ -1,5 +1,6 @@
 package com.kayu.car_owner_pay.ui;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hjq.toast.ToastUtils;
 import com.kayu.car_owner_pay.KWApplication;
 import com.kayu.car_owner_pay.R;
+import com.kayu.car_owner_pay.activity.BaseActivity;
+import com.kayu.car_owner_pay.activity.WashStationActivity;
+import com.kayu.car_owner_pay.activity.WashUnusedActivity;
 import com.kayu.car_owner_pay.data_parser.WashOrderListDataParser;
 import com.kayu.car_owner_pay.http.HttpConfig;
 import com.kayu.car_owner_pay.http.ReqUtil;
@@ -26,14 +31,21 @@ import com.kayu.car_owner_pay.http.ResponseCallback;
 import com.kayu.car_owner_pay.http.ResponseInfo;
 import com.kayu.car_owner_pay.model.ItemWashOrderBean;
 import com.kayu.car_owner_pay.ui.adapter.ItemWashOrderAdapter;
+import com.kayu.utils.Constants;
 import com.kayu.utils.ItemCallback;
 import com.kayu.utils.LogUtil;
+import com.kayu.utils.callback.Callback;
+import com.kayu.utils.permission.EasyPermissions;
+import com.kongzue.dialog.interfaces.OnDialogButtonClickListener;
+import com.kongzue.dialog.util.BaseDialog;
+import com.kongzue.dialog.v3.MessageDialog;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class WashOrderAllFragment extends Fragment {
     boolean isLoadmore = false;
@@ -210,10 +222,52 @@ public class WashOrderAllFragment extends Fragment {
 
                 @Override
                 public void onDetailCallBack(int position, Object obj) {
-                    KWApplication.getInstance().callPhone(getActivity(),((ItemWashOrderBean)obj).telephone);
+                    permissionsCheck(new String[]{Manifest.permission.CALL_PHONE}, R.string.permiss_call_phone,new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            KWApplication.getInstance().callPhone(getActivity(),((ItemWashOrderBean)obj).telephone);
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
                 }
             });
             recyclerView.setAdapter(adapter);
         }
+    }
+
+    public void permissionsCheck(String[] perms, int resId, @NonNull Callback callback) {
+//        String[] perms = {Manifest.permission.CAMERA};
+        ((BaseActivity)getActivity()).performCodeWithPermission(1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, perms, new BaseActivity.PermissionCallback() {
+            @Override
+            public void hasPermission(List<String> allPerms) {
+                callback.onSuccess();
+            }
+
+            @Override
+            public void noPermission(List<String> deniedPerms, List<String> grantedPerms, Boolean hasPermanentlyDenied) {
+                EasyPermissions.goSettingsPermissions(requireContext(), 1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, Constants.RC_PERMISSION_BASE);
+            }
+
+            @Override
+            public void showDialog(int dialogType, final EasyPermissions.DialogCallback callback) {
+                MessageDialog dialog = MessageDialog.build((AppCompatActivity) requireActivity());
+                dialog.setTitle("需要获取以下权限");
+                dialog.setMessage(getString(resId));
+                dialog.setOkButton("下一步", new OnDialogButtonClickListener() {
+
+                    @Override
+                    public boolean onClick(BaseDialog baseDialog, View v) {
+                        callback.onGranted();
+                        return false;
+                    }
+                });
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+        });
     }
 }

@@ -362,8 +362,8 @@ public class LoginActivity extends BaseActivity {
                     }
 
 
-                    user_agreement.setText(titles[1]);
-                    user_privacy.setText(titles[0]);
+                    user_agreement.setText("《"+titles[1]+"》");
+                    user_privacy.setText("《"+titles[0]+"》");
                     user_agreement.setOnClickListener(new NoMoreClickListener() {
                         @Override
                         protected void OnMoreClick(View view) {

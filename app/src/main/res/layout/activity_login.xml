@@ -265,7 +265,7 @@
                     android:layout_height="wrap_content"
                     android:paddingVertical="@dimen/dp_5"
                     android:text="我已阅读并同意 "
-                    android:textColor="@color/black1"
+                    android:textColor="@color/grayText4"
                     android:textSize="@dimen/sp_12"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/login_user_agreement_tv"
@@ -277,23 +277,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingVertical="@dimen/dp_5"
-                    android:text="用户协议"
-                    android:textColor="@color/black1"
+                    android:text="《用户协议》"
+                    android:textColor="@color/endColor_btn"
                     android:textSize="@dimen/sp_12"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/id_tag_and_tv"
                     app:layout_constraintStart_toEndOf="@id/id_tag_user_agreement_tv"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <View
-                    android:layout_width="@dimen/dp_0"
-                    android:layout_height="@dimen/dp_0_5"
-                    android:background="@color/grayText3"
-                    android:layout_marginTop="@dimen/dp_15"
-                    app:layout_constraintTop_toTopOf="@id/login_user_agreement_tv"
-                    app:layout_constraintBottom_toBottomOf="@id/login_user_agreement_tv"
-                    app:layout_constraintEnd_toEndOf="@id/login_user_agreement_tv"
-                    app:layout_constraintStart_toStartOf="@id/login_user_agreement_tv" />
+<!--                <View-->
+<!--                    android:layout_width="@dimen/dp_0"-->
+<!--                    android:layout_height="@dimen/dp_0_5"-->
+<!--                    android:background="@color/grayText3"-->
+<!--                    android:layout_marginTop="@dimen/dp_15"-->
+<!--                    app:layout_constraintTop_toTopOf="@id/login_user_agreement_tv"-->
+<!--                    app:layout_constraintBottom_toBottomOf="@id/login_user_agreement_tv"-->
+<!--                    app:layout_constraintEnd_toEndOf="@id/login_user_agreement_tv"-->
+<!--                    app:layout_constraintStart_toStartOf="@id/login_user_agreement_tv" />-->
 
                 <TextView
                     android:id="@+id/id_tag_and_tv"
@@ -301,7 +301,7 @@
                     android:layout_height="wrap_content"
                     android:paddingVertical="@dimen/dp_5"
                     android:text=" 和 "
-                    android:textColor="@color/black1"
+                    android:textColor="@color/grayText4"
                     android:textSize="@dimen/sp_12"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/login_user_privacy_tv"
@@ -313,22 +313,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingVertical="@dimen/dp_5"
-                    android:text="隐私政策"
-                    android:textColor="@color/black1"
+                    android:text="《隐私政策》"
+                    android:textColor="@color/endColor_btn"
                     android:textSize="@dimen/sp_12"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/id_tag_and_tv"
                     app:layout_constraintTop_toTopOf="parent" />
-                <View
-                    android:layout_width="@dimen/dp_0"
-                    android:layout_height="@dimen/dp_0_5"
-                    android:background="@color/grayText3"
-                    android:layout_marginTop="@dimen/dp_15"
-                    app:layout_constraintTop_toTopOf="@id/login_user_privacy_tv"
-                    app:layout_constraintBottom_toBottomOf="@id/login_user_privacy_tv"
-                    app:layout_constraintEnd_toEndOf="@id/login_user_privacy_tv"
-                    app:layout_constraintStart_toStartOf="@id/login_user_privacy_tv" />
+<!--                <View-->
+<!--                    android:layout_width="@dimen/dp_0"-->
+<!--                    android:layout_height="@dimen/dp_0_5"-->
+<!--                    android:background="@color/grayText3"-->
+<!--                    android:layout_marginTop="@dimen/dp_15"-->
+<!--                    app:layout_constraintTop_toTopOf="@id/login_user_privacy_tv"-->
+<!--                    app:layout_constraintBottom_toBottomOf="@id/login_user_privacy_tv"-->
+<!--                    app:layout_constraintEnd_toEndOf="@id/login_user_privacy_tv"-->
+<!--                    app:layout_constraintStart_toStartOf="@id/login_user_privacy_tv" />-->
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>

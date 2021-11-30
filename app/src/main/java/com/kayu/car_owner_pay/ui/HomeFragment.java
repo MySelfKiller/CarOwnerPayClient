@@ -574,6 +574,7 @@ public class HomeFragment extends Fragment {
                                     sb.append(",");
                                     sb.append(latitude);
                                 }
+//                                intent.putExtra("url", "http://192.168.3.32:8080/#/index");
                                 intent.putExtra("url", sb.toString());
                                 intent.putExtra("from", "首页");
                                 startActivity(intent);

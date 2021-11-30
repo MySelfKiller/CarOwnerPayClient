@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -491,7 +490,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     }
 
     private void installApk(String path) {
-        InstallUtils.installAPK(this, path, new InstallUtils.InstallCallBack() {
+        InstallUtils.installAPK(MainActivity.this, path, new InstallUtils.InstallCallBack() {
             @Override
             public void onSuccess() {
                 //onSuccess：表示系统的安装界面被打开

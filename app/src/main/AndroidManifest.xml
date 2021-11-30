@@ -207,7 +207,6 @@
         <activity
             android:name=".activity.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
             android:theme="@style/LaudnchTheme"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
@@ -219,7 +218,6 @@
         <activity
             android:name=".activity.SplashHotActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
             android:theme="@style/LaudnchTheme"
             tools:ignore="LockedOrientationActivity">
         </activity>

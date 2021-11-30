@@ -98,11 +98,15 @@ public class SplashHotActivity extends AppCompatActivity {
         //在开屏时候申请不太合适，因为该页面倒计时结束或者请求超时会跳转，在该页面申请权限，体验不好
 
         //step2:创建TTAdNative对象
-        mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
+        try {
+            mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
+        } catch (Exception e) {
+            KWApplication.getInstance().initAdSdk();
+        }
         if (null == mTTAdNative) {
             KWApplication.getInstance().initAdSdk();
-            mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
         }
+        mTTAdNative = TTAdManagerHolder.get().createAdNative(this);
         if (null != KWApplication.getInstance().systemArgs) {
             if (StringUtil.isEmpty(KWApplication.getInstance().systemArgs.android.showAd)) {
                 goToMainActivity();
