@@ -17,6 +17,7 @@
     <string name="permiss_call_phone">拨打电话权限：用于一键拨打客服电话。</string>
     <string name="permiss_location">定位权限：用于获取周边特惠服务，如优惠加油站，洗车等。</string>
     <string name="permiss_write_store">存储权限：以实现保存二维码图片功能。</string>
+    <string name="permiss_write_store1">存储权限：以实现保存更新的安装包。</string>
 
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
