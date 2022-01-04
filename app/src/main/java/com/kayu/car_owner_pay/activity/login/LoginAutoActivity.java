@@ -617,8 +617,8 @@ public class LoginAutoActivity extends BaseActivity {
         List<PrivacyBean> listp = new ArrayList<>();
 //        PrivacyBean privacy1 = new PrivacyBean("用户协议","https://www.ky808.cn/carfriend/static/user_agree.html","和《","》、");
 //        PrivacyBean privacy2 = new PrivacyBean("隐私政策","https://www.ky808.cn/carfriend/static/privacy_agree.html","《","》");
-        PrivacyBean privacy1 = new PrivacyBean("《用户协议》","https://www.ky808.cn/carfriend/static/user_agree.html","和");
-        PrivacyBean privacy2 = new PrivacyBean("《隐私政策》","https://www.ky808.cn/carfriend/static/privacy_agree.html","、");
+        PrivacyBean privacy1 = new PrivacyBean("《用户协议》","https://www.kykj909.com/carfriend/static/user_agree.html","和");
+        PrivacyBean privacy2 = new PrivacyBean("《隐私政策》","https://www.kykj909.com/carfriend/static/privacy_agree.html","、");
         listp.add(privacy1);
         listp.add(privacy2);
         uiConfigBuilder.setPrivacyNameAndUrlBeanList(listp);
