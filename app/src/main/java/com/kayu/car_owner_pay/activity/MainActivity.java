@@ -1,6 +1,5 @@
 package com.kayu.car_owner_pay.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,12 +40,10 @@ import com.kayu.car_owner_pay.update.UpdateInfo;
 import com.kayu.car_owner_pay.update.UpdateInfoParse;
 import com.kayu.utils.AppUtil;
 import com.kayu.utils.Constants;
-import com.kayu.utils.ImageUtil;
 import com.kayu.utils.LogUtil;
 import com.kayu.utils.Md5Util;
 import com.kayu.utils.NoMoreClickListener;
 import com.kayu.utils.StringUtil;
-import com.kayu.utils.callback.Callback;
 import com.kayu.utils.callback.ImageCallback;
 import com.kayu.utils.location.LocationManagerUtil;
 import com.kayu.utils.permission.EasyPermissions;
@@ -322,39 +319,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         ReqUtil.getInstance().requestPostJSON(new UpdateCallBack(reqInfo));
     }
 
-
-    public void permissionsCheck(String[] perms, int resId, @NonNull Callback callback) {
-//        String[] perms = {Manifest.permission.CAMERA};
-        performCodeWithPermission(1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, perms, new PermissionCallback() {
-            @Override
-            public void hasPermission(List<String> allPerms) {
-                callback.onSuccess();
-            }
-
-            @Override
-            public void noPermission(List<String> deniedPerms, List<String> grantedPerms, Boolean hasPermanentlyDenied) {
-                EasyPermissions.goSettingsPermissions(MainActivity.this, 1, Constants.RC_PERMISSION_PERMISSION_FRAGMENT, Constants.RC_PERMISSION_BASE);
-            }
-
-            @Override
-            public void showDialog(int dialogType, final EasyPermissions.DialogCallback callback) {
-                MessageDialog dialog = MessageDialog.build((AppCompatActivity) MainActivity.this);
-                dialog.setTitle("需要获取以下权限");
-                dialog.setMessage(getString(resId));
-                dialog.setOkButton("下一步", new OnDialogButtonClickListener() {
-
-                    @Override
-                    public boolean onClick(BaseDialog baseDialog, View v) {
-                        callback.onGranted();
-                        return false;
-                    }
-                });
-                dialog.setCancelable(false);
-                dialog.show();
-            }
-        });
-    }
-
     public void updateDialog(boolean isMustUpdate, final String apkName){
         final File file = new File(KWApplication.getInstance().getDataPath() + File.separator + "apk" + File.separator + apkName);
         MessageDialog messageDialog = MessageDialog.build(MainActivity.this);
@@ -376,18 +340,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             messageDialog.setCancelable(!isMustUpdate);
             messageDialog.setOkButton((baseDialog, v) -> {
                 messageDialog.doDismiss();
-                permissionsCheck(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, R.string.permiss_write_store1,new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        installApk(file.getAbsolutePath());
-                    }
-
-                    @Override
-                    public void onError() {
-
-                    }
-                });
-
+                installApk(file.getAbsolutePath());
                 return false;
             });
         } else {
@@ -410,32 +363,22 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 @Override
                 public boolean onClick(BaseDialog baseDialog, View v) {
                     messageDialog.doDismiss();
-                    permissionsCheck(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, R.string.permiss_write_store1,new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            SharedPreferences userSettings = getSharedPreferences(Constants.SharedPreferences_name, 0);
-                            SharedPreferences.Editor editor = userSettings.edit();
-                            editor.putString("update_md5", md5);
-                            editor.apply();
-                            editor.commit();
-                            initCallBack();
-                            showProgressDialog(isMustUpdate);
-                            InstallUtils.with(MainActivity.this)
-                                    //必须-下载地址
-                                    .setApkUrl(updateInfo.url)
-                                    //非必须-下载保存的文件的完整路径+name.apk
-                                    .setApkPath(KWApplication.getInstance().getDataPath() + File.separator + "apk" + File.separator + apkName)
-                                    //非必须-下载回调
-                                    .setCallBack(downloadCallBack)
-                                    //开始下载
-                                    .startDownload();
-                        }
-
-                        @Override
-                        public void onError() {
-
-                        }
-                    });
+                    SharedPreferences userSettings = getSharedPreferences(Constants.SharedPreferences_name, 0);
+                    SharedPreferences.Editor editor = userSettings.edit();
+                    editor.putString("update_md5", md5);
+                    editor.apply();
+                    editor.commit();
+                    initCallBack();
+                    showProgressDialog(isMustUpdate);
+                    InstallUtils.with(MainActivity.this)
+                            //必须-下载地址
+                            .setApkUrl(updateInfo.url)
+                            //非必须-下载保存的文件的完整路径+name.apk
+                            .setApkPath(KWApplication.getInstance().getDataPath() + File.separator + "apk" + File.separator + apkName)
+                            //非必须-下载回调
+                            .setCallBack(downloadCallBack)
+                            //开始下载
+                            .startDownload();
                     return false;
                 }
             });

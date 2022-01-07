@@ -336,9 +336,9 @@ public class PersonalFragment extends Fragment {
                     protected void OnMoreClick(View view) {
                         StringBuilder jumpUrl = new StringBuilder();
                         if (userBean.type == 1) {
-                            jumpUrl.append("https://www.kykj909.com/carfriend/static/cyt/index.html#/purchase?token=");
+                            jumpUrl.append("https://www.ky808.cn/carfriend/static/cyt/index.html#/purchase?token=");
                         } else {
-                            jumpUrl.append("https://www.kykj909.com/carfriend/static/cyt/index.html#/upgrade?token=");
+                            jumpUrl.append("https://www.ky808.cn/carfriend/static/cyt/index.html#/upgrade?token=");
                         }
                         long randomNum = System.currentTimeMillis();
                         jumpUrl.append(KWApplication.getInstance().token).append("&").append(randomNum);
