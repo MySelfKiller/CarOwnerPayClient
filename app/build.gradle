@@ -21,8 +21,8 @@ android {
         applicationId "com.kayu.car_owner_pay"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 9
-        versionName "1.0.8"
+        versionCode 8
+        versionName "1.0.7"
 
         ndk {
             //选择要添加的对应 cpu 类型的 .so 库。
@@ -102,7 +102,7 @@ android {
             jniDebuggable true
 //            applicationIdSuffix ".release"
             buildConfigField("boolean", "LOG_DEBUG", "true")//配置Log日志
-            buildConfigField "String", "BASE_URL", '"https://www.kykj909.com/cyt/carfriend/"'  //正式环境
+            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/cyt/carfriend/"'  //正式环境
 //            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/test/carfriend/"'  //测试环境
         }
         debug {
@@ -114,7 +114,7 @@ android {
 //            applicationIdSuffix ".debug"
             buildConfigField("boolean", "LOG_DEBUG", "true")//配置Log日志
 //            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/test/carfriend/"'  //测试环境
-            buildConfigField "String", "BASE_URL", '"https://www.kykj909.com/cyt/carfriend/"'  //正式环境
+            buildConfigField "String", "BASE_URL", '"https://www.ky808.cn/cyt/carfriend/"'  //正式环境
 //            buildConfigField "String", "BASE_URL", '"http://192.168.0.112:8080/"'  //测试环境
 
         }
