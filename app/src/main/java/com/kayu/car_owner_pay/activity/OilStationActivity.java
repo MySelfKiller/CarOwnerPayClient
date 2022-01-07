@@ -210,6 +210,7 @@ public class OilStationActivity extends BaseActivity {
                 parentTypeAdapter = new ProductTypeAdapter(OilStationActivity.this, new ArrayList<>(oilStationBean.oilsTypeList.get(0).oilsParamList), 1, parentParamItemCallback);
                 select_oil_rv.setAdapter(parentTypeAdapter);
                 OilsParam defultOilParam = oilStationBean.oilsTypeList.get(0).oilsParamList.get(0);
+                selectedOilNo = defultOilParam.oilNo;
                 oil_price.setText(String.valueOf(defultOilParam.priceYfq));
                 oil_price_sub1.setText("比国标价降" + DoubleUtils.sub(defultOilParam.priceOfficial, defultOilParam.priceYfq) + "元");
                 oil_price_sub2.setText("比油站降" + DoubleUtils.sub(defultOilParam.priceGun, defultOilParam.priceYfq) + "元");
@@ -277,7 +278,7 @@ public class OilStationActivity extends BaseActivity {
 
         }
     }
-    int selectedOilNo = -1;
+    int selectedOilNo = -100;
     class ParentParamItemCallback implements ItemCallback {
         @Override
         public void onItemCallback(int position, Object obj) {
