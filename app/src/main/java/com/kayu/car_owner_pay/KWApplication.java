@@ -23,6 +23,7 @@ import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -148,7 +149,8 @@ public class KWApplication extends MultiDexApplication {
         SharedPreferences sp = getSharedPreferences(Constants.SharedPreferences_name, MODE_PRIVATE);
         token = sp.getString(Constants.token, "");
         LogUtil.setIsDebug(BuildConfig.LOG_DEBUG);
-
+//        String useragent = new WebView(this).getSettings().getUserAgentString();
+//        LogUtil.e("useragent",useragent);
         localBroadcastManager = LocalBroadcastManager.getInstance(this); // 获取实例
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("com.kayu.broadcasttest.JUMP");

@@ -40,7 +40,7 @@ public class ReqUtil {
         //请求超时设置
         headerMap.put("terminal","app");
         headerMap.put("Referer",HttpConfig.HOST);
-        Referer: http://192.168.0.112:8081/
+//        Referer: http://192.168.0.112:8081/
         httpClient = OkHttpManager.getInstance().getHttpClient();
     }
     public static ReqUtil getInstance(){
