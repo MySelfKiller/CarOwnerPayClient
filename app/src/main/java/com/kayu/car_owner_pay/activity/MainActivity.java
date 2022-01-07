@@ -349,7 +349,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             final String md5 = updateInfo.pathMd5;
             final String url = updateInfo.url;
             messageDialog.setTitle("检测到新版");
-            asdfasdf
             messageDialog.setMessage(updateInfo.content);
             messageDialog.setOkButton("升级");
             if (!isMustUpdate) {
