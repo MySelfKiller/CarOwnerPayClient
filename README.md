@@ -1,5 +1,5 @@
 # CarOwnerPayClient
-一个练习的小项目
+Convenient service app
 
 ## License
 
