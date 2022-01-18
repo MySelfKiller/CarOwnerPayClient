@@ -65,7 +65,7 @@ public class WashOrderActivity extends BaseActivity {
     private WxPayBean mWxPayBean;
     private String shopCode;
     private AliPayBean mAliPayBean;
-    private int payWay = 2;//支付方式 0:微信JSAPI 、1:微信APP 、2:支付宝
+    private int payWay = 4;//支付方式 0:微信JSAPI 、1:微信APP 、4:支付宝
     private boolean isPaying = false; //是否正在发起支付
     //    private long vipId;
     private static final int SDK_PAY_FLAG = 1;
@@ -190,7 +190,7 @@ public class WashOrderActivity extends BaseActivity {
             protected void OnMoreClick(View view) {
                 if (!alipay_checked.isSelected()) {
                     alipay_checked.setSelected(true);
-                    payWay = 2;
+                    payWay = 4;
                 }
                 if (wechat_checked.isSelected())
                     wechat_checked.setSelected(false);
@@ -262,7 +262,7 @@ public class WashOrderActivity extends BaseActivity {
                             alipay_option.setVisibility(View.VISIBLE);
                             if (x ==0){
                                 alipay_checked.setSelected(true);
-                                payWay = 2;
+                                payWay = 4;
                                 pay_way_lay.setVisibility(View.VISIBLE);
                                 order_pay_btn.setVisibility(View.VISIBLE);
                             }
