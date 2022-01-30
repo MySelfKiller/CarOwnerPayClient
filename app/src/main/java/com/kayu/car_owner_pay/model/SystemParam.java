@@ -48,21 +48,21 @@ public class SystemParam {
     @SerializedName("force")
     public String force;
     @SerializedName("blank1")
-    public Object blank1;
+    public String blank1;
     @SerializedName("blank2")
-    public Object blank2;
+    public String blank2;
     @SerializedName("blank3")
-    public Object blank3;
+    public String blank3;
     @SerializedName("blank4")
-    public Object blank4;
+    public String blank4;
     @SerializedName("blank5")
-    public Object blank5;
+    public String blank5;
     @SerializedName("blank6")
-    public Object blank6;
+    public String blank6;
     @SerializedName("blank7")
-    public Object blank7;
+    public String blank7;
     @SerializedName("blank8")
-    public Object blank8;
+    public String blank8;
     @SerializedName("blank9")
     public String blank9;
 }

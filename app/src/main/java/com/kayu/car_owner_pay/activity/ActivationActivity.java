@@ -64,7 +64,7 @@ public class ActivationActivity extends BaseActivity {
 //        LinearLayout title_lay = findViewById(R.id.title_lay);
 //        title_lay.setBackgroundColor(getResources().getColor(R.color.background_gray));
         TextView title_name = findViewById(R.id.title_name_tv);
-        title_name.setText("激活"+getResources().getString(R.string.app_name)+"卡");
+        title_name.setText("激活"+getResources().getString(R.string.app_name));
 
         findViewById(R.id.title_back_btu).setOnClickListener(new NoMoreClickListener() {
             @Override

@@ -212,6 +212,7 @@ public class OilStationActivity extends BaseActivity {
                 OilsParam defultOilParam = oilStationBean.oilsTypeList.get(0).oilsParamList.get(0);
                 selectedOilNo = defultOilParam.oilNo;
                 oil_price.setText(String.valueOf(defultOilParam.priceYfq));
+                selectedOilNo = defultOilParam.oilNo;
                 oil_price_sub1.setText("比国标价降" + DoubleUtils.sub(defultOilParam.priceOfficial, defultOilParam.priceYfq) + "元");
                 oil_price_sub2.setText("比油站降" + DoubleUtils.sub(defultOilParam.priceGun, defultOilParam.priceYfq) + "元");
                 String[] gunArrs = defultOilParam.gunNos.split(",");

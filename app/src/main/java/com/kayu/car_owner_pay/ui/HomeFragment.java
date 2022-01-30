@@ -500,8 +500,15 @@ public class HomeFragment extends Fragment {
             public void onChanged(List<List<CategoryBean>> categoryBeans) {
                 if (null == categoryBeans)
                     return;
+                List<List<CategoryBean>> categoryListNew = new ArrayList<>();
+                List<CategoryBean> categoryBeans1 = new ArrayList<>();
                 for (List<CategoryBean> list : categoryBeans) {
                     for (CategoryBean categoryBean : list) {
+                        if (StringUtil.equals(categoryBean.title, "特惠加油")
+                        || StringUtil.equals(categoryBean.title, "特惠洗车")
+                        || StringUtil.equals(categoryBean.title, "电影订票")){
+                            categoryBeans1.add(categoryBean);
+                        }
                         if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
                             KWApplication.getInstance().isGasPublic = categoryBean.isPublic;
                         }
@@ -510,7 +517,12 @@ public class HomeFragment extends Fragment {
                         }
                     }
                 }
-                int mColumns=1, mRows = categoryBeans.size();
+                categoryListNew.add(categoryBeans1);
+                //当前是游客模式展示3个
+                if (null !=KWApplication.getInstance().regDialogTip && !KWApplication.getInstance().regDialogTip.blank1.equals("-2")) {
+                    categoryListNew = categoryBeans;
+                }
+                int mColumns=1, mRows = categoryListNew.size();
 //                if (categoryBeans.size() <= 4) {
 //                    mColumns = 4;
 //                    mRows = 1;
@@ -539,7 +551,7 @@ public class HomeFragment extends Fragment {
                     }
                 });    // 设置页面变化监听器
                 category_rv.setLayoutManager(mLayoutManager);
-                CategoryRootAdapter categoryAdapter = new CategoryRootAdapter(categoryBeans, new ItemCallback() {
+                CategoryRootAdapter categoryAdapter = new CategoryRootAdapter(categoryListNew, new ItemCallback() {
                     @Override
                     public void onItemCallback(int position, Object obj) {
                         CategoryBean categoryBean = (CategoryBean) obj;

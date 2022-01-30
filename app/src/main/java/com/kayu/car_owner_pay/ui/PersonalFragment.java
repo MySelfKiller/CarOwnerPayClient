@@ -55,6 +55,7 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PersonalFragment extends Fragment {
@@ -321,7 +322,7 @@ public class PersonalFragment extends Fragment {
 
                 user_rewad.setText(String.valueOf(userBean.rewardAmt));
                 if (!StringUtil.isEmpty(userBean.inviteNo)) {
-                    card_num.setText("卡号："+userBean.inviteNo);
+                    card_num.setText("会员号："+userBean.inviteNo);
                     card_num.setVisibility(View.VISIBLE);
                 }else {
                     card_num.setVisibility(View.INVISIBLE);
@@ -360,8 +361,17 @@ public class PersonalFragment extends Fragment {
             public void onChanged(List<List<SysOrderBean>> categoryBeans) {
                 if (null == categoryBeans)
                     return;
+                List<List<SysOrderBean>> newCategoryList = new ArrayList<>();
+                List<SysOrderBean> categoryBeanList = new ArrayList<>();
+                newCategoryList.add(categoryBeanList);
+
                 for (List<SysOrderBean> list : categoryBeans) {
                     for (SysOrderBean categoryBean : list) {
+                        if (KWApplication.getInstance().userRole == -2) {
+                            if (categoryBean.id == 1 || categoryBean.id == 5 ) {
+                                categoryBeanList.add(categoryBean);
+                            }
+                        }
                         if (StringUtil.equals(categoryBean.type, "KY_GAS")) {
                             KWApplication.getInstance().isGasPublic = categoryBean.isPublic;
                         }
@@ -370,7 +380,10 @@ public class PersonalFragment extends Fragment {
                         }
                     }
                 }
-                int mColumns=1, mRows = categoryBeans.size();
+                if (KWApplication.getInstance().userRole != -2) {
+                    newCategoryList = categoryBeans;
+                }
+                int mColumns=1, mRows = newCategoryList.size();
 //                if (categoryBeans.size() <= 4) {
 //                    mColumns = 4;
 //                    mRows = 1;
@@ -399,7 +412,7 @@ public class PersonalFragment extends Fragment {
                     }
                 });    // 设置页面变化监听器
                 category_rv.setLayoutManager(mLayoutManager);
-                OrderCategoryAdapter categoryAdapter = new OrderCategoryAdapter(categoryBeans, new ItemCallback() {
+                OrderCategoryAdapter categoryAdapter = new OrderCategoryAdapter(newCategoryList, new ItemCallback() {
                     @Override
                     public void onItemCallback(int position, Object obj) {
                         SysOrderBean categoryBean = (SysOrderBean) obj;
